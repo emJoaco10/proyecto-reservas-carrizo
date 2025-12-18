@@ -1,0 +1,29 @@
+/* === App.css === */
+/* Estilos base para toda la app */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+/* Contenedor raíz */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Espaciado para evitar que el header fijo tape el contenido */
+main {
+  padding-top: 70px; /* altura del header */
+  flex: 1;
+}
+
+/* Responsividad */
+@media (max-width: 600px) {
+  main {
+    padding-top: 120px; /* header más alto en móvil */
+    padding-inline: 1rem;
+  }
+}
