@@ -1,0 +1,100 @@
+/* Contenedor general */
+.detalle-producto {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Header fijo y ancho completo */
+.detalle-header {
+  display: flex;
+  flex-wrap: wrap; /* Permite que los elementos bajen si no hay espacio */
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #0077cc;
+  color: white;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+/* Título alineado a la izquierda */
+.detalle-header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+/* Flecha alineada a la derecha */
+.btn-volver {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: white;
+  cursor: pointer;
+  flex-shrink: 0; /* Evita que se achique o se desplace fuera del contenedor */
+  margin-left: auto; /* Empuja hacia la derecha */
+}
+
+.btn-volver:hover {
+  transform: scale(1.1);
+}
+
+/* Body con contenido */
+.detalle-body {
+  padding: 2rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Descripción del producto */
+.detalle-body p {
+  font-size: 1.1rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Galería de imágenes */
+.imagenes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.imagenes img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 0 6px rgba(0,0,0,0.1);
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 480px) {
+  .detalle-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .btn-volver {
+    align-self: flex-end;
+    margin-left: 0;
+  }
+
+  .imagenes {
+    grid-template-columns: 1fr;
+  }
+
+  .detalle-body {
+    padding: 1rem;
+  }
+}

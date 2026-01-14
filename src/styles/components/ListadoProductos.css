@@ -1,0 +1,147 @@
+/* Contenedor general */
+.listado-productos-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Paginador */
+.paginador {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* 👉 más espacio para respirar */
+  align-items: flex-start;
+}
+
+/* Acciones (Inicio / Atrás / Adelante) */
+.page-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap; /* 👉 permite que se acomoden en pantallas chicas */
+}
+
+.listado-productos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 👉 4 cartas por fila */
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.producto-card {
+  background: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 280px; /* 👉 altura mínima para consistencia visual */
+}
+
+.producto-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+}
+.producto-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0.25rem 0;
+}
+
+.producto-card p {
+  font-size: 0.9rem;
+  color: #374151;
+  line-height: 1.4;
+  margin-bottom: 0.25rem;
+}
+
+.producto-card .tipo {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #2563eb;
+  background: #eff6ff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  align-self: flex-start;
+}
+
+.miniatura {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background-color: #f3f4f6; /* 👉 fondo gris claro si no carga */
+}
+.page-nav {
+  background: #f9fafb; /* 👉 estilo más tenue para diferenciar de botones de página */
+  color: #374151;
+  border: 1px solid var(--border);
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.page-nav:hover {
+  background: #f3f4f6; /* 👉 hover más marcado */
+  border-color: var(--accent-200);
+}
+
+.page-nav:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Lista de páginas */
+.page-list {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap; /* 👉 en móviles se acomodan en varias filas */
+}
+
+.page-btn {
+  background: #fff;
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.page-btn:hover {
+  background: #f3f4f6; /* 👉 hover más visible */
+  border-color: var(--accent-200);
+}
+
+.page-btn.is-active {
+  background: var(--accent-50);
+  border-color: var(--accent-300);
+  color: var(--accent-700);
+  font-weight: 700; /* 👉 jerarquía más fuerte */
+  border-width: 2px; /* 👉 borde más sólido */
+}
+
+/* Foco accesible */
+.page-btn:focus-visible,
+.page-nav:focus-visible {
+  outline: 3px solid rgba(11,95,255,0.14);
+  outline-offset: 2px;
+}
+
+/* Responsividad */
+@media (max-width: 1024px) {
+  .listado-productos {
+    grid-template-columns: repeat(2, 1fr); /* 👉 2 por fila en tablets */
+  }
+}
+
+@media (max-width: 600px) {
+  .listado-productos {
+    grid-template-columns: 1fr; /* 👉 1 por fila en móviles */
+  }
+}

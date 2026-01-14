@@ -1,0 +1,289 @@
+:root{
+  --bg: #ffffff;
+  --panel-bg: #fbfcfd;
+  --accent: #0b5fff;
+  --accent-600: #084ed6;
+  --danger: #d93025;
+  --success: #188038;
+  --muted: #6b7280;
+  --border: #e6e9ee;
+  --radius: 8px;
+  --gap: 1rem;
+  --max-width: 880px;
+  --input-height: 44px;
+  --font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Container */
+.agregar-producto{
+  font-family: var(--font-family);
+  background: var(--bg);
+  padding: 1.25rem;
+  margin: 0 auto;
+  max-width: var(--max-width);
+  box-shadow: 0 1px 2px rgba(16,24,40,0.04);
+  border-radius: calc(var(--radius) + 2px);
+}
+
+/* Heading */
+.agregar-producto h2{
+  font-size: 1.25rem;
+  margin: 0 0 1rem 0;
+  color: #0f172a;
+}
+
+/* Form layout */
+.form-producto{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap);
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+/* Label + control grouping when labels precede controls */
+.form-producto label{
+  display: block;
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.375rem;
+}
+
+/* Inputs / selects / textarea */
+.form-producto input[type="text"],
+.form-producto select,
+.form-producto textarea,
+.form-producto input[type="file"]{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 2px);
+  height: var(--input-height);
+  background: var(--panel-bg);
+  color: #0f172a;
+  font-size: 0.95rem;
+  transition: box-shadow .12s ease, border-color .12s ease;
+}
+
+/* textarea specific */
+.form-producto textarea{
+  min-height: 92px;
+  height: auto;
+  resize: vertical;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+/* focus states */
+.form-producto input[type="file"] {
+  height: auto;
+  padding: 0.5rem 0.75rem;
+}
+.form-producto select:focus,
+.form-producto textarea:focus{
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(11,95,255,0.08);
+}
+
+/* Buttons */
+button[type="submit"],
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: calc(var(--radius) - 4px);
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform .06s ease, box-shadow .06s ease, opacity .12s ease;
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(11,95,255,0.06);
+}
+
+button[type="submit"]:hover:not(:disabled){
+  transform: translateY(-1px);
+  background: var(--accent-600);
+}
+
+button[type="submit"]:disabled{
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+button[type="submit"]:focus-visible,
+.btn:focus-visible {
+  outline: 3px solid rgba(11,95,255,0.18);
+  outline-offset: 2px;
+}
+
+
+/* Danger button */
+.btn-danger {
+  background: rgba(217, 49, 37, 0.263) !important; /* fondo rojo muy tenue */
+  color: var(--danger);
+  border: 2px solid rgba(217,48,37,0.25);
+  padding: 0.6rem 0.9rem;
+  border-radius: calc(var(--radius) - 4px);
+  font-weight: 600;
+  transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 1px 2px rgba(217,48,37,0.08); /* sombra sutil */
+}
+
+
+
+.btn-danger:hover {
+  background: rgba(217, 49, 37, 0.349) !important; 
+}
+
+.btn-danger:focus-visible {
+  outline: 3px solid rgba(217, 49, 37, 0.258);
+  outline-offset: 2px;
+}
+
+
+.preview-imagenes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+}
+
+.preview-imagenes img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+ 
+
+/* Paso 1: Secciones y acciones */
+
+/* Bloques/Secciones dentro del formulario */
+.form-section {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Espaciado vertical uniforme entre controles */
+.form-producto > label,
+.form-producto > input[type="text"],
+.form-producto > select,
+.form-producto > textarea,
+.form-producto > input[type="file"],
+.form-actions {
+  margin-bottom: 0.75rem;
+}
+
+/* Acciones principales del formulario */
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.input-error {
+  border-color: rgba(217,48,37,0.65) !important;
+  box-shadow: 0 0 0 4px rgba(217,48,37,0.08) !important;
+}
+.input-exito {
+  border-color: var(--success) !important;
+  box-shadow: 0 0 0 4px rgba(24,128,56,0.08) !important;
+}
+
+.form-producto input,
+.form-producto select,
+.form-producto textarea {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+
+/* Responsive previews */
+@media (max-width: 640px){
+  .preview-imagenes{
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .preview-imagenes img{
+    height: 90px;
+  }
+}
+
+/* Messages */
+.mensaje-error,
+.mensaje-exito {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 1px 2px rgba(16,24,40,0.04); /* sombra suave */
+}
+
+.mensaje-error {
+  background: #fff5f5;
+  color: var(--danger);
+  border: 1px solid rgba(217,48,37,0.1);
+}
+
+.mensaje-exito {
+  background: #f0fdf4;
+  color: var(--success);
+  border: 1px solid rgba(24,128,56,0.08);
+}
+
+
+/* Small helpers */
+.form-producto .helper{
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.25rem;
+}
+
+/* Accessibility: focus-visible outline for keyboard users */
+:focus-visible{
+  outline: 3px solid rgba(11,95,255,0.14);
+  outline-offset: 2px;
+}
+
+/* Layout for larger screens: center form and actions */
+@media (min-width: 900px){
+  .form-producto {
+    grid-template-columns: 1fr 320px; /* columna principal + columna lateral */
+    column-gap: 1.25rem;
+  }
+
+  .form-actions {
+    grid-column: 2 / 3; /* mueve las acciones a la segunda columna */
+    align-self: start;  /* alinea arriba en esa columna */
+  }
+
+  .preview-imagenes img {
+    height: 90px;
+  }
+
+}
+
+@media (max-width: 640px) {
+  .form-producto {
+    grid-template-columns: 1fr; /* vuelve a una sola columna */
+  }
+
+  .form-actions {
+    width: 100%; /* ocupa todo el ancho */
+  }
+
+  .preview-imagenes img {
+    height: 80px;
+  }
+}

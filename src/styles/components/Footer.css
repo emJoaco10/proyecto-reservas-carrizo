@@ -1,0 +1,24 @@
+/* src/styles/components/Footer.css */
+.app-footer {
+  width: 100%;
+  background: #172441;
+  color: #e6eef8;
+  padding: 16px 20px;
+  box-sizing: border-box;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.footer-left { display: flex; align-items: center; gap: 12px; }
+.footer-logo { width: 120px; height: auto; object-fit: contain; }
+.footer-copy { display: flex; flex-direction: column; font-size: 14px; }
+
+@media (max-width: 640px) {
+  .footer-inner { flex-direction: column; text-align: center; }
+  .footer-right { margin-top: 8px; }
+}

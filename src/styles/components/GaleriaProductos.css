@@ -1,0 +1,71 @@
+/* src/components/GaleriaProductos.css */
+.galeria-producto {
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  align-items: stretch;
+  flex-wrap: nowrap;
+}
+
+/* Mitad izquierda: imagen principal */
+.imagen-principal {
+  flex: 0 0 60%;
+  min-height: 320px;
+}
+.imagen-principal img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+/* Mitad derecha: grid 2x2 */
+.imagenes-secundarias {
+  flex: 0 0 40%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0.5rem;
+  position: relative;
+  min-height: 320px;
+}
+.grid-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+}
+
+/* Ver más en esquina inferior derecha */
+.ver-mas {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  border: none;
+  padding: 0.45rem 0.7rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* Responsive: apilar en mobile/tablet */
+@media (max-width: 900px) {
+  .galeria-producto {
+    flex-direction: column;
+  }
+  .imagen-principal,
+  .imagenes-secundarias {
+    flex: 1 1 auto;
+    min-height: 180px;
+  }
+  .imagenes-secundarias {
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: 100px;
+  }
+  /* Mostrar hasta 4 thumbnails en mobile; ocultar la última si sobra */
+  .imagenes-secundarias .grid-item:nth-child(n+4) { display: none; }
+}

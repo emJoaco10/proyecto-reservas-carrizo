@@ -1,0 +1,27 @@
+:root {
+  --color-fondo: #f0f4f8;
+  --color-primario: #004080;
+  --color-texto: #333;
+  --header-height: 70px;
+  --header-height-mobile: 120px;
+}
+
+/* contenedor centrado reutilizable */
+.container {
+  max-width: 1200px;   /* mismo ancho que el footer-inner que usamos antes */
+  margin: 0 auto;
+  padding: 0 1rem;     /* mismo padding horizontal que tu header actual */
+  box-sizing: border-box;
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  color: var(--color-texto);
+  background-color: var(--color-fondo);
+}
+
+@media (max-width: 600px) {
+  :root { --header-height: var(--header-height-mobile); }
+}

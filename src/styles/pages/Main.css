@@ -1,0 +1,29 @@
+/* === Main.css === */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* Bloques de contenido */
+.bloque {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+/* Responsividad */
+@media (max-width: 600px) {
+  .main-container {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .bloque {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+}
