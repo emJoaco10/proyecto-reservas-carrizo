@@ -1,9 +1,6 @@
-/* === Header.css actualizado === */
 
-/* Variables base (ajustá si ya las tenés en :root) */
 :root {
   --header-height: 64px;        /* altura por defecto del header */
-  --header-bg: var(--color-primario, #0f172a);
   --header-text: #ffffff;
   --container-max: 1200px;
 }
@@ -25,10 +22,10 @@
   right: 0;
   width: 100%;
   height: var(--header-height);
-  background-color: var(--header-bg);
-  color: var(--header-text);
+  background-color: var(--color-header-bg);
+  color: var(--color-texto-invertido);
   z-index: 1000;
-  display: block; /* el layout interno lo maneja .header-content */
+  display: block;
   box-sizing: border-box;
   overflow-x: hidden;
   border-bottom: 1px solid rgba(255,255,255,0.04);
@@ -88,7 +85,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
   line-height: 1;
-  background: transparent;
+  background: var(--color-primario);
   border: 2px solid transparent;
   color: inherit;
 }
@@ -100,21 +97,22 @@
 /* Variantes */
 .btn-outline {
   background-color: transparent;
-  border: 2px solid rgba(255,255,255,0.9);
-  color: rgba(255,255,255,0.95);
+  border: 2px solid var(--color-texto-invertido);
+  color: var(--color-texto-invertido);
 }
 .btn-outline:hover {
-  background-color: rgba(255,255,255,0.95);
-  color: var(--header-bg);
+  background-color: var(--color-texto-invertido);
+  color: var(--color-header-bg);
 }
 
 .btn-filled {
-  background-color: rgba(255,255,255,0.95);
-  color: var(--header-bg);
+  background-color: var(--color-texto-invertido );
+  color: var(--color-header-bg);
   border: none;
 }
 .btn-filled:hover {
-  background-color: #e6e6e6;
+  background-color: var(--color-secundario);
+  color: var(--color-texto-invertido);
 }
 
 /* Evitar que reglas globales rompan el layout */

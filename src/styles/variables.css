@@ -1,0 +1,20 @@
+:root {
+  /* Base verde */
+  --color-primario: #2ECC71;   /* Botones principales, acentos */
+  --color-secundario: #27AE60; /* Hover, enlaces, detalles */
+
+  /* Fondos */
+  --color-header-bg: #1B5E20;  /* Verde profundo para header */
+  --color-footer-bg: #3d9141;  /* Verde oscuro para footer */
+  --color-fondo: #F1F8E9;      /* Verde muy claro para contenido principal */
+
+  /* Texto */
+  --color-texto: #212121;      /* Gris oscuro para legibilidad */
+  --color-texto-invertido: #FFFFFF; /* Texto sobre header/footer oscuros */
+
+  /* Estados */
+  --color-exito: #00C853;      /* Verde intenso para confirmaciones */
+  --color-error: #C62828;      /* Rojo controlado para errores */
+  --color-alerta: #F9A825;     /* Amarillo para advertencias */
+}
+

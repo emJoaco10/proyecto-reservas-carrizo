@@ -10,7 +10,7 @@
 .admin-container h1 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
-  color: #111827;
+  color: var(--color-texto);
 }
 
 .admin-menu ul {
@@ -24,12 +24,18 @@
 
 .admin-menu a {
   font-weight: 600;
-  color: #2563eb;
+  color: var(--color-secundario); /* verde medio */
   text-decoration: none;
   font-size: 1rem;
+  padding: 0;                      /* sin padding tipo botón */
+  background: none;               /* sin fondo */
+  border: none;                   /* sin borde */
+  border-radius: 0;
+  transition: color 0.2s ease;
 }
 
 .admin-menu a:hover {
+  color: var(--color-primario);   /* verde brillante al pasar el mouse */
   text-decoration: underline;
 }
 
@@ -46,11 +52,11 @@
 
 .admin-bloqueado h2 {
   font-size: 1.2rem;
-  color: #b91c1c;
+  color: var(--color-error); /* rojo controlado */
   margin-bottom: 0.5rem;
 }
 
 .admin-bloqueado p {
   font-size: 1rem;
-  color: #374151;
+  color: var(--color-texto);
 }

@@ -1,7 +1,6 @@
+@import './styles/variables.css';
+
 :root {
-  --color-fondo: #f0f4f8;
-  --color-primario: #004080;
-  --color-texto: #333;
   --header-height: 70px;
   --header-height-mobile: 120px;
 }

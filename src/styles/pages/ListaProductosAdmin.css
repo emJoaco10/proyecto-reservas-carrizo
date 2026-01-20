@@ -1,3 +1,7 @@
+h1{
+  color: rgb(0, 42, 0);
+}
+
 .lista-admin-container {
   padding: 2rem;
   background: #fff;
@@ -22,8 +26,8 @@
 }
 
 .estado-vacio {
-  background: #eef2ff;
-  color: #3730a3;
+  background: var(--color-fondo);
+  color: var(--color-texto);
 }
 
 .tabla-productos {
