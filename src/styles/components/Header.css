@@ -51,7 +51,7 @@
 
 /* Control del logo para que no crezca descontrolado */
 .logo {
-  height: 44px;                       /* tamaño base */
+  height: 65px;                       /* tamaño base */
   width: auto;
   max-width: 160px;                   /* evita logos muy anchos */
   object-fit: contain;
