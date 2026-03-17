@@ -1,21 +1,23 @@
 import { useState, useEffect } from 'react';
-import { leerLocal } from '../helpers/storageUtils';
-import { obtenerProductosAleatorios } from '../helpers/productoUtils';
+import axios from 'axios';
 
-const useProductosAleatorios = ({ clave = 'productos', onError } = {}) => {
+const useProductosAleatorios = ({ onError } = {}) => {
   const [productosAleatorios, setProductosAleatorios] = useState([]);
 
   useEffect(() => {
-    try {
-      const productosGuardados = leerLocal(clave, [], onError);
-      const seleccionados = obtenerProductosAleatorios(productosGuardados, 10);
-      setProductosAleatorios(seleccionados);
-    } catch (err) {
-      console.error('[useProductosAleatorios] Error:', err);
-      if (typeof onError === 'function') onError(err);
-      setProductosAleatorios([]);
-    }
-  }, [clave, onError]);
+    const fetchAleatorios = async () => {
+      try {
+        const response = await axios.get("/api/productos/aleatorios");
+        setProductosAleatorios(response.data); // Esto ya es List<ProductoDTO>
+      } catch (err) {
+        console.error("[useProductosAleatorios] Error:", err);
+        if (typeof onError === "function") onError(err);
+        setProductosAleatorios([]);
+      }
+    };
+
+    fetchAleatorios();
+  }, [onError]);
 
   return productosAleatorios;
 };
