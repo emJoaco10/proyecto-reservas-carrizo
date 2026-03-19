@@ -1,36 +1,30 @@
-// src/components/GaleriaProductos.jsx
 import React, { useMemo } from 'react';
 import useImageError from '../hooks/useImageError';
+import { obtenerImagenesPorTipo } from '../helpers/imageUtils';
 import '../styles/components/GaleriaProductos.css';
 
 const GaleriaProductos = ({ imagenes = [], tipo = '', onVerMas = () => {} }) => {
   const { handleImgError } = useImageError();
 
-  // Normalizar y limitar a 5 imágenes; la generación de fallback la hace DetalleProducto
   const imgs = useMemo(() => {
     const clean = Array.isArray(imagenes) ? imagenes.filter(Boolean) : [];
-    return clean.slice(0, 5);
-  }, [imagenes]);
+    return clean.length > 0 ? clean.slice(0, 5) : obtenerImagenesPorTipo(tipo, 5);
+  }, [imagenes, tipo]);
 
-  const imagenPrincipal = imgs[0];
-  const imagenesSecundarias = imgs.slice(1, 5);
+  const [imagenPrincipal, ...imagenesSecundarias] = Array.isArray(imgs) ? imgs : [];
 
   return (
     <section className="galeria-producto" aria-label="Galería de imágenes del producto">
       <div className="imagen-principal">
-        {imagenPrincipal ? (
-          <img
-            src={imagenPrincipal}
-            alt={`Imagen principal ${tipo ? `de ${tipo}` : 'del producto'}`}
-            loading="lazy"
-            onError={handleImgError}
-            width="1200"
-            height="800"
-            style={{ objectFit: 'cover', display: 'block' }}
-          />
-        ) : (
-          <div className="placeholder-principal" aria-hidden="true" />
-        )}
+        <img
+          src={imagenPrincipal}
+          alt={`Imagen principal ${tipo ? `de ${tipo}` : 'del producto'}`}
+          loading="lazy"
+          onError={handleImgError}
+          width="1200"
+          height="800"
+          style={{ objectFit: 'cover', display: 'block' }}
+        />
       </div>
 
       <div className="imagenes-secundarias">
@@ -47,7 +41,6 @@ const GaleriaProductos = ({ imagenes = [], tipo = '', onVerMas = () => {} }) => 
             />
           </div>
         ))}
-
         <button className="ver-mas" onClick={onVerMas} aria-label="Ver más imágenes">
           Ver más
         </button>

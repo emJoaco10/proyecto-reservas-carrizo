@@ -1,18 +1,19 @@
-import { useState, useEffect }  from "react";
-import { Link } from "react-router-dom";
-import '../styles/pages/Administracion.css';
+import React, { useState, useEffect } from "react";
+import "../styles/pages/Administracion.css";
+import AgregarProductos from "../pages/AgregarProducto";
+import ListaProductosAdmin from "../pages/ListaProductosAdmin";
+import useProductosLocalStorage from "../hooks/useProductosLocalStorage";
 
 const Administracion = () => {
-    const [esMobile, setEsMobile] = useState(false);
+  const [esMobile, setEsMobile] = useState(false);
 
-    useEffect(() => {
-    const ancho = window.innerWidth;
-    if (ancho < 768) {
-      setEsMobile(true);
-    }
+  const { productos, guardarProducto, eliminarProducto } = useProductosLocalStorage();
+
+  useEffect(() => {
+    setEsMobile(window.innerWidth < 768);
   }, []);
 
-if (esMobile) {
+  if (esMobile) {
     return (
       <div className="admin-bloqueado">
         <h2>Panel no disponible en dispositivos móviles</h2>
@@ -24,20 +25,22 @@ if (esMobile) {
   return (
     <div className="admin-container">
       <h1>Panel de administración</h1>
-      <nav className="admin-menu">
-        <ul>
-          <li>
-            <Link to="/agregar-producto">Registrar producto</Link>
-          </li>
-          {/* futuras funciones */}
-          <li>
-            <Link to="/lista-productos">Lista de productos</Link>
-          </li>
-          <li>
-            <Link to="/reportes">Ver reportes</Link>
-          </li>
-        </ul>
-      </nav>
+
+      <section className="admin-section">
+        <h2>Registrar producto</h2>
+        <AgregarProductos onGuardar={guardarProducto} />
+      </section>
+
+      <section className="admin-section">
+        <h2>Lista de productos</h2>
+        <ListaProductosAdmin productos={productos} onEliminar={eliminarProducto} />
+      </section>
+
+      {/* Futuras funciones */}
+      <section className="admin-section">
+        <h2>Reportes</h2>
+        <p>Próximamente podrás ver estadísticas y reportes de tu negocio.</p>
+      </section>
     </div>
   );
 };
