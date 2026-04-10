@@ -1,11 +1,11 @@
 // src/pages/AgregarProducto.jsx
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import useProductosLocalStorage from '../hooks/useProductosLocalStorage';
 import { validarProducto, validarImagenes } from '../helpers/validaciones';
 import useImagePreviews from '../hooks/useImagePreviews';
 import '../styles/pages/AgregarProducto.css';
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024; 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILES = 10;
 
@@ -20,10 +20,16 @@ const AgregarProducto = () => {
   const [exito, setExito] = useState('');
   const [subiendo, setSubiendo] = useState(false);
 
-  const { previews, clearPreviews } = useImagePreviews(imagenesFiles, {
+  const options = useMemo(() => ({
     maxSize: MAX_FILE_SIZE,
     allowedTypes: ALLOWED_TYPES,
-  }, (err) => setError(err.message || 'Error procesando imágenes'));
+  }), []);
+
+  const handleError = useCallback((err) => {
+    setError(err.message || 'Error procesando imágenes');
+  }, []);
+
+  const { previews, clearPreviews } = useImagePreviews(imagenesFiles, options, handleError);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +45,7 @@ const AgregarProducto = () => {
     if (imgErr) { setError(imgErr); return; }
 
     setSubiendo(true);
-    const result = await guardarProducto({ nombre, descripcion, tipo, imagenesFiles, imagenesUrls: [] });
+    const result = await guardarProducto({ nombre, descripcion, tipo, imagenes: [] });
     setSubiendo(false);
 
     if (!result.ok) {

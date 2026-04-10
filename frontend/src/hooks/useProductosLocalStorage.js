@@ -9,41 +9,41 @@ const useProductosLocalStorage = ({ clave = "productos", onError } = {}) => {
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const response = await axios.get("/api/producto/admin"); 
-        setProductos(response.data); // List<ProductoDTO>
-        escribirLocal(clave, response.data); // cache en localStorage
+        const response = await axios.get("http://localhost:8080/api/producto/admin"); 
+        setProductos(response.data); 
+        escribirLocal(clave, response.data); 
       } catch (err) {
         console.error("[useProductosLocalStorage] Error:", err);
         if (typeof onError === "function") onError(err);
-        // fallback: leer desde localStorage
+        
         const productosGuardados = leerLocal(clave, [], onError);
         setProductos(productosGuardados);
       }
     };
 
     fetchProductos();
-  }, [clave, onError]);
+  }, [clave]);
 
   // Guardar producto en backend y actualizar cache
   const guardarProducto = async (productoDTO) => {
     try {
-      const response = await axios.post("/api/producto", productoDTO);
+      const response = await axios.post("http://localhost:8080/api/producto", productoDTO);
       const nuevoProducto = response.data; // ProductoDTO
       const nuevosProductos = [...productos, nuevoProducto];
       setProductos(nuevosProductos);
       escribirLocal(clave, nuevosProductos);
-      return nuevoProducto;
+      return { ok: true, data: nuevoProducto };
     } catch (err) {
       console.error("[useProductosLocalStorage] Error al guardar:", err);
       if (typeof onError === "function") onError(err);
-      throw err;
+      return { ok: false, error: err.message };
     }
   };
 
   // Eliminar producto en backend y actualizar cache
   const eliminarProducto = async (id) => {
     try {
-      await axios.delete(`/api/producto/${id}`);
+      await axios.delete(`http://localhost:8080/api/producto/${id}`);
       const nuevosProductos = productos.filter(p => p.id !== id);
       setProductos(nuevosProductos);
       escribirLocal(clave, nuevosProductos);
@@ -54,7 +54,20 @@ const useProductosLocalStorage = ({ clave = "productos", onError } = {}) => {
     }
   };
 
-  return { productos, guardarProducto, eliminarProducto };
+  const borrarTodos = async () => {
+  try {
+    await axios.delete("http://localhost:8080/api/producto"); // nuevo endpoint en el controlador
+    setProductos([]);
+    escribirLocal(clave, []);
+    return { ok: true };
+  } catch (err) {
+    console.error("[useProductosLocalStorage] Error al borrar todos:", err);
+    if (typeof onError === "function") onError(err);
+    return { ok: false, error: err.message };
+  }
+};
+
+  return { productos, guardarProducto, eliminarProducto, borrarTodos };
 };
 
 export default useProductosLocalStorage;

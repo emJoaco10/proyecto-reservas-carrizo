@@ -7,7 +7,8 @@ const useProductosAleatorios = ({ onError } = {}) => {
   useEffect(() => {
     const fetchAleatorios = async () => {
       try {
-        const response = await axios.get("/api/productos/aleatorios");
+        const response = await axios.get("http://localhost:8080/api/producto/aleatorios");
+        console.log("[useProductosAleatorios] Datos recibidos:", response.data);
         setProductosAleatorios(response.data); // Esto ya es List<ProductoDTO>
       } catch (err) {
         console.error("[useProductosAleatorios] Error:", err);

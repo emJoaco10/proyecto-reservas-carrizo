@@ -14,7 +14,7 @@ const Main = () => {
       <section className="bloque">
         <h2>Panel de administración</h2>
         <p>Aqui podes encontrar las herramientas para gestionar tu negocio.</p>
-        <Link to="/administración">
+        <Link to="/admin">
           <button className="btn btn-filled">Acceder al panel</button>
         </Link>
       </section>

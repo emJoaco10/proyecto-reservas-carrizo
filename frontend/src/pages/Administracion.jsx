@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import "../styles/pages/Administracion.css";
-import AgregarProductos from "../pages/AgregarProducto";
-import ListaProductosAdmin from "../pages/ListaProductosAdmin";
-import useProductosLocalStorage from "../hooks/useProductosLocalStorage";
 
 const Administracion = () => {
   const [esMobile, setEsMobile] = useState(false);
-
-  const { productos, guardarProducto, eliminarProducto } = useProductosLocalStorage();
 
   useEffect(() => {
     setEsMobile(window.innerWidth < 768);
@@ -26,21 +22,19 @@ const Administracion = () => {
     <div className="admin-container">
       <h1>Panel de administración</h1>
 
-      <section className="admin-section">
-        <h2>Registrar producto</h2>
-        <AgregarProductos onGuardar={guardarProducto} />
-      </section>
-
-      <section className="admin-section">
-        <h2>Lista de productos</h2>
-        <ListaProductosAdmin productos={productos} onEliminar={eliminarProducto} />
-      </section>
-
-      {/* Futuras funciones */}
-      <section className="admin-section">
-        <h2>Reportes</h2>
-        <p>Próximamente podrás ver estadísticas y reportes de tu negocio.</p>
-      </section>
+      <nav className="admin-nav">
+        <ul>
+          <li>
+            <Link to="/admin/agregar">Registrar producto</Link>
+          </li>
+          <li>
+            <Link to="/admin/lista">Lista de productos</Link>
+          </li>
+          <li>
+            <Link to="/admin/reportes">Reportes</Link>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 };

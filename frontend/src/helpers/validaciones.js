@@ -18,3 +18,26 @@ export const validarProducto = ({ nombre = '', descripcion = '', tipo = '' } = {
   if (!tipo.trim()) return 'Seleccioná un tipo de propiedad';
   return validarNombre(nombre) || validarDescripcion(descripcion);
 };
+
+export const validarImagenes = (
+  files = [],
+  { maxSize = 5 * 1024 * 1024, allowedTypes = ['image/jpeg', 'image/png', 'image/webp'], maxFiles = 10 } = {}
+) => {
+  if (!Array.isArray(files) || files.length === 0) return '';
+
+  if (files.length > maxFiles) {
+    return `Podés subir hasta ${maxFiles} imágenes por producto.`;
+  }
+
+  const invalidType = files.find(f => !allowedTypes.includes(f.type));
+  if (invalidType) {
+    return `Formato no permitido: ${invalidType.name}`;
+  }
+
+  const tooLarge = files.find(f => f.size > maxSize);
+  if (tooLarge) {
+    return `La imagen "${tooLarge.name}" supera el límite de ${Math.round(maxSize / (1024 * 1024))}MB.`;
+  }
+
+  return '';
+};

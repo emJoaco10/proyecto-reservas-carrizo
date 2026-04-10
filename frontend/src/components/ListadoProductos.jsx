@@ -8,7 +8,7 @@ import '../styles/components/ListadoProductos.css';
 const ListadoProductos = () => {
    const productosAleatorios = useProductosAleatorios() || [];
   const [paginaActual, setPaginaActual] = useState(1);
-  const pageSize = 4;
+  const pageSize = 4; 
 
   const { productosVisibles, totalPaginas } = useMemo(() => {
     const total = Array.isArray(productosAleatorios) ? productosAleatorios.length : 0;

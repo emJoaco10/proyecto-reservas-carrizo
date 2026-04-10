@@ -1,5 +1,3 @@
-// src/helpers/productoUtils.js
-
 export const crearProducto = ({ nombre = '', descripcion = '', tipo = '', imagenes = [] } = {}) => ({
   id: Date.now(),
   nombre: nombre.trim(),

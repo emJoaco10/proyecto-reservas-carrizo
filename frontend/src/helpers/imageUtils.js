@@ -1,5 +1,4 @@
-// src/helpers/imageUtils.js
-
+// Convierte archivos a objectURLs para previsualización
 export const filesToObjectURLs = (fileList, { maxSize, allowedTypes } = {}, onError) => {
   try {
     return Array.from(fileList || []).reduce((urls, file) => {
@@ -26,19 +25,27 @@ export const filesToObjectURLs = (fileList, { maxSize, allowedTypes } = {}, onEr
   }
 };
 
+// Revoca objectURLs para liberar memoria
 export const revokeObjectURLs = (urls = []) =>
   urls.forEach(u => u.startsWith('blob:') && URL.revokeObjectURL(u));
 
+// Verifica si una URL es un objectURL
 export const isObjectURL = (url) => url?.startsWith('blob:');
 
-export const obtenerImagenesPorTipo = (tipo = '', count = 5, width = 1200, height = 800, seedBase = Date.now()) => {
+// Obtiene imágenes locales según el tipo de producto
+export const obtenerImagenesPorTipo = (tipo = '', count = 1) => {
   const limpio = tipo.trim().toLowerCase();
-  const makePicsum = (i) => `https://picsum.photos/seed/${seedBase}-${i}/${width}/${height}`;
+
+  // Mapa de imágenes locales en src/assets/img/
   const mapByType = {
-    casa: [],
-    departamento: [],
-    hotel: []
+    casa: ['/img/casa-proyecto.jpg'],
+    departamento: ['/img/depto-proyecto.jpg'],
+    hotel: ['/img/hotel-proyecto.jpg']
   };
-  const base = mapByType[limpio] || Array.from({ length: count }, (_, i) => makePicsum(i));
+
+  // Selecciona el set según el tipo, o usa genérico
+  const base = mapByType[limpio] || mapByType.generico;
+
+  // Devuelve un array con la cantidad solicitada
   return Array.from({ length: count }, (_, i) => base[i % base.length]);
 };

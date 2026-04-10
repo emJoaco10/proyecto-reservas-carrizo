@@ -1,8 +1,6 @@
 // src/components/ListaProductosAdmin.jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
-import '../styles/components/ListaProductosAdmin.css';
-import { obtenerImagenesPorTipo } from '../helpers/imageUtils';
+import '../styles/pages/ListaProductosAdmin.css';
+
 import useProductosLocalStorage from '../hooks/useProductosLocalStorage';
 
 const ListaProductosAdmin = () => {
@@ -14,47 +12,44 @@ const ListaProductosAdmin = () => {
 
   return (
     <div className="lista-admin-container">
-      <h1>Lista de productos</h1>
+  <h1>Lista de productos</h1>
 
-      <div className="lista-productos-admin">
-        {productos.map((p) => {
-          const imagenes = Array.isArray(p.imagenes) && p.imagenes.length > 0
-            ? p.imagenes
-            : obtenerImagenesPorTipo(p.tipo, 1);
-
-          return (
-            <div key={p.id} className="producto-admin-card">
-              <img
-                src={imagenes[0]}
-                alt={`Imagen de ${p.nombre}`}
-                className="miniatura"
-              />
-              <div className="producto-info">
-                <h3>{p.nombre}</h3>
-                <p>{p.descripcion}</p>
-                <span className="tipo">{p.tipo}</span>
-              </div>
-
-              <div className="acciones">
-                <Link to={`/producto/${p.id}`} className="btn btn-link">
-                  Ver detalle
-                </Link>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => {
-                    if (confirm(`¿Seguro que querés eliminar "${p.nombre}"?`)) {
-                      eliminarProducto(p.id);
-                    }
-                  }}
-                >
-                  Eliminar
-                </button>
-              </div>
+  <table className="tabla-productos">
+    <thead>
+      <tr>
+        <th>Imagen</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Tipo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {productos.map((producto) => (
+        <tr key={producto.id}>
+          <td>
+            {producto.imagenes && producto.imagenes.length > 0 ? (
+              <img src={producto.imagenes[0]} alt={producto.nombre} width="80" />
+            ) : (
+              <span>Sin imagen</span>
+            )}
+          </td>
+          <td>{producto.nombre}</td>
+          <td>{producto.descripcion}</td>
+          <td>{producto.tipo}</td>
+          <td>
+            <div className="acciones">
+              <button className="btn-accion btn-danger" onClick={() => eliminarProducto(producto.id)}>
+                Eliminar
+              </button>
             </div>
-          );
-        })}
-      </div>
-    </div>
+          </td>
+        </tr>
+
+      ))}
+    </tbody>
+  </table>
+</div>
   );
 };
 
