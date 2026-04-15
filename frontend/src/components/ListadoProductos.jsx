@@ -4,12 +4,23 @@ import useProductosAleatorios from '../hooks/useProductosAleatorios';
 import { obtenerImagenesPorTipo } from '../helpers/imageUtils';
 import '../styles/components/ListadoProductos.css';
 
-
+// Componente que muestra un listado de productos con paginación.
+// - Usa un hook para traer productos aleatorios.
+// - Renderiza tarjetas de producto con imagen, nombre, descripción y tipo.
+// - Incluye un paginador para navegar entre páginas.
 const ListadoProductos = () => {
-   const productosAleatorios = useProductosAleatorios() || [];
+
+  // Hook: obtiene productos aleatorios desde backend.
+  const productosAleatorios = useProductosAleatorios() || [];
+
+  // Estado: página actual del paginador.
   const [paginaActual, setPaginaActual] = useState(1);
+
+  // Tamaño de página: cuántos productos mostrar por página.
   const pageSize = 4; 
 
+  // useMemo: calcula productos visibles y total de páginas
+  // solo cuando cambian productosAleatorios o paginaActual.
   const { productosVisibles, totalPaginas } = useMemo(() => {
     const total = Array.isArray(productosAleatorios) ? productosAleatorios.length : 0;
     const paginas = Math.max(1, Math.ceil(total / pageSize));
@@ -22,6 +33,7 @@ const ListadoProductos = () => {
     };
   }, [productosAleatorios, paginaActual]);
 
+  // Si no hay productos, muestra mensaje vacío.
   if (productosAleatorios.length === 0) {
     return <p className="mensaje-vacio">No hay productos registrados aún.</p>;
   }

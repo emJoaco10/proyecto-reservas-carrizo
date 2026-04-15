@@ -5,11 +5,11 @@
   gap: 1.5rem;
 }
 
-/* Paginador */
+/* Paginador: bloque debajo del grid */
 .paginador {
   display: flex;
   flex-direction: column;
-  gap: 1rem; /* 👉 más espacio para respirar */
+  gap: 1rem; /* espacio entre botones */
   align-items: flex-start;
 }
 
@@ -17,16 +17,18 @@
 .page-actions {
   display: flex;
   gap: 0.5rem;
-  flex-wrap: wrap; /* 👉 permite que se acomoden en pantallas chicas */
+  flex-wrap: wrap; /* Permite que se acomoden en pantallas chicas */
 }
 
+/* Grid de productos: 4 columnas en desktop */
 .listado-productos {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 👉 4 cartas por fila */
+  grid-template-columns: repeat(4, 1fr); /* 4 cartas por fila */
   gap: 1.5rem;
   margin-top: 1rem;
 }
 
+/* Tarjeta de producto */
 .producto-card {
   background: #fff;
   border: 1px solid #d1d5db;
@@ -37,27 +39,29 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  min-height: 280px; /* 👉 altura mínima para consistencia visual */
+  min-height: 280px; /* Altura mínima para consistencia visual */
 }
 
+/* Hover: efecto de elevación */
 .producto-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0,0,0,0.12);
 }
+/* Título del producto */
 .producto-card h3 {
   font-size: 1.1rem;
   font-weight: 700;
   color: #111827;
   margin: 0.25rem 0;
 }
-
+/* Descripción */
 .producto-card p {
   font-size: 0.9rem;
   color: #374151;
   line-height: 1.4;
   margin-bottom: 0.25rem;
 }
-
+/* Tipo de producto (badge) */
 .producto-card .tipo {
   font-size: 0.8rem;
   font-weight: 600;
@@ -67,14 +71,15 @@
   border-radius: 6px;
   align-self: flex-start;
 }
-
+/* Imagen miniatura */
 .miniatura {
   width: 100%;
   height: 180px;
   object-fit: cover;
 }
+/* Botones de navegación */
 .page-nav {
-  background: #f9fafb; /* 👉 estilo más tenue para diferenciar de botones de página */
+  background: #f9fafb; /* Estilo más tenue para diferenciar de botones de página */
   color: #374151;
   border: 1px solid var(--border);
   padding: 0.45rem 0.75rem;
@@ -93,13 +98,14 @@
   cursor: not-allowed;
 }
 
-/* Lista de páginas */
+/* Lista de páginas numeradas */
 .page-list {
   display: flex;
   gap: 6px;
   flex-wrap: wrap; /* 👉 en móviles se acomodan en varias filas */
 }
 
+/* Botón de página */
 .page-btn {
   background: #fff;
   color: var(--text);

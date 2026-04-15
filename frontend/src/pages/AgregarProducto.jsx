@@ -5,32 +5,42 @@ import { validarProducto, validarImagenes } from '../helpers/validaciones';
 import useImagePreviews from '../hooks/useImagePreviews';
 import '../styles/pages/AgregarProducto.css';
 
+// Constantes de validación
 const MAX_FILE_SIZE = 5 * 1024 * 1024; 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILES = 10;
 
 const AgregarProducto = () => {
+
+  // Hook para guardar y borrar productos en localStorage
   const { guardarProducto, borrarTodos } = useProductosLocalStorage({ onError: console.error });
 
+   // Estados para los campos del formulario
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [tipo, setTipo] = useState('');
   const [imagenesFiles, setImagenesFiles] = useState([]);
+
+  // Estados para feedback y control
   const [error, setError] = useState('');
   const [exito, setExito] = useState('');
   const [subiendo, setSubiendo] = useState(false);
 
+  // Opciones de validación para imágenes (memoizadas)
   const options = useMemo(() => ({
     maxSize: MAX_FILE_SIZE,
     allowedTypes: ALLOWED_TYPES,
   }), []);
 
+  // Manejo de errores en imágenes
   const handleError = useCallback((err) => {
     setError(err.message || 'Error procesando imágenes');
   }, []);
 
+  // Hook para previews de imágenes
   const { previews, clearPreviews } = useImagePreviews(imagenesFiles, options, handleError);
 
+  // Manejo del submit del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -44,16 +54,19 @@ const AgregarProducto = () => {
     const imgErr = validarImagenes(imagenesFiles, { maxSize: MAX_FILE_SIZE, allowedTypes: ALLOWED_TYPES, maxFiles: MAX_FILES });
     if (imgErr) { setError(imgErr); return; }
 
+    // Guardado del producto
     setSubiendo(true);
     const result = await guardarProducto({ nombre, descripcion, tipo, imagenes: [] });
     setSubiendo(false);
 
+    // Manejo de resultado
     if (!result.ok) {
       clearPreviews();
       setError(result.error || 'No se pudo guardar el producto');
       return;
     }
 
+    // Reset de formulario y feedback de éxito
     clearPreviews();
     setImagenesFiles([]);
     setNombre('');
@@ -63,12 +76,14 @@ const AgregarProducto = () => {
     setTimeout(() => setExito(''), 4000);
   };
 
+  // Manejo de carga de imágenes
   const handleImagenes = (e) => {
     const files = Array.from(e.target.files || []);
     setError('');
     setImagenesFiles(files);
   };
 
+  // Borrar todos los productos
   const handleBorrarTodo = async () => {
     const res = await borrarTodos();
     if (res && res.ok) {

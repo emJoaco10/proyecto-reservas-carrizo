@@ -2,13 +2,20 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/pages/Administracion.css";
 
+// Page del panel de administración.
+// - Detecta si el usuario está en mobile y bloquea el acceso.
+// - Muestra navegación hacia distintas secciones del panel.
 const Administracion = () => {
+
+  // Estado: indica si el dispositivo es mobile.
   const [esMobile, setEsMobile] = useState(false);
 
+  // Efecto: al montar el componente, detecta el ancho de la ventana.
   useEffect(() => {
     setEsMobile(window.innerWidth < 768);
   }, []);
 
+  // Renderizado condicional: si es mobile, bloquea el acceso.
   if (esMobile) {
     return (
       <div className="admin-bloqueado">
@@ -18,6 +25,7 @@ const Administracion = () => {
     );
   }
 
+  // Renderizado normal: panel de administración con navegación.
   return (
     <div className="admin-container">
       <h1>Panel de administración</h1>
