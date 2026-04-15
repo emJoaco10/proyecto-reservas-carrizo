@@ -2,6 +2,13 @@
  * Utility functions to safely interact with localStorage.
  * - Encapsula parse/stringify y manejo de errores para evitar que un JSON corrupto rompa la app.
  * - Centraliza la clave por defecto y ofrece funciones pequeñas y reutilizables.
+ *
+ * USO PRINCIPAL: Toda interacción con localStorage debe pasar por estas funciones.
+ * Nunca usar localStorage.getItem/setItem directamente en componentes.
+ *
+ * EJEMPLO:
+ *   const productos = leerLocal('productos', []);
+ *   escribirLocal('productos', [...productos, nuevoProducto]);
  */
 
 /**
@@ -11,6 +18,10 @@
  * @param {string} clave - Nombre de la clave en localStorage
  * @param {any} defecto - Valor a retornar si no hay dato o ocurre error (por defecto [])
  * @returns {any} - El valor parseado desde localStorage o el valor por defecto
+ *
+ * EJEMPLO:
+ *   const productos = leerLocal('productos', []); // Retorna array vacío si no existe
+ *   const config = leerLocal('config', { theme: 'light' }); // Retorna objeto por defecto
  */
 
 export const leerLocal = (clave, defecto = []) => {
@@ -82,4 +93,3 @@ export const updateLocal = (clave, transformFn, defecto = []) => {
     return false;
   }
 };
-

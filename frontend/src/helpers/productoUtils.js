@@ -3,6 +3,18 @@
  * - Centraliza la forma (contrato) del objeto producto.
  * - Normaliza strings y encapsula búsquedas/comparaciones comunes.
  * - No realiza efectos secundarios (puros) para facilitar tests.
+ *
+ * MODELO DE PRODUCTO:
+ * {
+ *   id: number,           // Date.now() en creación
+ *   nombre: string,       // Requerido, sin duplicados
+ *   descripcion: string,  // Requerido
+ *   tipo: string,         // 'casa' | 'departamento' | 'hotel'
+ *   imagenes: string[]    // Array de base64 o URLs
+ * }
+ *
+ * USO PRINCIPAL: Todas las operaciones con productos pasan por estas funciones.
+ * Nunca manipular objetos producto directamente en componentes.
  */
 
 /**
@@ -107,4 +119,3 @@ export const obtenerProductosAleatorios = (productos = [], cantidad = 10) => {
 
   return copia.slice(0, cantidad);
 };
-

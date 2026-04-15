@@ -1,20 +1,58 @@
+/**
+ * Variables CSS globales - Sistema de colores y diseño.
+ *
+ * PALETA DE COLORES - IDENTIDAD VISUAL:
+ * Verde como color principal representando naturaleza, tranquilidad y viajes.
+ * Gradientes desde verde oscuro (confianza) hasta verde claro (frescura).
+ *
+ * USO CONSISTENTE:
+ * - Todas las variables se usan en componentes con var(--nombre-variable)
+ * - Mantiene consistencia visual en toda la aplicación
+ * - Facilita cambios globales de tema
+ *
+ * NOMENCLATURA:
+ * - --color-[contexto]: Colores principales
+ * - --color-[estado]: Estados de interacción
+ * - Nombres descriptivos en español para claridad
+ */
+
 :root {
-  /* Base verde */
-  --color-primario: #2ECC71;   /* Botones principales, acentos */
-  --color-secundario: #27AE60; /* Hover, enlaces, detalles */
+  /* ===== BASE VERDE - IDENTIDAD DE MARCA ===== */
+  --color-primario: #2ECC71;   /* Verde brillante - Botones principales, CTAs, acentos */
+  --color-secundario: #27AE60; /* Verde medio - Hover, enlaces, detalles secundarios */
 
-  /* Fondos */
-  --color-header-bg: #1B5E20;  /* Verde profundo para header */
-  --color-footer-bg: #3d9141;  /* Verde oscuro para footer */
-  --color-fondo: #F1F8E9;      /* Verde muy claro para contenido principal */
+  /* ===== FONDOS - JERARQUÍA VISUAL ===== */
+  --color-header-bg: #1B5E20;  /* Verde muy oscuro - Header fijo, máxima prominencia */
+  --color-footer-bg: #3d9141;  /* Verde oscuro - Footer, información legal */
+  --color-fondo: #F1F8E9;      /* Verde muy claro - Contenido principal, sensación de frescura */
 
-  /* Texto */
-  --color-texto: #212121;      /* Gris oscuro para legibilidad */
-  --color-texto-invertido: #FFFFFF; /* Texto sobre header/footer oscuros */
+  /* ===== TEXTO - LEGIBILIDAD ===== */
+  --color-texto: #212121;      /* Gris casi negro - Texto principal, máxima legibilidad */
+  --color-texto-invertido: #FFFFFF; /* Blanco puro - Texto sobre fondos oscuros */
 
-  /* Estados */
-  --color-exito: #00C853;      /* Verde intenso para confirmaciones */
-  --color-error: #C62828;      /* Rojo controlado para errores */
-  --color-alerta: #F9A825;     /* Amarillo para advertencias */
+  /* ===== ESTADOS - INTERACCIÓN ===== */
+  --color-exito: #00C853;      /* Verde intenso - Confirmaciones, operaciones exitosas */
+  --color-error: #C62828;      /* Rojo controlado - Errores, validaciones fallidas */
+  --color-alerta: #F9A825;     /* Amarillo - Advertencias, atención del usuario */
 }
 
+/*
+EJEMPLOS DE USO:
+
+Botones principales:
+  background: var(--color-primario);
+  color: var(--color-texto-invertido);
+
+Header:
+  background: var(--color-header-bg);
+  color: var(--color-texto-invertido);
+
+Contenido principal:
+  background: var(--color-fondo);
+  color: var(--color-texto);
+
+Estados:
+  .success { color: var(--color-exito); }
+  .error { color: var(--color-error); }
+  .warning { color: var(--color-alerta); }
+*/
