@@ -1,18 +1,22 @@
-import { useState, useEffect }  from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import '../styles/pages/Administracion.css';
+import "../styles/pages/Administracion.css";
 
+// Page del panel de administración.
+// - Detecta si el usuario está en mobile y bloquea el acceso.
+// - Muestra navegación hacia distintas secciones del panel.
 const Administracion = () => {
-    const [esMobile, setEsMobile] = useState(false);
 
-    useEffect(() => {
-    const ancho = window.innerWidth;
-    if (ancho < 768) {
-      setEsMobile(true);
-    }
+  // Estado: indica si el dispositivo es mobile.
+  const [esMobile, setEsMobile] = useState(false);
+
+  // Efecto: al montar el componente, detecta el ancho de la ventana.
+  useEffect(() => {
+    setEsMobile(window.innerWidth < 768);
   }, []);
 
-if (esMobile) {
+  // Renderizado condicional: si es mobile, bloquea el acceso.
+  if (esMobile) {
     return (
       <div className="admin-bloqueado">
         <h2>Panel no disponible en dispositivos móviles</h2>
@@ -21,20 +25,21 @@ if (esMobile) {
     );
   }
 
+  // Renderizado normal: panel de administración con navegación.
   return (
     <div className="admin-container">
       <h1>Panel de administración</h1>
-      <nav className="admin-menu">
+
+      <nav className="admin-nav">
         <ul>
           <li>
-            <Link to="/agregar-producto">Registrar producto</Link>
-          </li>
-          {/* futuras funciones */}
-          <li>
-            <Link to="/lista-productos">Lista de productos</Link>
+            <Link to="/admin/agregar">Registrar producto</Link>
           </li>
           <li>
-            <Link to="/reportes">Ver reportes</Link>
+            <Link to="/admin/lista">Lista de productos</Link>
+          </li>
+          <li>
+            <Link to="/admin/reportes">Reportes</Link>
           </li>
         </ul>
       </nav>

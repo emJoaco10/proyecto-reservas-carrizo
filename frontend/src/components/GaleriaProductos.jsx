@@ -1,36 +1,43 @@
-// src/components/GaleriaProductos.jsx
 import React, { useMemo } from 'react';
 import useImageError from '../hooks/useImageError';
+import { obtenerImagenesPorTipo } from '../helpers/imageUtils';
 import '../styles/components/GaleriaProductos.css';
 
+// Componente de galería de imágenes para un producto.
+// - Muestra una imagen principal y hasta 4 secundarias.
+// - Usa un hook para manejar errores de carga de imágenes.
+// - Si no hay imágenes, obtiene imágenes locales según el tipo.
 const GaleriaProductos = ({ imagenes = [], tipo = '', onVerMas = () => {} }) => {
+
+  // Hook: devuelve función para manejar errores en imágenes.
   const { handleImgError } = useImageError();
 
-  // Normalizar y limitar a 5 imágenes; la generación de fallback la hace DetalleProducto
+  // useMemo: calcula las imágenes a mostrar solo cuando cambian 'imagenes' o 'tipo'.
   const imgs = useMemo(() => {
-    const clean = Array.isArray(imagenes) ? imagenes.filter(Boolean) : [];
-    return clean.slice(0, 5);
-  }, [imagenes]);
 
-  const imagenPrincipal = imgs[0];
-  const imagenesSecundarias = imgs.slice(1, 5);
+    // Limpia el array: filtra valores nulos o falsy.
+    const clean = Array.isArray(imagenes) ? imagenes.filter(Boolean) : [];
+
+    // Si hay imágenes válidas, toma las primeras 5.
+    // Si no, obtiene imágenes locales según el tipo.
+    return clean.length > 0 ? clean.slice(0, 5) : obtenerImagenesPorTipo(tipo, 5);
+  }, [imagenes, tipo]);
+
+  // Desestructura: la primera imagen es principal, el resto secundarias.
+  const [imagenPrincipal, ...imagenesSecundarias] = Array.isArray(imgs) ? imgs : [];
 
   return (
     <section className="galeria-producto" aria-label="Galería de imágenes del producto">
       <div className="imagen-principal">
-        {imagenPrincipal ? (
-          <img
-            src={imagenPrincipal}
-            alt={`Imagen principal ${tipo ? `de ${tipo}` : 'del producto'}`}
-            loading="lazy"
-            onError={handleImgError}
-            width="1200"
-            height="800"
-            style={{ objectFit: 'cover', display: 'block' }}
-          />
-        ) : (
-          <div className="placeholder-principal" aria-hidden="true" />
-        )}
+        <img
+          src={imagenPrincipal}
+          alt={`Imagen principal ${tipo ? `de ${tipo}` : 'del producto'}`}
+          loading="lazy"
+          onError={handleImgError}
+          width="1200"
+          height="800"
+          style={{ objectFit: 'cover', display: 'block' }}
+        />
       </div>
 
       <div className="imagenes-secundarias">
@@ -47,7 +54,6 @@ const GaleriaProductos = ({ imagenes = [], tipo = '', onVerMas = () => {} }) => 
             />
           </div>
         ))}
-
         <button className="ver-mas" onClick={onVerMas} aria-label="Ver más imágenes">
           Ver más
         </button>
@@ -56,4 +62,5 @@ const GaleriaProductos = ({ imagenes = [], tipo = '', onVerMas = () => {} }) => 
   );
 };
 
+// React.memo: evita renders innecesarios si las props no cambian.
 export default React.memo(GaleriaProductos);

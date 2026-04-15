@@ -1,63 +1,55 @@
-import { useEffect, useState } from 'react';
+// src/components/ListaProductosAdmin.jsx
 import '../styles/pages/ListaProductosAdmin.css';
 
+import useProductosLocalStorage from '../hooks/useProductosLocalStorage';
+
 const ListaProductosAdmin = () => {
-  const [productos, setProductos] = useState([]);
+  const { productos, eliminarProducto } = useProductosLocalStorage();
 
-  useEffect(() => {
-    const productosGuardados = localStorage.getItem("productos");
-    if (productosGuardados) {
-      try {
-        const parsed = JSON.parse(productosGuardados);
-        if (Array.isArray(parsed)) {
-          setProductos(parsed);
-        }
-      } catch (e) {
-        console.error("Error al parsear productos del localStorage", e);
-      }
-    }
-  }, []);
-
-  const handleEliminar = (id) => {
-    const confirmar = window.confirm("¿Estás seguro de que querés eliminar este producto?");
-    if (!confirmar) return;
-
-    const actualizados = productos.filter((p) => p.id !== id);
-    localStorage.setItem("productos", JSON.stringify(actualizados));
-    setProductos(actualizados); // actualiza la vista
-  };
-
+  if (!Array.isArray(productos) || productos.length === 0) {
+    return <p className="mensaje-vacio">No hay productos registrados aún.</p>;
+  }
 
   return (
     <div className="lista-admin-container">
-      <h1>Lista de productos</h1>
+  <h1>Lista de productos</h1>
 
-      {productos.length === 0 ? (
-        <div className="estado estado-vacio">No hay productos disponibles.</div>
-      ) : (
-        <table className="tabla-productos">
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Nombre</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {productos.map((p) => (
-              <tr key={p.id}>
-                <td>{p.id}</td>
-                <td>{p.nombre}</td>
-                <td className="acciones">
-                  <button onClick={() => console.log("Editar", p)}>Editar</button>
-                  <button onClick={() => handleEliminar(p.id)}>Eliminar</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+  <table className="tabla-productos">
+    <thead>
+      <tr>
+        <th>Imagen</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Tipo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {productos.map((producto) => (
+        <tr key={producto.id}>
+          <td>
+            {producto.imagenes && producto.imagenes.length > 0 ? (
+              <img src={producto.imagenes[0]} alt={producto.nombre} width="80" />
+            ) : (
+              <span>Sin imagen</span>
+            )}
+          </td>
+          <td>{producto.nombre}</td>
+          <td>{producto.descripcion}</td>
+          <td>{producto.tipo}</td>
+          <td>
+            <div className="acciones">
+              <button className="btn-accion btn-danger" onClick={() => eliminarProducto(producto.id)}>
+                Eliminar
+              </button>
+            </div>
+          </td>
+        </tr>
+
+      ))}
+    </tbody>
+  </table>
+</div>
   );
 };
 
