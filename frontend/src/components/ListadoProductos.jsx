@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import useProductosAleatorios from '../hooks/useProductosAleatorios';
+import useProductoAPI from '../hooks/useProductoAPI';
 import '../styles/components/ListadoProductos.css';
 
 /**
@@ -32,12 +32,15 @@ import '../styles/components/ListadoProductos.css';
  * - Mantiene navegación SPA (Single Page Application)
  */
 const ListadoProductos = () => {
-  // Obtener productos aleatorios del hook personalizado
-  const productosAleatorios = useProductosAleatorios();
+  // Hook unificado con backend
+  const { getProductosAleatorios, loading, error } = useProductoAPI();
 
   // Estado de paginación (1-indexed para UX)
   const [paginaActual, setPaginaActual] = useState(1);
   const pageSize = 4; // 4 productos por página
+
+  // Selección aleatoria desde productos cargados
+  const productosAleatorios = getProductosAleatorios(); // por ejemplo, 12 para recomendaciones
 
   // Cálculos de paginación
   const totalProductos = productosAleatorios.length;
@@ -50,7 +53,13 @@ const ListadoProductos = () => {
     }
   }, [totalPaginas, paginaActual]);
 
-  // Si no hay productos, mostrar mensaje
+  // Estados de carga y error
+  if (loading) {
+    return <p className="mensaje-vacio">Cargando productos...</p>;
+  }
+  if (error) {
+    return <p className="mensaje-vacio">{error}</p>;
+  }
   if (totalProductos === 0) {
     return <p className="mensaje-vacio">No hay productos registrados aún.</p>;
   }

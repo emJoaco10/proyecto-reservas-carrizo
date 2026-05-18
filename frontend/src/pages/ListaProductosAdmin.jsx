@@ -1,38 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import useProductoAPI from '../hooks/useProductoAPI';
+import { Link } from 'react-router-dom';
 import '../styles/pages/ListaProductosAdmin.css';
 
 const ListaProductosAdmin = () => {
-  const [productos, setProductos] = useState([]);
+  const { productos, fetchProductos, removeProductoById, loading, error } = useProductoAPI();
 
   useEffect(() => {
-    const productosGuardados = localStorage.getItem("productos");
-    if (productosGuardados) {
-      try {
-        const parsed = JSON.parse(productosGuardados);
-        if (Array.isArray(parsed)) {
-          setProductos(parsed);
-        }
-      } catch (e) {
-        console.error("Error al parsear productos del localStorage", e);
-      }
-    }
+    fetchProductos();
   }, []);
 
-  const handleEliminar = (id) => {
+  const handleEliminar = async (id) => {
     const confirmar = window.confirm("¿Estás seguro de que querés eliminar este producto?");
     if (!confirmar) return;
-
-    const actualizados = productos.filter((p) => p.id !== id);
-    localStorage.setItem("productos", JSON.stringify(actualizados));
-    setProductos(actualizados); // actualiza la vista
+    await removeProductoById(id);
   };
-
 
   return (
     <div className="lista-admin-container">
       <h1>Lista de productos</h1>
 
-      {productos.length === 0 ? (
+      {loading && <div className="estado">Cargando productos...</div>}
+      {error && <div className="estado estado-error">{error}</div>}
+
+      {productos.length === 0 && !loading ? (
         <div className="estado estado-vacio">No hay productos disponibles.</div>
       ) : (
         <table className="tabla-productos">
@@ -49,7 +40,9 @@ const ListaProductosAdmin = () => {
                 <td>{p.id}</td>
                 <td>{p.nombre}</td>
                 <td className="acciones">
-                  <button onClick={() => console.log("Editar", p)}>Editar</button>
+                  <Link to={`/admin/productos/editar/${p.id}`}>
+                    <button>Editar</button>
+                  </Link>
                   <button onClick={() => handleEliminar(p.id)}>Eliminar</button>
                 </td>
               </tr>

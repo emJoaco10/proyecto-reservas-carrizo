@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import useProductosLocalStorage from '../hooks/useProductosLocalStorage';
+import useProductoAPI from '../hooks/useProductoAPI';
 import { filesToObjectURLs, revokeObjectURLs } from '../helpers/imageUtils';
 import { validarProducto } from '../helpers/validaciones';
 import '../styles/pages/AgregarProducto.css';
@@ -9,7 +9,7 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_FILES = 10;
 
 const AgregarProducto = () => {
-  const { guardarProducto, borrarTodos } = useProductosLocalStorage({ onError: console.error });
+  const { addProducto, removeAllProductos } = useProductoAPI();
 
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
@@ -23,109 +23,122 @@ const AgregarProducto = () => {
   // Generar previews al seleccionar imágenes y revocarlas correctamente en cleanup
   // useEffect para generar previews y revocarlos al desmontar o cuando cambian archivos
 useEffect(() => {
-  // Si no hay archivos, limpiar previews
-  if (!imagenesFiles || imagenesFiles.length === 0) {
-    setPreviews([]);
-    return;
-  }
+    if (!imagenesFiles || imagenesFiles.length === 0) {
+      setPreviews([]);
+      return;
+    }
 
-  // Crear objectURLs usando la utilidad con las mismas reglas
-  const urls = filesToObjectURLs(imagenesFiles, { maxSize: MAX_FILE_SIZE, allowedTypes: ALLOWED_TYPES }, (err) => {
-    // Mostrar error si algo falla al crear URLs
-    setError(err.message || 'Error procesando imágenes');
-  });
+    const urls = filesToObjectURLs(
+      imagenesFiles,
+      { maxSize: MAX_FILE_SIZE, allowedTypes: ALLOWED_TYPES },
+      (err) => setError(err.message || 'Error procesando imágenes')
+    );
 
-  setPreviews(urls);
+    setPreviews(urls);
 
-  // Cleanup: revocar las URLs creadas cuando cambien archivos o se desmonte
-  return () => {
-    revokeObjectURLs(urls);
-  };
-}, [imagenesFiles]);
+    return () => {
+      revokeObjectURLs(urls);
+    };
+  }, [imagenesFiles]);
 
   // En el submit (antes de llamar a guardarProducto), validación defensiva
 const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError('');
-  setExito('');
+    e.preventDefault();
+    setError('');
+    setExito('');
 
-  const errMsg = validarProducto({ nombre, descripcion, tipo });
-  if (errMsg) { setError(errMsg); return; }
+    const errMsg = validarProducto({ nombre, descripcion, tipo });
+    if (errMsg) { setError(errMsg); return; }
 
-  if (imagenesFiles?.length > 0) {
-    if (imagenesFiles.length > MAX_FILES) { setError(`Máximo ${MAX_FILES} imágenes permitidas.`); return; }
-    const invalidType = imagenesFiles.find(f => !ALLOWED_TYPES.includes(f.type));
-    if (invalidType) { setError(`Formato no permitido: ${invalidType.name}`); return; }
-    const tooLarge = imagenesFiles.find(f => f.size > MAX_FILE_SIZE);
-    if (tooLarge) { setError(`La imagen ${tooLarge.name} supera ${Math.round(MAX_FILE_SIZE / (1024 * 1024))}MB`); return; }
-  }
+    if (imagenesFiles?.length > 0) {
+      if (imagenesFiles.length > MAX_FILES) {
+        setError(`Máximo ${MAX_FILES} imágenes permitidas.`);
+        return;
+      }
+      const invalidType = imagenesFiles.find(f => !ALLOWED_TYPES.includes(f.type));
+      if (invalidType) {
+        setError(`Formato no permitido: ${invalidType.name}`);
+        return;
+      }
+      const tooLarge = imagenesFiles.find(f => f.size > MAX_FILE_SIZE);
+      if (tooLarge) {
+        setError(`La imagen ${tooLarge.name} supera ${Math.round(MAX_FILE_SIZE / (1024 * 1024))}MB`);
+        return;
+      }
+    }
 
   setSubiendo(true);
-  const result = await guardarProducto({ nombre, descripcion, tipo, imagenesFiles, imagenesUrls: [] });
-  setSubiendo(false);
+    try {
+      const nuevo = await addProducto({
+        nombre,
+        descripcion,
+        tipo,
+        imagenes: previews // enviamos las URLs generadas
+      });
+      setSubiendo(false);
 
-  if (!result.ok) {
-    // asegurar revocación local si el hook no lo hizo
-    revokeObjectURLs(previews);
-    setError(result.error || 'No se pudo guardar el producto');
-    return;
-  }
+      if (!nuevo) {
+        revokeObjectURLs(previews);
+        setError('No se pudo guardar el producto');
+        return;
+      }
 
-  // éxito: limpiar y notificar
-  revokeObjectURLs(previews);
-  setPreviews([]);
-  setImagenesFiles([]);
-  setNombre('');
-  setDescripcion('');
-  setTipo('');
-  setError('');
-  setExito('Producto guardado correctamente.');
-  // opcional: limpiar mensaje después de X segundos
-  setTimeout(() => setExito(''), 4000);
-};
+      // éxito: limpiar y notificar
+      revokeObjectURLs(previews);
+      setPreviews([]);
+      setImagenesFiles([]);
+      setNombre('');
+      setDescripcion('');
+      setTipo('');
+      setError('');
+      setExito('Producto guardado correctamente.');
+      setTimeout(() => setExito(''), 4000);
+    } catch (err) {
+      console.error('[AgregarProducto] Error al guardar:', err);
+      setError('Error inesperado al guardar el producto');
+      setSubiendo(false);
+    }
+  };
 
   // Handler del input file (reemplazar o añadir en el componente)
 const handleImagenes = (e) => {
-  const files = Array.from(e.target.files || []);
-  if (files.length === 0) {
-    setImagenesFiles([]);
-    setPreviews([]);
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) {
+      setImagenesFiles([]);
+      setPreviews([]);
+      setError('');
+      return;
+    }
+
+    if (files.length > MAX_FILES) {
+      setError(`Podés subir hasta ${MAX_FILES} imágenes por producto.`);
+      return;
+    }
+
+    const invalidType = files.find(f => !ALLOWED_TYPES.includes(f.type));
+    if (invalidType) {
+      setError(`Formato no permitido: ${invalidType.name}`);
+      return;
+    }
+
+    const tooLarge = files.find(f => f.size > MAX_FILE_SIZE);
+    if (tooLarge) {
+      setError(`La imagen "${tooLarge.name}" supera el límite de ${Math.round(MAX_FILE_SIZE / (1024 * 1024))}MB.`);
+      return;
+    }
+
     setError('');
-    return;
-  }
-
-  // Límite de cantidad
-  if (files.length > MAX_FILES) {
-    setError(`Podés subir hasta ${MAX_FILES} imágenes por producto.`);
-    return;
-  }
-
-  // Validar tipos
-  const invalidType = files.find(f => !ALLOWED_TYPES.includes(f.type));
-  if (invalidType) {
-    setError(`Formato no permitido: ${invalidType.name}`);
-    return;
-  }
-
-  // Validar tamaño
-  const tooLarge = files.find(f => f.size > MAX_FILE_SIZE);
-  if (tooLarge) {
-    setError(`La imagen "${tooLarge.name}" supera el límite de ${Math.round(MAX_FILE_SIZE / (1024 * 1024))}MB.`);
-    return;
-  }
-
-  // Si todo OK, limpiar error y guardar archivos para preview/submit
-  setError('');
-  setImagenesFiles(files);
-};
+    setImagenesFiles(files);
+  };
 
   const handleBorrarTodo = async () => {
-    const res = await borrarTodos();
-    if (res && res.ok) {
+    try {
+      await removeAllProductos();
       setExito('Todos los productos han sido eliminados.');
       setError('');
-    } else {
-      setError(res?.error || 'No se pudo borrar todo');
+    } catch (err) {
+      console.error('[AgregarProducto] Error al borrar todos:', err);
+      setError('No se pudo borrar todo');
     }
   };
 
