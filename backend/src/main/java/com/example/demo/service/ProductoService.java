@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.ProductoDTO;
 import com.example.demo.model.Producto;
 import com.example.demo.repository.ProductoRepository;
 import org.springframework.data.domain.Page;
@@ -71,10 +72,19 @@ public class ProductoService {
      * @param cantidad Número máximo de productos a retornar
      * @return Lista de productos aleatorios (máx. 'cantidad' elementos)
      */
-    public List<Producto> obtenerProductosAleatorios(int cantidad) {
+    public List<ProductoDTO> obtenerProductosAleatorios(int cantidad) {
         List<Producto> todos = productoRepository.findAll();
         Collections.shuffle(todos);
-        return todos.stream().limit(cantidad).toList();
+        return todos.stream()
+                .limit(cantidad)
+                .map(p -> new ProductoDTO(
+                        p.getId(),
+                        p.getNombre(),
+                        p.getDescripcion(),
+                        p.getTipo(),
+                        p.getImagenes()
+                ))
+                .toList();
     }
 
     /**
@@ -83,8 +93,17 @@ public class ProductoService {
      * @param id ID único del producto
      * @return Optional<Producto> con el producto si existe, vacío si no
      */
-    public Optional<Producto> obtenerPorId(Long id) {
-        return productoRepository.findById(id);
+    public Optional<ProductoDTO> obtenerPorId(Long id) {
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+
+        return Optional.of(new ProductoDTO(
+                producto.getId(),
+                producto.getNombre(),
+                producto.getDescripcion(),
+                producto.getTipo(),
+                producto.getImagenes()
+        ));
     }
 
     /**
@@ -101,9 +120,17 @@ public class ProductoService {
      * @param size Cantidad de elementos por página
      * @return Page<Producto> con datos paginados
      */
-    public Page<Producto> obtenerPaginados(int page, int size) {
+    public Page<ProductoDTO> obtenerPaginados(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return productoRepository.findAll(pageable);
+        Page<Producto> productos = productoRepository.findAll(pageable);
+
+        return productos.map(p -> new ProductoDTO(
+                p.getId(),
+                p.getNombre(),
+                p.getDescripcion(),
+                p.getTipo(),
+                p.getImagenes()
+        ));
     }
 
     /**
@@ -114,8 +141,18 @@ public class ProductoService {
      *
      * @return Lista completa de todos los productos
      */
-    public List<Producto> obtenerTodos() {
-        return productoRepository.findAll();
+    public List<ProductoDTO> obtenerTodos() {
+        List<Producto> productos = productoRepository.findAll();
+
+        return productos.stream()
+                .map(p -> new ProductoDTO(
+                        p.getId(),
+                        p.getNombre(),
+                        p.getDescripcion(),
+                        p.getTipo(),
+                        p.getImagenes()
+                ))
+                .toList();
     }
 
     /**
@@ -124,9 +161,11 @@ public class ProductoService {
      * CUIDADO: Operación destructiva sin recuperación.
      * Usar solo en casos de reseteo o testing.
      */
-    public void borrarTodos() {
+    public String borrarTodos() {
         productoRepository.deleteAll();
+        return "Todos los productos se eliminaron correctamente";
     }
+
 
     /**
      * Elimina un producto específico por ID.
@@ -137,12 +176,14 @@ public class ProductoService {
      * @param id ID del producto a eliminar
      * @throws IllegalArgumentException si el producto no existe
      */
-    public void eliminarProducto(Long id) {
+    public String eliminarProducto(Long id) {
         if (!productoRepository.existsById(id)) {
             throw new IllegalArgumentException("El producto no existe");
         }
         productoRepository.deleteById(id);
+        return "Producto eliminado correctamente";
     }
+
 }
 
 

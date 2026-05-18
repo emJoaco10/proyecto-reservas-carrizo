@@ -70,16 +70,13 @@ public class ProductoController {
      */
     @PostMapping
     public ResponseEntity<?> registrarProducto(@RequestBody ProductoDTO productoDTO) {
-        try {
+
             // 1. Mapeo DTO → Entity
             Producto producto = new Producto();
             producto.setNombre(productoDTO.getNombre());
             producto.setDescripcion(productoDTO.getDescripcion());
             producto.setTipo(productoDTO.getTipo());
-            
-            if (productoDTO.getImagenes() != null) {
-                producto.setImagenes(productoDTO.getImagenes());
-            }
+            producto.setImagenes(productoDTO.getImagenes());
 
             // 2. Guardar en servicio (valida duplicados, persiste)
             Producto nuevo = productoService.guardarProducto(producto);
@@ -94,11 +91,6 @@ public class ProductoController {
             );
 
             return ResponseEntity.ok(dto);
-
-        } catch (IllegalArgumentException e) {
-            // Si hay error de validación (ej: nombre duplicado)
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
     }
 
     /**
@@ -118,58 +110,31 @@ public class ProductoController {
      */
     @GetMapping("/aleatorios")
     public ResponseEntity<List<ProductoDTO>> obtenerAleatorios() {
-        List<Producto> aleatorios = productoService.obtenerProductosAleatorios(10);
-
-        // Mapeo Entity → DTO en stream
-        List<ProductoDTO> dtos = aleatorios.stream().
-                map(p -> new ProductoDTO(
-                        p.getId(),
-                        p.getNombre(),
-                        p.getDescripcion(),
-                        p.getTipo(),
-                        p.getImagenes()
-                )).toList();
+        List<ProductoDTO> dtos = productoService.obtenerProductosAleatorios(10);
 
         return ResponseEntity.ok(dtos);
     }
 
     /**
      * GET /api/producto/{id}
-     *
+     * <p>
      * Obtiene un producto específico por su ID.
-     *
+     * <p>
      * FLUJO:
      * 1. Extrae ID de la URL (path variable)
      * 2. Llama a ProductoService.obtenerPorId(id)
      * 3. Si existe, convierte Entity → DTO y retorna 200
      * 4. Si no existe, retorna 404 Not Found
-     *
+     * <p>
      * USAR: En frontend para cargar detalle de producto.
      *
      * @param id ID del producto a obtener
      * @return ResponseEntity con ProductoDTO si existe, 404 si no
      */
     @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerPorId(@PathVariable Long id) {
-        Optional<Producto> producto = productoService.obtenerPorId(id);
-
-        if (producto.isPresent()) {
-            Producto p = producto.get();
-
-            // Mapeo Entity → DTO
-            ProductoDTO dto = new ProductoDTO(
-                    p.getId(),
-                    p.getNombre(),
-                    p.getDescripcion(),
-                    p.getTipo(),
-                    p.getImagenes()
-            );
-            return ResponseEntity.ok(dto);
-
-        } else {
-            // Producto no encontrado
-            return ResponseEntity.status(404).body("Producto no encontrado");
-        }
+    public ResponseEntity<Optional<ProductoDTO>> obtenerPorId(@PathVariable Long id) {
+        Optional<ProductoDTO> dto = productoService.obtenerPorId(id);
+        return ResponseEntity.ok(dto);
     }
 
     /**
@@ -198,17 +163,7 @@ public class ProductoController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        Page<Producto> productos = productoService.obtenerPaginados(page, size);
-
-        // Mapeo Page<Entity> → Page<DTO>
-        Page<ProductoDTO> dtos = productos.map(p -> new ProductoDTO(
-                p.getId(),
-                p.getNombre(),
-                p.getDescripcion(),
-                p.getTipo(),
-                p.getImagenes()
-        ));
-
+        Page<ProductoDTO> dtos = productoService.obtenerPaginados(page, size);
         return ResponseEntity.ok(dtos);
     }
 
@@ -232,18 +187,7 @@ public class ProductoController {
      */
     @GetMapping("/admin")
     public ResponseEntity<List<ProductoDTO>> obtenerTodosParaAdmin() {
-        List<Producto> productos = productoService.obtenerTodos();
-
-        // Convertir entidades a DTOs
-        List<ProductoDTO> dtos = productos.stream()
-                .map(p -> new ProductoDTO(
-                        p.getId(),
-                        p.getNombre(),
-                        p.getDescripcion(),
-                        p.getTipo(),
-                        p.getImagenes()
-                ))
-                .toList();
+        List<ProductoDTO> dtos = productoService.obtenerTodos();
 
         return ResponseEntity.ok(dtos);
     }
@@ -261,10 +205,11 @@ public class ProductoController {
      * @return ResponseEntity con mensaje de confirmación
      */
     @DeleteMapping
-    public ResponseEntity<?> borrarTodos(){
-        productoService.borrarTodos();
-        return ResponseEntity.ok("Todos los productos se eliminaron correctamente");
+    public ResponseEntity<String> borrarTodos() {
+        String mensaje = productoService.borrarTodos();
+        return ResponseEntity.ok(mensaje);
     }
+
 
     /**
      * DELETE /api/producto/{id}
@@ -286,15 +231,9 @@ public class ProductoController {
      * @return ResponseEntity con mensaje de confirmación o error
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminarProducto(@PathVariable Long id) {
-        try {
-            productoService.eliminarProducto(id);
-            return ResponseEntity.ok("Producto eliminado correctamente");
-
-        } catch (IllegalArgumentException e) {
-            // Producto no existe
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+    public ResponseEntity<String> eliminarProducto(@PathVariable Long id) {
+        String mensaje = productoService.eliminarProducto(id);
+        return ResponseEntity.ok(mensaje);
     }
 
 }
