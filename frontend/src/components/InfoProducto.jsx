@@ -1,6 +1,7 @@
 import React from 'react'
+import '../styles/components/InfoProducto.css'
 
-export const InfoProducto = ({ producto, onVerMas }) => {
+ const InfoProducto = ({ producto, onVerMas }) => {
   if (!producto) {
     return <div>No hay producto disponible</div>
   }
@@ -29,3 +30,5 @@ export const InfoProducto = ({ producto, onVerMas }) => {
     </div>
   )
 }
+
+export default InfoProducto 
