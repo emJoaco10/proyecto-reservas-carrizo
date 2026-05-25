@@ -1,8 +1,8 @@
 @import './styles/variables.css';
 
 :root {
-  --header-height: 70px;
-  --header-height-mobile: 120px;
+  --header-height: 64px;
+  --header-height-mobile: 110px;
 }
 
 /* contenedor centrado reutilizable */

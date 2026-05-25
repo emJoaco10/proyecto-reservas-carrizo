@@ -51,11 +51,38 @@
 
 /* Control del logo para que no crezca descontrolado */
 .logo {
-  height: 65px;                       /* tamaño base */
+  height: 56px;                       /* tamaño base ajustado al header */
   width: auto;
   max-width: 160px;                   /* evita logos muy anchos */
   object-fit: contain;
   display: block;
+}
+
+.btn.btn-volver {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 108px;
+  height: 35px;
+  padding: 0;
+  background: transparent;
+  background-image: url('../../assets/boton-volver.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: none;
+  color: transparent;
+  overflow: hidden;
+  text-indent: 100%;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.btn.btn-volver:hover,
+.btn.btn-volver:focus-visible {
+  filter: brightness(1.05);
+  transform: translateX(-1px);
 }
 
 /* Texto del slogan: truncar si no hay espacio en desktop */

@@ -1,5 +1,6 @@
 import '../styles/components/Header.css';
 import logo from '../assets/logo.png';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 /**
  * Componente Header - Barra de navegación superior.
@@ -7,25 +8,39 @@ import logo from '../assets/logo.png';
  * CARACTERÍSTICAS:
  * - Posición fija (fixed) en la parte superior
  * - Diseño responsivo con contenedor centrado
+ * - Botón "Volver" en rutas de detalle de producto
  * - Logo + eslogan a la izquierda
  * - Botones de autenticación a la derecha (sin funcionalidad actual)
  *
  * ESTRUCTURA:
  * - header.app-header: Contenedor principal fijo
- * - .header-left: Logo y eslogan (navega a home)
+ * - .header-left: Botón de volver + logo + eslogan
  * - .header-right: Botones "Crear cuenta" e "Iniciar sesión"
  *
- * NOTA: Los botones son placeholders para futuras funcionalidades de autenticación.
- * Actualmente solo tienen estilos hover.
+ * NOTA: El botón de volver aparece solo en rutas de detalle de producto.
  */
 const Header = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const showBackButton = location.pathname.startsWith('/producto/');
+
   return (
     <header className="app-header">
       {/* Contenedor centrado con ancho máximo */}
       <div className="container header-content">
 
-        {/* Sección izquierda: Logo y eslogan */}
+        {/* Sección izquierda: botón de volver + logo y eslogan */}
         <div className="header-left">
+          {showBackButton && (
+            <button
+              type="button"
+              className="btn btn-volver"
+              onClick={() => navigate(-1)}
+              aria-label="Volver"
+            >
+              Volver
+            </button>
+          )}
           <img src={logo} alt="Logo" className="logo" />
           <span className="slogan">Tu viaje comienza aquí</span>
         </div>

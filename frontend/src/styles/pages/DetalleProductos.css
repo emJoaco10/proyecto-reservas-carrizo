@@ -3,8 +3,15 @@
   flex-direction: column;
   gap: 24px;
   background: #ffffff;
-  align-items: center;
+  align-items: flex-start;
   padding: 24px;
+  margin: 0;
+}
+
+.detalle-producto-page {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
 }
 
 .detalle-producto header {

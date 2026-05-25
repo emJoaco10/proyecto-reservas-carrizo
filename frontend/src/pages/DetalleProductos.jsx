@@ -29,14 +29,13 @@ const DetalleProductos = () => {
 
   return (
     <main>
-      <button type="button" onClick={() => navigate(-1)}>
-        Volver
-      </button>
-      {loading && <p>Cargando producto...</p>}
-      {error && <p role="alert">Error al cargar el producto: {error}</p>}
-      {!loading && !error && producto && (
-        <InfoProducto producto={producto} onVerMas={onVerMas} />
-      )}
+      <div className="container detalle-producto-page">
+        {loading && <p>Cargando producto...</p>}
+        {error && <p role="alert">Error al cargar el producto: {error}</p>}
+        {!loading && !error && producto && (
+          <InfoProducto producto={producto} onVerMas={onVerMas} />
+        )}
+      </div>
     </main>
   );
 };
