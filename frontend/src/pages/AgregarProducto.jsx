@@ -41,6 +41,14 @@ useEffect(() => {
     };
   }, [imagenesFiles]);
 
+  const fileToBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result); // string base64
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
   // En el submit (antes de llamar a guardarProducto), validación defensiva
 const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,11 +77,13 @@ const handleSubmit = async (e) => {
 
   setSubiendo(true);
     try {
+      const imagenesBase64 = await Promise.all(imagenesFiles.map(fileToBase64));
+
       const nuevo = await addProducto({
         nombre,
         descripcion,
         tipo,
-        imagenes: previews // enviamos las URLs generadas
+        imagenes: imagenesBase64 // El backend se encarga de asignar categoría y generar ID
       });
       setSubiendo(false);
 
@@ -84,8 +94,6 @@ const handleSubmit = async (e) => {
       }
 
       // éxito: limpiar y notificar
-      revokeObjectURLs(previews);
-      setPreviews([]);
       setImagenesFiles([]);
       setNombre('');
       setDescripcion('');

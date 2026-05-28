@@ -7,6 +7,7 @@ import { Footer } from './components/Footer';
 import Administracion from './pages/Administracion';
 import AgregarProducto from './pages/AgregarProducto';
 import ListaProductosAdmin from './pages/ListaProductosAdmin';
+import DetalleProductosGaleria from './pages/DetalleProductosGaleria';
 
 /**
  * Componente principal de la aplicación React.
@@ -49,6 +50,9 @@ const App = () => {
 
           {/* Detalle de producto - parámetro dinámico :id */}
           <Route path="/producto/:id" element={<DetalleProductos />} />
+
+            {/* Detalle de producto para galería - con ID */}
+          <Route path="/producto/:id/galeria" element={<DetalleProductosGaleria />} />
         </Routes>
       </main>
 

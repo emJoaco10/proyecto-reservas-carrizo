@@ -22,10 +22,10 @@ const DetalleProductos = () => {
   }, [id, fetchProductoById]);
 
   const onVerMas = useCallback(() => {
-    if (id) {
-      navigate(`/producto/${id}/galeria`);
+    if (id && producto) {
+      navigate(`/producto/${id}/galeria`, { state: { producto } });
     }
-  }, [navigate, id]);
+  }, [navigate, id, producto]);
 
   return (
     <main>

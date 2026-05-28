@@ -77,14 +77,17 @@ const ListadoProductos = () => {
           <Link key={producto.id} to={`/producto/${producto.id}`} className="producto-link">
             <div className="producto-card">
 
-              {/* Imagen del producto (primera disponible) */}
-              {Array.isArray(producto.imagenes) && producto.imagenes.length > 0 && (
+              {/* Imagen del producto subida */}
+              {Array.isArray(producto.imagenes) && producto.imagenes.length > 0 ? (
                 <img
                   src={producto.imagenes[0]}
                   alt={`Imagen de ${producto.nombre}`}
                   className="miniatura"
                 />
+              ) : (
+                <div className="placeholder-imagen">Sin imagen</div>
               )}
+
 
               {/* Información del producto */}
               <h3>{producto.nombre}</h3>
