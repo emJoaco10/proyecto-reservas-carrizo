@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import jakarta.persistence.Column;
+
 import java.util.List;
 
 /**
@@ -48,6 +50,7 @@ public class ProductoDTO {
     /**
      * Lista de URLs o base64 de imágenes.
      */
+    @Column(columnDefinition = "TEXT")
     private List<String> imagenes;
 
     /**

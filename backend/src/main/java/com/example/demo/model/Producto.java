@@ -50,6 +50,7 @@ public class Producto {
      * Puede ser vacía si no hay imágenes disponibles.
      */
     @ElementCollection
+    @Column(columnDefinition = "TEXT")
     private List<String> imagenes;
 
     /**
