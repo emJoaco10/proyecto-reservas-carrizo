@@ -71,6 +71,7 @@ public class ProductoController {
     @PostMapping
     public ResponseEntity<?> registrarProducto(@RequestBody ProductoDTO productoDTO) {
 
+        try{
             // 1. Mapeo DTO → Entity
             Producto producto = new Producto();
             producto.setNombre(productoDTO.getNombre());
@@ -81,16 +82,16 @@ public class ProductoController {
             // 2. Guardar en servicio (valida duplicados, persiste)
             Producto nuevo = productoService.guardarProducto(producto);
 
-            // 3. Mapeo Entity → DTO para respuesta
-            ProductoDTO dto = new ProductoDTO(
-                    nuevo.getId(),
-                    nuevo.getNombre(),
-                    nuevo.getDescripcion(),
-                    nuevo.getTipo(),
-                    nuevo.getImagenes()
-            );
+        // 3. Obtener DTO usando el método del servicio que ya maneja el mapeo
+        Optional<ProductoDTO> dto = productoService.obtenerPorId(nuevo.getId());
 
-            return ResponseEntity.ok(dto);
+            ;return dto.map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.status(500)
+                            .body(new ProductoDTO(null, null, null, null, null, null)));
+
+        } catch (IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
     }
 
     /**
@@ -192,6 +193,7 @@ public class ProductoController {
         return ResponseEntity.ok(dtos);
     }
 
+
     /**
      * DELETE /api/producto
      *
@@ -234,6 +236,38 @@ public class ProductoController {
     public ResponseEntity<String> eliminarProducto(@PathVariable Long id) {
         String mensaje = productoService.eliminarProducto(id);
         return ResponseEntity.ok(mensaje);
+    }
+
+
+    /**
+     * PUT /api/producto/{id}/categoria
+     *
+     * Asigna una categoría a un producto existente.
+     * Recibe el ID de la categoría en el body (JSON number) y devuelve el ProductoDTO actualizado.
+     *
+     * @param id ID del producto al que se asignará la categoría
+     * @param categoriaId ID de la categoría en el body
+     * @return ResponseEntity con ProductoDTO actualizado
+     */
+    @PutMapping("/{id}/categoria")
+    public ResponseEntity<ProductoDTO> asignarCategoria(@PathVariable Long id, @RequestBody Long categoriaId) {
+        ProductoDTO actualizado = productoService.asignarCategoria(id, categoriaId);
+        return ResponseEntity.ok(actualizado);
+    }
+
+    /**
+     * GET /api/producto/categoria/{id}
+     *
+     * Obtiene los productos que pertenecen a una categoría específica.
+     * Llama a productoService.obtenerPorCategoria(id) y retorna la lista de ProductoDTO.
+     *
+     * @param id ID de la categoría por la cual filtrar
+     * @return ResponseEntity con List<ProductoDTO> filtrados por la categoría
+     */
+    @GetMapping("/categoria/{id}")
+    public ResponseEntity<List<ProductoDTO>> obtenerPorCategoria(@PathVariable Long id) {
+        List<ProductoDTO> dtos = productoService.obtenerPorCategoria(id);
+        return ResponseEntity.ok(dtos);
     }
 
 }

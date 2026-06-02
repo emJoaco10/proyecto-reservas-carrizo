@@ -53,6 +53,10 @@ public class Producto {
     @Column(columnDefinition = "TEXT")
     private List<String> imagenes;
 
+    @ManyToOne
+    @JoinColumn(name = "categoria_id", nullable = true)
+    private Categoria categoria;
+
     /**
      * Constructor con parámetros.
      * Utilizado para crear instancias de Producto con datos iniciales.
@@ -91,4 +95,7 @@ public class Producto {
 
     public List<String> getImagenes() {return imagenes;}
     public void setImagenes(List<String> imagenes) {this.imagenes = imagenes;}
+
+    public Categoria getCategoria() {return categoria;}
+    public void setCategoria(Categoria categoria) {this.categoria = categoria;}
 }

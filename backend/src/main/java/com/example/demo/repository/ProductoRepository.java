@@ -3,6 +3,7 @@ package com.example.demo.repository;
 import com.example.demo.model.Producto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -34,5 +35,14 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
      * @return Optional<Producto> con el producto si existe, vacío si no
      */
     Optional<Producto> findByNombre(String nombre);
+
+    /**
+     * Busca todos los productos que pertenezcan a la categoría indicada por su id.
+     *
+     * @param categoriaId id de la categoría
+     * @return Lista de productos que pertenecen a la categoría
+     */
+    List<Producto> findByCategoriaId(Long categoriaId);
+
 }
 

@@ -1,7 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ProductoDTO;
+import com.example.demo.dto.CategoriaDTO;
+import com.example.demo.model.Categoria;
 import com.example.demo.model.Producto;
+import com.example.demo.repository.CategoriaRepository;
 import com.example.demo.repository.ProductoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,13 +34,15 @@ import java.util.Optional;
 public class ProductoService {
 
     private final ProductoRepository productoRepository;
+    private final CategoriaRepository categoriaRepository;
 
     /**
      * Inyección de dependencia del Repository.
      * Spring instancia automáticamente ProductoRepository.
      */
-    public ProductoService(ProductoRepository productoRepository) {
+    public ProductoService(ProductoRepository productoRepository, CategoriaRepository categoriaRepository) {
         this.productoRepository = productoRepository;
+        this.categoriaRepository = categoriaRepository;
     }
 
     /**
@@ -77,13 +82,7 @@ public class ProductoService {
         Collections.shuffle(todos);
         return todos.stream()
                 .limit(cantidad)
-                .map(p -> new ProductoDTO(
-                        p.getId(),
-                        p.getNombre(),
-                        p.getDescripcion(),
-                        p.getTipo(),
-                        p.getImagenes()
-                ))
+                .map(this::mapearProductoADTO)
                 .toList();
     }
 
@@ -97,13 +96,7 @@ public class ProductoService {
         Producto producto = productoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
 
-        return Optional.of(new ProductoDTO(
-                producto.getId(),
-                producto.getNombre(),
-                producto.getDescripcion(),
-                producto.getTipo(),
-                producto.getImagenes()
-        ));
+        return Optional.of(mapearProductoADTO(producto));
     }
 
     /**
@@ -124,13 +117,7 @@ public class ProductoService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Producto> productos = productoRepository.findAll(pageable);
 
-        return productos.map(p -> new ProductoDTO(
-                p.getId(),
-                p.getNombre(),
-                p.getDescripcion(),
-                p.getTipo(),
-                p.getImagenes()
-        ));
+        return productos.map(this::mapearProductoADTO);
     }
 
     /**
@@ -145,13 +132,7 @@ public class ProductoService {
         List<Producto> productos = productoRepository.findAll();
 
         return productos.stream()
-                .map(p -> new ProductoDTO(
-                        p.getId(),
-                        p.getNombre(),
-                        p.getDescripcion(),
-                        p.getTipo(),
-                        p.getImagenes()
-                ))
+                .map(this::mapearProductoADTO)
                 .toList();
     }
 
@@ -184,6 +165,64 @@ public class ProductoService {
         return "Producto eliminado correctamente";
     }
 
+    /**     * Asigna una categoría a un producto y retorna el ProductoDTO actualizado.*
+     *  * @param productoId  id del producto
+     *  * @param categoriaId id de la categoría a asignar
+     *  * @return ProductoDTO actualizado con la categoría asignada
+     *  * @throws IllegalArgumentException si producto o categoría no existen
+     *  */
+    public ProductoDTO asignarCategoria(Long productoId, Long categoriaId) {
+        Producto producto = productoRepository.findById(productoId)
+                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+
+        Categoria categoria = categoriaRepository.findById(categoriaId)
+                .orElseThrow(() -> new IllegalArgumentException("Categoria no encontrada"));
+
+        producto.setCategoria(categoria);
+        Producto actualizado = productoRepository.save(producto);
+
+        return mapearProductoADTO(actualizado);
+    }
+
+    /** * Obtiene todos los productos pertenecientes a una categoría determinada.
+     * FLUJO:
+     * 1. Llama a productoRepository.findByCategoriaId(categoriaId)
+     * 2. Convierte cada entidad Producto a ProductoDTO incluyendo la categoría
+     * 3. Retorna la lista de DTOs * * USAR: Endpoint de filtrado por categoría en el frontend (lista por categoría).
+     * @param categoriaId id de la categoría por la cual filtrar productos * @return List<ProductoDTO> con los productos que pertenecen a la categoría */
+    public List<ProductoDTO> obtenerPorCategoria(Long categoriaId) {
+        List<Producto> productos = productoRepository.findByCategoriaId(categoriaId);
+
+        return productos.stream()
+                .map(this::mapearProductoADTO)
+                .toList();
+    }
+
+    /**     * Método auxiliar privado para mapear una entidad Producto a ProductoDTO.
+     * FLUJO:
+     * 1. Extrae datos de la entidad Producto
+     * 2. Si la categoría existe, mapea Categoria a CategoriaDTO
+     * 3. Construye y retorna ProductoDTO con todos los datos
+     * VENTAJA: Centraliza la lógica de mapeo para evitar duplicación en todos los métodos.
+     * @param producto Entidad Producto a mapear     * @return ProductoDTO mapeado con CategoriaDTO si existe
+     */
+    private ProductoDTO mapearProductoADTO(Producto producto) {
+        CategoriaDTO categoriaDTO = null;
+
+        if (producto.getCategoria() != null) {
+            Categoria categoria = producto.getCategoria();
+            categoriaDTO = new CategoriaDTO(categoria.getId(), categoria.getNombre());
+        }
+
+        return new ProductoDTO(
+                producto.getId(),
+                producto.getNombre(),
+                producto.getDescripcion(),
+                producto.getTipo(),
+                producto.getImagenes(),
+                categoriaDTO
+        );
+    }
 }
 
 
