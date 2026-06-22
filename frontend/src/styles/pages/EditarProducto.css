@@ -1,0 +1,50 @@
+.editar-producto {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.editar-producto h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.editar-producto p {
+  margin: 0.5rem 0;
+  color: #555;
+}
+
+.editar-producto__error-message {
+  color: #d9534f;
+  font-weight: 600;
+}
+
+.editar-producto__loading-message {
+  color: #007bff;
+}
+
+.editar-producto__guardar-button {
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.editar-producto__guardar-button:hover {
+  background-color: #0056b3;
+}
+
+.editar-producto__fields {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}

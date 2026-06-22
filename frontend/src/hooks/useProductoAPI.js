@@ -7,7 +7,8 @@ import {
   deleteProductoById,
   deleteProducto,
   getPaginados,
-  asignarCategoria
+  asignarCategoria,
+  getCategorias
 } from '../services/productoService';
 import { obtenerProductosAleatorios } from '../helpers/productoUtils';
 import { useState, useEffect } from 'react';
@@ -16,6 +17,7 @@ export default function useProductoAPI() {
     const [productos, setProductos] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [categorias, setCategorias] = useState([]);
 
     // Cargar productos al montar
   useEffect(() => {
@@ -128,12 +130,25 @@ export default function useProductoAPI() {
     return obtenerProductosAleatorios(productos, cantidad);
   };
 
+  const fetchCategorias = async () => {
+  try {
+    const data = await getCategorias();
+    setCategorias(Array.isArray(data) ? data : []);
+  } catch (err) {
+    console.error("[fetchCategorias] Error:", err);
+    setError("Error al obtener categorías");
+    setCategorias([]);
+  }
+};
+
   return {
     productos,
+    categorias,
     loading,
     error,
     fetchProductos,
     fetchProductoById,
+    fetchCategorias,
     addProducto,
     editProducto,
     setCategoriaProducto,

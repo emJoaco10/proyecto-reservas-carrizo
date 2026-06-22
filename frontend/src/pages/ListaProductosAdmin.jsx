@@ -40,7 +40,7 @@ const ListaProductosAdmin = () => {
                 <td>{p.id}</td>
                 <td>{p.nombre}</td>
                 <td className="acciones">
-                  <Link to={`/admin/productos/editar/${p.id}`}>
+                  <Link to={`/admin/producto/editar/${p.id}`}>
                     <button>Editar</button>
                   </Link>
                   <button onClick={() => handleEliminar(p.id)}>Eliminar</button>

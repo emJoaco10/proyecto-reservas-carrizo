@@ -32,14 +32,14 @@ export const createProducto = async (producto) => {
   try {
     // Validar antes de enviar
     const errNombre = validarNombre(producto.nombre);
-if (errNombre) {
-  throw new Error(errNombre);
-}
+    if (errNombre) {
+      throw new Error(errNombre);
+    }
 
-const errDesc = validarDescripcion(producto.descripcion);
-if (errDesc) {
-  throw new Error(errDesc);
-}
+    const errDesc = validarDescripcion(producto.descripcion);
+    if (errDesc) {
+      throw new Error(errDesc);
+    }
 
 
     // Normalizar con productoUtils
@@ -90,12 +90,11 @@ export const deleteProducto = async () => {
 export const updateProducto = async (id, producto) => {
   try {
     // Validar antes de enviar
-    if (!validarNombre(producto.nombre)) {
-      throw new Error('El nombre del producto es inválido.');
-    }
-    if (!validarDescripcion(producto.descripcion)) {
-      throw new Error('La descripción del producto es inválida.');
-    }
+    const errNombre = validarNombre(producto.nombre);
+    if (errNombre) throw new Error(errNombre);
+
+    const errDesc = validarDescripcion(producto.descripcion);
+    if (errDesc) throw new Error(errDesc);
 
     // Normalizar con productoUtils
     const normalizado = crearProducto(producto);
@@ -111,10 +110,25 @@ export const updateProducto = async (id, producto) => {
 // Asignar categoría a un producto (si tu backend tiene endpoint específico)
 export const asignarCategoria = async (id, categoriaId) => {
   try {
-    const response = await axios.put(`${URL_BASE}/${id}/categoria`, { categoriaId });
+    const response = await axios.put(
+      `${URL_BASE}/${id}/categoria`, categoriaId, { headers: { "Content-Type": "application/json" } });
     return response.data;
   } catch (error) {
     console.error(`Error al asignar categoría al producto ${id}:`, error);
+    throw error;
+  }
+};
+
+// Obtener todas las categorías
+export const getCategorias = async () => {
+  try {
+    const response = await axios.get("http://localhost:8080/api/producto/categorias");
+    const data = response.data;
+
+    return Array.isArray(data) ? data : (data?.content ?? []);
+
+  } catch (error) {
+    console.error("Error al obtener categorías:", error);
     throw error;
   }
 };

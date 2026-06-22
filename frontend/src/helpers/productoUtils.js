@@ -18,18 +18,15 @@
  * Nunca manipular objetos producto directamente en componentes.
  */
 
-export const crearProducto = ({ nombre, descripcion, tipo = '', categoria = '', imagenes = [] } = {}) => {
-  const nombreNormalizado = typeof nombre === 'string' ? nombre.trim() : '';
-  const descripcionNormalizada = typeof descripcion === 'string' ? descripcion.trim() : '';
-  const tipoNormalizado = typeof tipo === 'string' ? tipo.trim() : '';
-  const categoriaNormalizada = typeof categoria === 'string' ? categoria.trim() : '';
-
+export const crearProducto = (
+  p = {}) => {
   return {
-    nombre: nombreNormalizado,
-    descripcion: descripcionNormalizada,
-    tipo: tipoNormalizado,
-    categoria: categoriaNormalizada,
-    imagenes: Array.isArray(imagenes) ? imagenes : []
+    id: p.id,
+    nombre: typeof p.nombre === 'string' ? p.nombre.trim() : (p.nombre ?? ''),
+    descripcion: typeof p.descripcion === 'string' ? p.descripcion.trim() : (p.descripcion ?? ''),
+    tipo: typeof p.tipo === 'string' ? p.tipo.trim() : '',
+    categoria: p.categoria ? {id: p.categoria.id, nombre: p.categoria.nombre} : null,
+    imagenes: Array.isArray(p.imagenes) ? p.imagenes : []
   };
 };
 
@@ -46,6 +43,14 @@ export const obtenerProductoPorId = (productos = [], id) => {
 };
 
 export const normalizarNombre = (nombre = '') => String(nombre).trim().toLowerCase();
+
+export const normalizarCategoria = (categoria) => {
+  if (!categoria) return { id: null, nombre: "Sin categoría" };
+  return {
+    id: categoria.id,
+    nombre: String(categoria.nombre).trim()
+  };
+};
 
 export const obtenerProductosAleatorios = (productos = [], cantidad = 10) => {
   if (!Array.isArray(productos) || productos.length === 0) return [];

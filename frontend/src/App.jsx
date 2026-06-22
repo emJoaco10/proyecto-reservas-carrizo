@@ -8,6 +8,7 @@ import Administracion from './pages/Administracion';
 import AgregarProducto from './pages/AgregarProducto';
 import ListaProductosAdmin from './pages/ListaProductosAdmin';
 import DetalleProductosGaleria from './pages/DetalleProductosGaleria';
+import { EditarProducto } from './pages/EditarProducto';
 
 /**
  * Componente principal de la aplicación React.
@@ -53,6 +54,9 @@ const App = () => {
 
             {/* Detalle de producto para galería - con ID */}
           <Route path="/producto/:id/galeria" element={<DetalleProductosGaleria />} />
+
+          {/* Edición de producto - parámetro dinámico :id */}
+          <Route path="/admin/producto/editar/:id" element={<EditarProducto />} />
         </Routes>
       </main>
 
