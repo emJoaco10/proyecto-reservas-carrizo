@@ -1,86 +1,95 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-/**
- * Entidad JPA que representa un Usuario registrado en la plataforma.
- *
- * Mapea la tabla 'usuarios' en la base de datos H2.
- * Almacena información de autenticación y perfil de usuario.
- *
- * NOTA: La contraseña se almacena hasheada usando BCryptPasswordEncoder.
- *
- * @author Backend Team
- * @version 1.0
- */
 @Entity
-@Table(name = "usuarios")
+@Table(name = "usuarios", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")
+})
 public class Usuario {
 
-    /**
-     * Identificador único del usuario.
-     * Autoincrement generado por la BD.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * Nombre completo del usuario.
-     * Campo opcional para perfil público.
-     */
+    @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
 
-    /**
-     * Email único del usuario.
-     * Utilizado como identificador secundario para login.
-     * CONSTRAINT: unique en BD.
-     */
-    @Column(unique = true)
+    @NotBlank(message = "El apellido es obligatorio")
+    private String apellido;
+
+    @Email(message = "El email debe ser válido")
+    @NotBlank(message = "El email es obligatorio")
     private String email;
 
-    /**
-     * Contraseña del usuario (almacenada hasheada).
-     * IMPORTANTE: Nunca transmitir en texto plano.
-     * Se codifica con BCryptPasswordEncoder en la capa de servicio.
-     */
-    private String contraseña;
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
+    private String password;
 
-    /**
-     * Constructor con parámetros.
-     * Utilizado para crear instancias de Usuario con datos iniciales.
-     *
-     * @param email Email único del usuario
-     * @param contraseña Contraseña en texto plano (será hasheada en el servicio)
-     * @param nombre Nombre completo del usuario
-     */
-    public Usuario(String email, String contraseña, String nombre) {
+    private String rol = "USER";
+
+    // 🔹 Constructor vacío (requerido por JPA)
+    public Usuario() {}
+
+    // 🔹 Constructor con parámetros (sin id, porque se genera automáticamente)
+    public Usuario(String nombre, String apellido, String email, String password, String rol) {
+        this.nombre = nombre;
+        this.apellido = apellido;
         this.email = email;
-        this.contraseña = contraseña;
+        this.password = password;
+        this.rol = rol;
+    }
+
+    // 🔹 Getters y Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    /**
-     * Constructor sin parámetros.
-     * Requerido por JPA para instanciar entidades desde la BD.
-     */
-    public Usuario(){};
+    public String getApellido() {
+        return apellido;
+    }
 
-    // ===================== GETTERS Y SETTERS =====================
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
 
-    public Long getId() {return id;}
-    public void setId(Long id) {this.id = id;}
+    public String getEmail() {
+        return email;
+    }
 
-    public String getNombre() {return nombre;}
-    public void setNombre(String nombre) {this.nombre = nombre;}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public String getEmail() {return email;}
-    public void setEmail(String email) {this.email = email;}
+    public String getPassword() {
+        return password;
+    }
 
-    /**
-     * CUIDADO: Este setter debería aplicar hashing en controlador/servicio.
-     * No pasar contraseñas en texto plano directamente.
-     */
-    public String getContraseña() {return contraseña;}
-    public void setContraseña(String contraseña) {this.contraseña = contraseña;}
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
 }
