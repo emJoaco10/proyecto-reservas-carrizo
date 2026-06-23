@@ -223,6 +223,43 @@ public class ProductoService {
                 categoriaDTO
         );
     }
+
+    /**
+     * Actualiza un producto existente con todos sus campos.
+     *
+     * FLUJO:
+     * 1. Busca el producto por ID
+     * 2. Actualiza nombre, descripción, tipo e imágenes
+     * 3. Si el DTO incluye categoría, la asigna; si no, la limpia
+     * 4. Persiste los cambios y retorna el ProductoDTO actualizado
+     *
+     * @param id ID del producto a actualizar
+     * @param productoDTO DTO con los datos actualizados
+     * @return ProductoDTO actualizado
+     * @throws IllegalArgumentException si el producto o la categoría no existen
+     */
+    public ProductoDTO actualizarProducto(Long id, ProductoDTO productoDTO) {
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
+
+        // Actualizar campos básicos
+        producto.setNombre(productoDTO.getNombre());
+        producto.setDescripcion(productoDTO.getDescripcion());
+        producto.setTipo(productoDTO.getTipo());
+        producto.setImagenes(productoDTO.getImagenes());
+
+        // Actualizar categoría si viene en el DTO
+        if (productoDTO.getCategoria() != null && productoDTO.getCategoria().getId() != null) {
+            Categoria categoria = categoriaRepository.findById(productoDTO.getCategoria().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada"));
+            producto.setCategoria(categoria);
+        } else {
+            producto.setCategoria(null); // opcional: limpiar categoría si no se envía
+        }
+
+        Producto actualizado = productoRepository.save(producto);
+        return mapearProductoADTO(actualizado);
+    }
 }
 
 

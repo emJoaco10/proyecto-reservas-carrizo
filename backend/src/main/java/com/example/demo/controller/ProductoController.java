@@ -1,6 +1,9 @@
 package com.example.demo.controller;
+import com.example.demo.dto.CategoriaDTO;
 import com.example.demo.dto.ProductoDTO;
+import com.example.demo.model.Categoria;
 import com.example.demo.model.Producto;
+import com.example.demo.repository.CategoriaRepository;
 import com.example.demo.service.ProductoService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -42,12 +45,14 @@ public class ProductoController {
      * Spring lo instancia automáticamente (inyección de dependencias).
      */
     private final ProductoService productoService;
+    private final CategoriaRepository categoriaRepository;
 
     /**
      * Constructor con inyección de ProductoService.
      */
-    public ProductoController(ProductoService productoService) {
+    public ProductoController(ProductoService productoService, CategoriaRepository categoriaRepository) {
         this.productoService = productoService;
+        this.categoriaRepository = categoriaRepository;
     }
 
     /**
@@ -133,8 +138,9 @@ public class ProductoController {
      * @return ResponseEntity con ProductoDTO si existe, 404 si no
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<ProductoDTO>> obtenerPorId(@PathVariable Long id) {
-        Optional<ProductoDTO> dto = productoService.obtenerPorId(id);
+    public ResponseEntity<ProductoDTO> obtenerPorId(@PathVariable Long id) {
+        ProductoDTO dto = productoService.obtenerPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
         return ResponseEntity.ok(dto);
     }
 
@@ -269,5 +275,23 @@ public class ProductoController {
         List<ProductoDTO> dtos = productoService.obtenerPorCategoria(id);
         return ResponseEntity.ok(dtos);
     }
+//Crear un endpoint para obtener
+    @GetMapping("/categorias")
+public ResponseEntity<List<CategoriaDTO>> getCategorias() {
+    List<CategoriaDTO> categorias = categoriaRepository.findAll()
+            .stream()
+            .map(c -> new CategoriaDTO(c.getId(), c.getNombre()))
+            .toList();
 
+    return ResponseEntity.ok(categorias);
 }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductoDTO> actualizarProducto(
+            @PathVariable Long id,
+            @RequestBody ProductoDTO productoDTO) {
+        ProductoDTO actualizado = productoService.actualizarProducto(id, productoDTO);
+        return ResponseEntity.ok(actualizado);
+    }
+}
+
