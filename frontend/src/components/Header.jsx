@@ -47,7 +47,13 @@ const Header = () => {
 
         {/* Sección derecha: Botones de autenticación */}
         <div className="header-right">
-          <button className="btn btn-outline">Crear cuenta</button>
+          <button 
+            className="btn btn-outline"
+            onClick={() => navigate('/registro-usuario')}
+            type="button"
+          >
+            Crear cuenta
+          </button>
           <button className="btn btn-filled">Iniciar sesión</button>
         </div>
 
