@@ -1,202 +1,217 @@
+/* =====================================================
+   HEADER
+===================================================== */
 
-:root {
-  --header-height: 64px;        /* altura por defecto del header */
-  --header-text: #ffffff;
-  --container-max: 1200px;
-}
-
-/* Contenedor global (si no está en index.css) */
-.container {
-  max-width: var(--container-max);
-  margin: 0 auto;
-  padding: 0 1rem;
-  box-sizing: border-box;
-  width: 100%;
-}
-
-/* Header principal fijo */
 .app-header {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
-  right: 0;
   width: 100%;
-  height: var(--header-height);
-  background-color: var(--color-header-bg);
-  color: var(--color-texto-invertido);
+  background-color: #1f5b52;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   z-index: 1000;
-  display: block;
-  box-sizing: border-box;
-  overflow-x: hidden;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,.08);
 }
 
-/* Layout interno: controla la separación izquierda/derecha */
+.container {
+  width: 90%;
+  max-width: 1366px;
+  margin: 0 auto;
+}
+
 .header-content {
+  height: 80px;
+
   display: flex;
-  justify-content: space-between; /* logo a la izquierda, botones a la derecha */
+  justify-content: space-between;
   align-items: center;
-  height: 100%;
-  gap: 1rem;
 }
 
-/* Bloque izquierdo: logo + slogan */
+/* =====================================================
+   IZQUIERDA
+===================================================== */
+
 .header-left {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  flex: 0 1 auto; /* puede reducirse si falta espacio */
-  min-width: 0;   /* permite truncado del texto dentro del flex */
+  gap: 12px;
 }
 
-/* Control del logo para que no crezca descontrolado */
 .logo {
-  height: 56px;                       /* tamaño base ajustado al header */
-  width: auto;
-  max-width: 160px;                   /* evita logos muy anchos */
-  object-fit: contain;
-  display: block;
-}
-
-.btn.btn-volver {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 108px;
-  height: 35px;
-  padding: 0;
-  background: transparent;
-  background-image: url('../../assets/boton-volver.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  border: none;
-  color: transparent;
-  overflow: hidden;
-  text-indent: 100%;
-  white-space: nowrap;
+  height: 48px;
   cursor: pointer;
-  transition: filter 0.2s ease, transform 0.2s ease;
 }
 
-.btn.btn-volver:hover,
-.btn.btn-volver:focus-visible {
-  filter: brightness(1.05);
-  transform: translateX(-1px);
-}
-
-/* Texto del slogan: truncar si no hay espacio en desktop */
 .slogan {
-  font-size: 1rem;
-  font-weight: 500;
-  color: inherit;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 0;                        /* necesario para text-overflow en flex */
+  font-size: 14px;
+  color: rgba(255,255,255,.75);
+  font-style: italic;
 }
 
-/* Bloque derecho: botones alineados a la derecha */
+/* =====================================================
+   DERECHA
+===================================================== */
+
 .header-right {
   display: flex;
-  gap: 0.75rem;
   align-items: center;
-  margin-left: auto;                   /* empuja al extremo derecho */
+  gap: 12px;
 }
 
-/* Botones: estilos base y accesibilidad de foco */
+/* =====================================================
+   BOTONES
+===================================================== */
+
 .btn {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  border: none;
   border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  line-height: 1;
-  background: var(--color-primario);
-  border: 2px solid transparent;
-  color: inherit;
-}
-.btn:focus {
-  outline: 3px solid rgba(255,255,255,0.12);
-  outline-offset: 2px;
+  transition: .25s;
 }
 
-/* Variantes */
 .btn-outline {
-  background-color: transparent;
-  border: 2px solid var(--color-texto-invertido);
-  color: var(--color-texto-invertido);
+  background: white;
+  color: #1DBEB4;
+  border: 1px solid #1DBEB4;
 }
+
 .btn-outline:hover {
-  background-color: var(--color-texto-invertido);
-  color: var(--color-header-bg);
+  background: #1DBEB4;
+  color: white;
 }
 
 .btn-filled {
-  background-color: var(--color-texto-invertido );
-  color: var(--color-header-bg);
-  border: none;
+  background: #1DBEB4;
+  color: white;
 }
+
 .btn-filled:hover {
-  background-color: var(--color-secundario);
-  color: var(--color-texto-invertido);
+  background: #169e97;
 }
 
-/* Evitar que reglas globales rompan el layout */
-.header-right .btn,
-.header-right .btn * {
-  width: auto !important;
-  flex: 0 0 auto;
+.btn-volver {
+  background: transparent;
+  color: #1DBEB4;
+  padding-left: 0;
 }
 
-/* Responsive: apilar y ajustar tamaños */
-@media (max-width: 900px) {
-  .logo { height: 40px; }
-  .slogan { font-size: 0.95rem; }
-  :root { --header-height: 60px; }
+/* =====================================================
+   USUARIO LOGUEADO
+===================================================== */
+
+.usuario-logueado {
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  background: transparent;
+  border: none;
+
+  cursor: pointer;
+
 }
 
-@media (max-width: 600px) {
-  /* En móvil apilamos: logo+slogan arriba, botones abajo centrados */
+.avatar {
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  background: #383B58;
+  color: white;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-weight: bold;
+  font-size: 17px;
+
+  flex-shrink: 0;
+
+}
+
+.datos-usuario {
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  line-height: 1.1;
+
+}
+
+.datos-usuario span {
+
+  color: #777;
+  font-size: 12px;
+
+}
+
+.datos-usuario strong {
+
+  color: #1DBEB4;
+  font-size: 15px;
+  font-weight: 700;
+
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 768px) {
+
   .header-content {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0;
+
+    height: 70px;
+
   }
 
-  .app-header { height: auto; padding: 0.5rem 0; } /* altura flexible en móvil */
-  :root { --header-height: 56px; }
+  .logo {
 
-  .header-left {
-    justify-content: center;
-    width: 100%;
+    height: 40px;
+
   }
-
-  .logo { height: 36px; max-width: 140px; }
 
   .slogan {
-    white-space: normal; /* permitir varias líneas en móvil */
-    text-align: center;
-    font-size: 0.95rem;
+
+    display: none;
+
   }
 
-  .header-right {
-    width: 100%;
-    justify-content: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;    /* si no entran, pasan a la siguiente línea ordenada */
-    margin-left: 0;     /* quitar el auto cuando se apila */
+  .datos-usuario {
+
+    display: none;
+
   }
 
   .btn {
-    padding: 0.45rem 0.9rem;
-    font-size: 0.9rem;
+
+    padding: 8px 14px;
+    font-size: 13px;
+
   }
+
 }
 
-/* Evitar solapamiento con el contenido principal cuando el header es fixed */
-main {
-  padding-top: var(--header-height);
+@media (max-width: 480px) {
+
+  .header-content {
+
+    height: 65px;
+
+  }
+
+  .logo {
+
+    height: 36px;
+
+  }
+
 }

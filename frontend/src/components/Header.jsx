@@ -1,6 +1,7 @@
 import '../styles/components/Header.css';
 import logo from '../assets/logo.png';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { leerLocal } from '../helpers/storageUtils';
 
 /**
  * Componente Header - Barra de navegación superior.
@@ -23,6 +24,11 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const showBackButton = location.pathname.startsWith('/producto/');
+  const usuario = leerLocal("usuario");
+
+  const iniciales = usuario
+    ? `${usuario.nombre.charAt(0)}${usuario.apellido.charAt(0)}`.toUpperCase()
+    : "";
 
   return (
     <header className="app-header">
@@ -41,25 +47,64 @@ const Header = () => {
               Volver
             </button>
           )}
-          <img src={logo} alt="Logo" className="logo" />
+          <img src={logo}
+            alt="Reservas Carrizo"
+            className="logo"
+            onClick={() => navigate("/")} />
           <span className="slogan">Tu viaje comienza aquí</span>
         </div>
 
         {/* Sección derecha: Botones de autenticación */}
         <div className="header-right">
-          <button 
-            className="btn btn-outline"
-            onClick={() => navigate('/registro-usuario')}
-            type="button"
-          >
-            Crear cuenta
-          </button>
-          <button className="btn btn-filled">Iniciar sesión</button>
-        </div>
 
+          {!usuario ? (
+
+            <>
+              <button
+                className="btn btn-outline"
+                onClick={() => navigate("/registro-usuario")}
+                type="button"
+              >
+                Crear cuenta
+              </button>
+
+              <button
+                className="btn btn-filled"
+                onClick={() => navigate("/iniciar-sesion")}
+                type="button"
+              >
+                Iniciar sesión
+              </button>
+            </>
+
+          ) : (
+
+            <button
+              className="usuario-logueado"
+              type="button"
+            >
+
+              <div className="avatar">
+                {iniciales}
+              </div>
+
+              <div className="datos-usuario">
+
+                <span>Hola,</span>
+
+                <strong>{usuario.nombre}</strong>
+
+              </div>
+
+            </button>
+
+          )}
+
+        </div>
       </div>
     </header>
   );
-};
+}
+
 
 export default Header;

@@ -16,3 +16,20 @@ export const registerUsuario = async (usuarioData) => {
   }
 }
 
+export const loginUsuario = async (credenciales) => {
+
+    const response = await fetch(`${API_BASE}/login`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credenciales),
+    });
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+
+    return await response.json();
+};
+

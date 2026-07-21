@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { registerUsuario as registerUsuarioService } from "../services/usuarioService";
+import { loginUsuario as loginUsuarioService } from "../services/usuarioService";
 
 const useUsuarioAPI = () => {
   const [loading, setLoading] = useState(false);
@@ -23,11 +24,37 @@ const useUsuarioAPI = () => {
     }
   };
 
+  const loginUsuario = async (credenciales) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+
+        const usuario = await loginUsuarioService(credenciales);
+
+        return usuario;
+
+    } catch (err) {
+
+        setError(err.message);
+
+        throw err;
+
+    } finally {
+
+        setLoading(false);
+
+    }
+
+};
+
+
   return {
     usuario,
     loading,
     error,
     registerUsuario,
+    loginUsuario
   };
 };
 

@@ -4,7 +4,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
 }
 
 .formulario h2 {
@@ -61,4 +61,31 @@
 
 .formulario p.success {
   color: #28a745; /* verde para éxito */
+}
+
+.login-footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.login-footer a {
+  color: #007bff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.login-footer a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.error {
+  color: #d9534f;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
 }

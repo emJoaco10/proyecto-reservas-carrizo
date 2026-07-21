@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import useUsuarioAPI from "../hooks/useUsuarioAPI";
-import "../styles/components/RegistroUsuarioFormulario.css";
+import "../styles/components/Formulario.css";
 
 const RegistroUsuarioFormulario = () => {
   const { usuario, loading, error, registerUsuario } = useUsuarioAPI();

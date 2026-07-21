@@ -10,6 +10,7 @@ import ListaProductosAdmin from './pages/ListaProductosAdmin';
 import DetalleProductosGaleria from './pages/DetalleProductosGaleria';
 import { EditarProducto } from './pages/EditarProducto';
 import  RegistroUsuario from './pages/RegistroUsuario';
+import IniciarSesion from "./pages/IniciarSesion";
 
 /**
  * Componente principal de la aplicación React.
@@ -60,6 +61,8 @@ const App = () => {
           <Route path="/admin/producto/editar/:id" element={<EditarProducto />} />
 
           <Route path="/registro-usuario" element={<RegistroUsuario />} />
+
+          <Route path="/iniciar-sesion" element={<IniciarSesion />} />  
         </Routes>
       </main>
 
