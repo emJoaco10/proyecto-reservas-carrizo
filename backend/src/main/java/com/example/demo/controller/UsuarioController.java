@@ -25,4 +25,13 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioDTO> iniciarSesion(@RequestBody UsuarioDTO dto) {
+
+        UsuarioDTO usuario = usuarioService.iniciarSesion(dto);
+
+        return ResponseEntity.ok(usuario);
+
+    }
 }

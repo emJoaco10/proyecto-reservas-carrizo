@@ -27,7 +27,7 @@ public class UsuarioService {
         usuario.setNombre(dto.getNombre());
         usuario.setApellido(dto.getApellido());
         usuario.setEmail(dto.getEmail());
-        usuario.setPassword(passwordEncoder.encode(dto.getEmail())); // encriptar contraseña
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword())); // encriptar contraseña
         usuario.setRol(dto.getRol() != null ? dto.getRol() : "USER");
 
         Usuario guardado = usuarioRepository.save(usuario);
@@ -37,7 +37,30 @@ public class UsuarioService {
                 guardado.getNombre(),
                 guardado.getApellido(),
                 guardado.getEmail(),
+                null,
                 guardado.getRol()
+        );
+    }
+
+    public UsuarioDTO iniciarSesion(UsuarioDTO dto) {
+
+        // Buscar usuario por email
+        Usuario usuario = usuarioRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Correo o contraseña incorrectos"));
+
+        // Verificar contraseña
+        if (!passwordEncoder.matches(dto.getPassword(), usuario.getPassword())) {
+            throw new IllegalArgumentException("Correo o contraseña incorrectos");
+        }
+
+        // Devolver datos del usuario (sin contraseña)
+        return new UsuarioDTO(
+                usuario.getId(),
+                usuario.getNombre(),
+                usuario.getApellido(),
+                usuario.getEmail(),
+                null,
+                usuario.getRol()
         );
     }
 }
