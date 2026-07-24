@@ -11,6 +11,7 @@ import DetalleProductosGaleria from './pages/DetalleProductosGaleria';
 import { EditarProducto } from './pages/EditarProducto';
 import  RegistroUsuario from './pages/RegistroUsuario';
 import IniciarSesion from "./pages/IniciarSesion";
+import MiPerfil from './pages/MiPerfil';
 
 /**
  * Componente principal de la aplicación React.
@@ -63,6 +64,8 @@ const App = () => {
           <Route path="/registro-usuario" element={<RegistroUsuario />} />
 
           <Route path="/iniciar-sesion" element={<IniciarSesion />} />  
+
+          <Route path="/mi-perfil" element={<MiPerfil />} />
         </Routes>
       </main>
 

@@ -1,7 +1,9 @@
 import '../styles/components/Header.css';
 import logo from '../assets/logo.png';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { leerLocal } from '../helpers/storageUtils';
+import { leerLocal , removerLocal } from '../helpers/storageUtils';
+import { useState } from 'react';
+import menuIcon from '../assets/menu-icon.png';
 
 /**
  * Componente Header - Barra de navegación superior.
@@ -25,10 +27,32 @@ const Header = () => {
   const navigate = useNavigate();
   const showBackButton = location.pathname.startsWith('/producto/');
   const usuario = leerLocal("usuario");
+  const [mostrarMenu, setMostrarMenu] = useState(false);
 
   const iniciales = usuario
-    ? `${usuario.nombre.charAt(0)}${usuario.apellido.charAt(0)}`.toUpperCase()
-    : "";
+    ? `${usuario.nombre.charAt(0)}${usuario.apellido.charAt(0)}`.toUpperCase() : "";
+
+    const handleCerrarSesion = () => {
+
+    const confirmar = window.confirm(
+        "¿Está seguro que desea cerrar la sesión?"
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    removerLocal("usuario");
+
+    setMostrarMenu(false);
+
+    alert("Sesión cerrada correctamente.");
+
+    navigate("/");
+
+    window.location.reload();
+
+};
 
   return (
     <header className="app-header">
@@ -79,24 +103,56 @@ const Header = () => {
 
           ) : (
 
-            <button
-              className="usuario-logueado"
-              type="button"
-            >
+            <div className="contenedor-usuario">
 
-              <div className="avatar">
-                {iniciales}
+              <div className="usuario-logueado">
+
+                <div className="usuario-info">
+
+                  <div className="avatar">
+                    {iniciales}
+                  </div>
+
+                  <div className="datos-usuario">
+                    <span>Hola,</span>
+                    <strong>{usuario.nombre}</strong>
+                  </div>
+
+                </div>
+
+                <button
+                  type="button"
+                  className="btn-menu-usuario"
+                  onClick={() => setMostrarMenu(!mostrarMenu)}
+                >
+                  <img src={menuIcon} alt="Menú" />
+                </button>
+
               </div>
 
-              <div className="datos-usuario">
+              {mostrarMenu && (
+                <div className="menu-usuario">
 
-                <span>Hola,</span>
+                  <button
+                    type="button"
+                    className="menu-item"
+                    onClick={() => navigate("/mi-perfil")}
+                  >
+                    Mi perfil
+                  </button>
 
-                <strong>{usuario.nombre}</strong>
+                  <button
+                    type="button"
+                    className="menu-item cerrar-sesion"
+                    onClick={handleCerrarSesion}
+                  >
+                    Cerrar sesión
+                  </button>
 
-              </div>
+                </div>
+              )}
 
-            </button>
+            </div>
 
           )}
 
