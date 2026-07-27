@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.RolDTO;
 import com.example.demo.dto.UsuarioDTO;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.UsuarioRepository;
@@ -62,6 +63,40 @@ public class UsuarioService {
                 null,
                 usuario.getRol()
         );
+    }
+
+    public UsuarioDTO cambiarRol (Long id, RolDTO rolDTO){
+        // Buscar el usuario
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
+        // Validar el rol recibido
+        if (!rolDTO.getRol().equals("USER") && !rolDTO.getRol().equals("ADMIN")) {
+            throw new IllegalArgumentException("Rol inválido");
+        }
+
+        // Actualizar el rol
+        usuario.setRol(rolDTO.getRol());
+
+        // Guardar cambios
+        Usuario actualizado = usuarioRepository.save(usuario);
+
+        // Devolver DTO actualizado
+        return new UsuarioDTO(
+                actualizado.getId(),
+                actualizado.getNombre(),
+                actualizado.getApellido(),
+                actualizado.getEmail(),
+                null,
+                actualizado.getRol()
+        );
+    }
+
+    //Metodo de desarrollo: eliminar todos
+    public void eliminarTodosLosUsuarios() {
+
+        usuarioRepository.deleteAll();
+
     }
 }
 

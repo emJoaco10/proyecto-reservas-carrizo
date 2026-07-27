@@ -14,15 +14,25 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
-                .csrf(csrf -> csrf.disable()) // Desactivar CSRF para pruebas con Postman
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // Permitir acceso a todos los endpoints
+                .csrf(csrf -> csrf.disable())
+
+                // Permitir que H2 Console se muestre dentro de un frame
+                .headers(headers ->
+                        headers.frameOptions(frame -> frame.disable())
                 )
-                .formLogin(form -> form.disable()) // Desactivar login por formulario
-                .httpBasic(basic -> basic.disable()); // Desactivar autenticación básica
+
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .anyRequest().permitAll()
+                )
+
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable());
 
         return http.build();
     }

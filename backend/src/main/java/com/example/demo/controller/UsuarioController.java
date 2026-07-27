@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.RolDTO;
 import com.example.demo.dto.UsuarioDTO;
 import com.example.demo.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,27 @@ public class UsuarioController {
         UsuarioDTO usuario = usuarioService.iniciarSesion(dto);
 
         return ResponseEntity.ok(usuario);
+
+    }
+
+    @PutMapping("/{id}/rol")
+    public ResponseEntity<UsuarioDTO> cambiarRol(
+            @PathVariable Long id,
+            @RequestBody RolDTO rolDTO) {
+
+        UsuarioDTO usuarioActualizado = usuarioService.cambiarRol(id, rolDTO);
+
+        return ResponseEntity.ok(usuarioActualizado);
+
+    }
+
+    //Endpoint de desarrollo: eliminar todos
+    @DeleteMapping
+    public ResponseEntity<String> eliminarTodosLosUsuarios() {
+
+        usuarioService.eliminarTodosLosUsuarios();
+
+        return ResponseEntity.ok("Todos los usuarios fueron eliminados.");
 
     }
 }
