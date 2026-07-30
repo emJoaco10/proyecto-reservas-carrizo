@@ -12,7 +12,9 @@ import { EditarProducto } from './pages/EditarProducto';
 import  RegistroUsuario from './pages/RegistroUsuario';
 import IniciarSesion from "./pages/IniciarSesion";
 import MiPerfil from './pages/MiPerfil';
-
+import AdministracionProductos from './pages/AdministracionProductos';
+import AdministracionUsuarios from './pages/AdministracionUsuarios';
+import ListaUsuariosAdmin from './pages/ListaUsuariosAdmin';
 /**
  * Componente principal de la aplicación React.
  *
@@ -66,6 +68,12 @@ const App = () => {
           <Route path="/iniciar-sesion" element={<IniciarSesion />} />  
 
           <Route path="/mi-perfil" element={<MiPerfil />} />
+          
+          <Route path="/usuarios-admin" element={<AdministracionUsuarios />} />
+
+          <Route path="/productos-admin" element={<AdministracionProductos />} />
+
+          <Route path="/lista-usuarios" element={<ListaUsuariosAdmin />} />ñ
         </Routes>
       </main>
 

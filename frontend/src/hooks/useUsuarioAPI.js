@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { registerUsuario as registerUsuarioService } from "../services/usuarioService";
 import { loginUsuario as loginUsuarioService } from "../services/usuarioService";
+import { obtenerUsuarios as obtenerUsuariosService } from "../services/usuarioService";
+import { cambiarRol as cambiarRolService } from "../services/usuarioService";
 
 const useUsuarioAPI = () => {
   const [loading, setLoading] = useState(false);
@@ -45,6 +47,17 @@ const useUsuarioAPI = () => {
         setLoading(false);
 
     }
+};
+
+const getUsuarios = async () => {
+
+    return await obtenerUsuariosService();
+
+};
+
+const actualizarRol = async (id, rol) => {
+
+    return await cambiarRolService(id, rol);
 
 };
 
@@ -54,7 +67,9 @@ const useUsuarioAPI = () => {
     loading,
     error,
     registerUsuario,
-    loginUsuario
+    loginUsuario,
+    getUsuarios,
+    actualizarRol
   };
 };
 

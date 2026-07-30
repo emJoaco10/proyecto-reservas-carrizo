@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import '../styles/pages/Main.css';
 import ListadoProductos from '../components/ListadoProductos';
+import {leerLocal} from "../helpers/storageUtils";
 
 /**
  * Página principal (Home) de la aplicación.
@@ -27,6 +28,9 @@ import ListadoProductos from '../components/ListadoProductos';
  * - Posiblemente más secciones dinámicas
  */
 const Main = () => {
+
+  const usuario = leerLocal("usuario");
+
   return (
     <div className="main-container">
 
@@ -43,13 +47,25 @@ const Main = () => {
       </section>
 
       {/* Sección funcional: Enlace al panel admin */}
-      <section className="bloque">
-        <h2>Panel de administración</h2>
-        <p>Aqui podes encontrar las herramientas para gestionar tu negocio.</p>
-        <Link to="/administración">
-          <button className="btn btn-filled">Acceder al panel</button>
-        </Link>
-      </section>
+      {usuario?.rol === "ADMIN" && (
+
+        <section className="bloque">
+
+          <h2>Panel de administración</h2>
+
+          <p>
+            Aquí podés encontrar las herramientas para gestionar tu negocio.
+          </p>
+
+          <Link to="/administración">
+            <button className="btn btn-filled">
+              Acceder al panel
+            </button>
+          </Link>
+
+        </section>
+
+      )}
 
     </div>
   );

@@ -27,11 +27,11 @@ if (esMobile) {
       <nav className="admin-menu">
         <ul>
           <li>
-            <Link to="/agregar-producto">Registrar producto</Link>
+            <Link to="/usuarios-admin">Acciones de usuario</Link>
           </li>
           {/* futuras funciones */}
           <li>
-            <Link to="/lista-productos">Lista de productos</Link>
+            <Link to="/productos-admin">Acciones de productos</Link>
           </li>
           <li>
             <Link to="/reportes">Ver reportes</Link>

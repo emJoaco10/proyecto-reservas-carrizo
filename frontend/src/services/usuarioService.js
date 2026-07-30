@@ -33,3 +33,40 @@ export const loginUsuario = async (credenciales) => {
     return await response.json();
 };
 
+export const obtenerUsuarios = async () => {
+
+    const response = await fetch(API_BASE);
+
+    if (!response.ok) {
+        throw new Error("No se pudieron obtener los usuarios.");
+    }
+
+    return await response.json();
+
+};
+
+export const cambiarRol = async (id, rol) => {
+
+    const response = await fetch(
+        `${API_BASE}/${id}/rol`,
+        {
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                rol
+            })
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("No se pudo actualizar el rol.");
+    }
+
+    return await response.json();
+
+};
+

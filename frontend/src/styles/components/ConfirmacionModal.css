@@ -1,0 +1,129 @@
+/* ===================================================
+   OVERLAY
+=================================================== */
+
+.modal-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+}
+
+/* ===================================================
+   MODAL
+=================================================== */
+
+.modal-confirmacion{
+
+    background:#FFFFFF;
+
+    width:90%;
+
+    max-width:480px;
+
+    border-radius:12px;
+
+    padding:32px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.20);
+
+    animation:aparecer .25s ease;
+
+}
+
+.modal-confirmacion h2{
+
+    margin-top:0;
+
+    color:#383B58;
+
+    text-align:center;
+
+}
+
+.modal-confirmacion p{
+
+    margin:24px 0;
+
+    text-align:center;
+
+    line-height:1.6;
+
+    color:#555;
+
+}
+
+/* ===================================================
+   BOTONES
+=================================================== */
+
+.modal-botones{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:16px;
+
+}
+
+/* ===================================================
+   ANIMACIÓN
+=================================================== */
+
+@keyframes aparecer{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(-20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/* ===================================================
+   RESPONSIVE
+=================================================== */
+
+@media(max-width:768px){
+
+    .modal-confirmacion{
+
+        padding:24px;
+
+    }
+
+    .modal-botones{
+
+        flex-direction:column;
+
+    }
+
+    .modal-botones button{
+
+        width:100%;
+
+    }
+
+}
