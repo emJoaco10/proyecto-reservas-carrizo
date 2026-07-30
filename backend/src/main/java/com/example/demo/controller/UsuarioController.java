@@ -6,6 +6,8 @@ import com.example.demo.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/usuario")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -54,6 +56,13 @@ public class UsuarioController {
         usuarioService.eliminarTodosLosUsuarios();
 
         return ResponseEntity.ok("Todos los usuarios fueron eliminados.");
+    }
 
+    @GetMapping
+    public ResponseEntity<List<UsuarioDTO>> obtenerTodosLosUsuarios() {
+
+        List<UsuarioDTO> usuarios = usuarioService.obtenerTodosLosUsuarios();
+
+        return ResponseEntity.ok(usuarios);
     }
 }

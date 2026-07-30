@@ -7,6 +7,8 @@ import com.example.demo.repository.UsuarioRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UsuarioService {
 
@@ -96,6 +98,23 @@ public class UsuarioService {
     public void eliminarTodosLosUsuarios() {
 
         usuarioRepository.deleteAll();
+
+    }
+
+    public List<UsuarioDTO> obtenerTodosLosUsuarios() {
+
+        List<Usuario> usuarios = usuarioRepository.findAll();
+
+        return usuarios.stream()
+                .map(usuario -> new UsuarioDTO(
+                        usuario.getId(),
+                        usuario.getNombre(),
+                        usuario.getApellido(),
+                        usuario.getEmail(),
+                        null,
+                        usuario.getRol()
+                ))
+                .toList();
 
     }
 }
