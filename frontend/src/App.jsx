@@ -1,4 +1,4 @@
-import { BrowserRouter as Router ,Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Main from './pages/Main';
 import './styles/App.css';
@@ -9,12 +9,18 @@ import AgregarProducto from './pages/AgregarProducto';
 import ListaProductosAdmin from './pages/ListaProductosAdmin';
 import DetalleProductosGaleria from './pages/DetalleProductosGaleria';
 import { EditarProducto } from './pages/EditarProducto';
-import  RegistroUsuario from './pages/RegistroUsuario';
+import RegistroUsuario from './pages/RegistroUsuario';
 import IniciarSesion from "./pages/IniciarSesion";
 import MiPerfil from './pages/MiPerfil';
 import AdministracionProductos from './pages/AdministracionProductos';
 import AdministracionUsuarios from './pages/AdministracionUsuarios';
+import AdministracionCaracteristicas from './pages/AdministracionCaracteristicas';
+import ListaCaracteristicas from './pages/ListaCaracteristicas';
+import AgregarCaracteristicas from './pages/AgregarCaracteristicas';
 import ListaUsuariosAdmin from './pages/ListaUsuariosAdmin';
+import EditarCaracteristica from './pages/EditarCaracteristica';
+import AsociarProductoCaracteristica from './pages/AsociarProductoCaracteristica';
+
 /**
  * Componente principal de la aplicación React.
  *
@@ -57,7 +63,7 @@ const App = () => {
           {/* Detalle de producto - parámetro dinámico :id */}
           <Route path="/producto/:id" element={<DetalleProductos />} />
 
-            {/* Detalle de producto para galería - con ID */}
+          {/* Detalle de producto para galería - con ID */}
           <Route path="/producto/:id/galeria" element={<DetalleProductosGaleria />} />
 
           {/* Edición de producto - parámetro dinámico :id */}
@@ -65,15 +71,25 @@ const App = () => {
 
           <Route path="/registro-usuario" element={<RegistroUsuario />} />
 
-          <Route path="/iniciar-sesion" element={<IniciarSesion />} />  
+          <Route path="/iniciar-sesion" element={<IniciarSesion />} />
 
           <Route path="/mi-perfil" element={<MiPerfil />} />
-          
+
           <Route path="/usuarios-admin" element={<AdministracionUsuarios />} />
 
           <Route path="/productos-admin" element={<AdministracionProductos />} />
 
-          <Route path="/lista-usuarios" element={<ListaUsuariosAdmin />} />ñ
+          <Route path="/caracteristicas-admin" element={<AdministracionCaracteristicas />} />
+
+          <Route path="/lista-caracteristicas" element={<ListaCaracteristicas />} />
+
+          <Route path="/agregar-caracteristica" element={<AgregarCaracteristicas />} />
+
+          <Route path="/editar-caracteristica/:id" element={<EditarCaracteristica />} />
+
+          <Route path="/asociar-producto-caracteristica/:id" element={<AsociarProductoCaracteristica />} />
+
+          <Route path="/lista-usuarios" element={<ListaUsuariosAdmin />} />
         </Routes>
       </main>
 

@@ -1,0 +1,47 @@
+.producto-asociacion-card{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    background:#fff;
+
+    border:1px solid #E5E7EB;
+
+    border-radius:10px;
+
+    padding:18px;
+
+    margin-bottom:14px;
+
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+
+}
+
+.producto-info h3{
+
+    margin:0;
+
+    color:#383B58;
+
+}
+
+.producto-info p{
+
+    margin-top:8px;
+
+    color:#666;
+
+}
+
+.producto-checkbox input{
+
+    width:22px;
+
+    height:22px;
+
+    cursor:pointer;
+
+}

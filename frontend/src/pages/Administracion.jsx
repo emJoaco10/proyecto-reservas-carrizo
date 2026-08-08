@@ -34,6 +34,9 @@ if (esMobile) {
             <Link to="/productos-admin">Acciones de productos</Link>
           </li>
           <li>
+            <Link to="/caracteristicas-admin">Acciones de características</Link>
+          </li>
+          <li>
             <Link to="/reportes">Ver reportes</Link>
           </li>
         </ul>

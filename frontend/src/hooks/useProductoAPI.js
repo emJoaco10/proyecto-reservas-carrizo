@@ -8,18 +8,19 @@ import {
   deleteProducto,
   getPaginados,
   asignarCategoria,
+  asignarCaracteristicas,
   getCategorias
 } from '../services/productoService';
 import { obtenerProductosAleatorios } from '../helpers/productoUtils';
 import { useState, useEffect } from 'react';
 
 export default function useProductoAPI() {
-    const [productos, setProductos] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [categorias, setCategorias] = useState([]);
+  const [productos, setProductos] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [categorias, setCategorias] = useState([]);
 
-    // Cargar productos al montar
+  // Cargar productos al montar
   useEffect(() => {
     fetchProductos();
   }, []);
@@ -31,8 +32,8 @@ export default function useProductoAPI() {
       const data = await getProductos();
       setProductos(data);
     } catch (err) {
-  console.error('[fetchProductos] Error:', err);
-  setError('Mensaje de error para el usuario');
+      console.error('[fetchProductos] Error:', err);
+      setError('Mensaje de error para el usuario');
     } finally {
       setLoading(false);
     }
@@ -92,6 +93,59 @@ export default function useProductoAPI() {
     }
   };
 
+  const setCaracteristicasProducto = async (
+    id,
+    caracteristicasId
+  ) => {
+
+    try {
+
+      const actualizado = await asignarCaracteristicas(
+
+        id,
+
+        caracteristicasId
+
+      );
+
+      setProductos((prev) =>
+
+        prev.map((p) =>
+
+          p.id === id
+
+            ? actualizado
+
+            : p
+
+        )
+
+      );
+
+      return actualizado;
+
+    } catch (err) {
+
+      console.error(
+
+        "[setCaracteristicasProducto] Error:",
+
+        err
+
+      );
+
+      setError(
+
+        `Error al asignar características al producto ${id}`
+
+      );
+
+      return null;
+
+    }
+
+  };
+
   // Eliminar producto por id
   const removeProductoById = async (id) => {
     try {
@@ -131,15 +185,15 @@ export default function useProductoAPI() {
   };
 
   const fetchCategorias = async () => {
-  try {
-    const data = await getCategorias();
-    setCategorias(Array.isArray(data) ? data : []);
-  } catch (err) {
-    console.error("[fetchCategorias] Error:", err);
-    setError("Error al obtener categorías");
-    setCategorias([]);
-  }
-};
+    try {
+      const data = await getCategorias();
+      setCategorias(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("[fetchCategorias] Error:", err);
+      setError("Error al obtener categorías");
+      setCategorias([]);
+    }
+  };
 
   return {
     productos,
@@ -152,6 +206,7 @@ export default function useProductoAPI() {
     addProducto,
     editProducto,
     setCategoriaProducto,
+    setCaracteristicasProducto,
     removeProductoById,
     removeAllProductos,
     fetchPaginados,

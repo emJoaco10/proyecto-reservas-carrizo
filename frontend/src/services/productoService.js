@@ -119,6 +119,47 @@ export const asignarCategoria = async (id, categoriaId) => {
   }
 };
 
+// Asignar características a un producto
+export const asignarCaracteristicas = async (id, caracteristicasId) => {
+
+  try {
+
+    const response = await axios.put(
+
+      `${URL_BASE}/${id}/caracteristicas`,
+
+      caracteristicasId,
+
+      {
+
+        headers: {
+
+          "Content-Type": "application/json"
+
+        }
+
+      }
+
+    );
+
+    return response.data;
+
+  } catch (error) {
+
+    console.error(
+
+      `Error al asignar características al producto ${id}:`,
+
+      error
+
+    );
+
+    throw error;
+
+  }
+
+};
+
 // Obtener todas las categorías
 export const getCategorias = async () => {
   try {

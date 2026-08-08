@@ -1,0 +1,31 @@
+.acciones-asociacion{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:16px;
+
+    margin-top:32px;
+
+}
+
+.contador-productos{
+
+    margin-top:12px;
+
+    margin-bottom:24px;
+
+    font-size:18px;
+
+    color:#545776;
+
+}
+
+.contador-productos strong{
+
+    color:#1DBEB4;
+
+    font-weight:700;
+
+}

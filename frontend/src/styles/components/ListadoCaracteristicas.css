@@ -1,0 +1,43 @@
+/* ===================================================
+   LISTADO DE CARACTERÍSTICAS
+=================================================== */
+
+.lista-caracteristicas{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+
+    gap:24px;
+
+    margin-top:32px;
+
+    align-items:stretch;
+
+}
+
+/* ===================================================
+   RESPONSIVE
+=================================================== */
+
+@media(max-width:1024px){
+
+    .lista-caracteristicas{
+
+        grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+
+    }
+
+}
+
+@media(max-width:768px){
+
+    .lista-caracteristicas{
+
+        grid-template-columns:1fr;
+
+        gap:20px;
+
+    }
+
+}

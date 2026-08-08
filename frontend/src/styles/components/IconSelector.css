@@ -1,0 +1,99 @@
+/* ==========================================
+   CONTENEDOR
+========================================== */
+
+.icon-selector{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+
+    gap:16px;
+
+    margin-top:12px;
+
+}
+
+/* ==========================================
+   TARJETA
+========================================== */
+
+.icon-card{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:18px;
+
+    border:2px solid #E5E7EB;
+
+    border-radius:10px;
+
+    background:#FFFFFF;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.icon-card svg{
+
+    color:#1DBEB4;
+
+}
+
+.icon-card span{
+
+    color:#383B58;
+
+    font-weight:600;
+
+    text-align:center;
+
+}
+
+.icon-card:hover{
+
+    border-color:#1DBEB4;
+
+    transform:translateY(-3px);
+
+}
+
+/* ==========================================
+   SELECCIONADA
+========================================== */
+
+.icon-card.seleccionada{
+
+    background:#E8FAF9;
+
+    border:2px solid #1DBEB4;
+
+    box-shadow:0 6px 18px rgba(29,190,180,.25);
+
+    transform:translateY(-3px);
+
+}
+
+.icon-card.seleccionada span{
+
+    color:#1DBEB4;
+
+    font-weight:700;
+
+}
+
+.icon-card.seleccionada svg{
+
+    color:#1DBEB4;
+
+}
