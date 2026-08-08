@@ -57,6 +57,14 @@ public class Producto {
     @JoinColumn(name = "categoria_id", nullable = true)
     private Categoria categoria;
 
+    @ManyToMany
+    @JoinTable(
+            name = "producto_caracteristica",
+            joinColumns = @JoinColumn(name = "producto_id"),
+            inverseJoinColumns = @JoinColumn(name = "caracteristica_id")
+    )
+    private List<Caracteristica> caracteristicas;
+
     /**
      * Constructor con parámetros.
      * Utilizado para crear instancias de Producto con datos iniciales.
@@ -98,4 +106,7 @@ public class Producto {
 
     public Categoria getCategoria() {return categoria;}
     public void setCategoria(Categoria categoria) {this.categoria = categoria;}
+
+    public List<Caracteristica> getCaracteristicas() {return caracteristicas;}
+    public void setCaracteristicas(List<Caracteristica> caracteristicas) {this.caracteristicas = caracteristicas;}
 }

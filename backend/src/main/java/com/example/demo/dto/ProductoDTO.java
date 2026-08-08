@@ -3,6 +3,7 @@ package com.example.demo.dto;
 import com.example.demo.model.Categoria;
 import jakarta.persistence.Column;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,6 +57,8 @@ public class ProductoDTO {
 
     private CategoriaDTO categoriaDTO;
 
+    private List<CaracteristicaDTO> caracteristicas = new ArrayList<>();
+
     /**
      * Constructor sin parámetros (default).
      * Utilizado por Jackson para deserializar JSON a objeto.
@@ -72,13 +75,14 @@ public class ProductoDTO {
      * @param tipo Tipo de propiedad
      * @param imagenes Lista de imágenes
      */
-    public ProductoDTO(Long id, String nombre, String descripcion, String tipo, List<String> imagenes, CategoriaDTO categoriaDTO) {
+    public ProductoDTO(Long id, String nombre, String descripcion, String tipo, List<String> imagenes, CategoriaDTO categoriaDTO, List<CaracteristicaDTO> caracteristicas) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.tipo = tipo;
         this.imagenes = imagenes;
         this.categoriaDTO = categoriaDTO;
+        this.caracteristicas = caracteristicas;
     }
 
     // ===================== GETTERS Y SETTERS =====================
@@ -100,4 +104,7 @@ public class ProductoDTO {
 
     public CategoriaDTO getCategoria() {return categoriaDTO;}
     public void setCategoria(CategoriaDTO categoriaDTO) {this.categoriaDTO = categoriaDTO;}
+
+    public List<CaracteristicaDTO> getCaracteristicas() {return caracteristicas;}
+    public void setCaracteristicas(List<CaracteristicaDTO> caracteristicas) {this.caracteristicas = caracteristicas;}
 }

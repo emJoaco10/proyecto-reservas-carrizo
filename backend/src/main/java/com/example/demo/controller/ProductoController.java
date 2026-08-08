@@ -92,7 +92,7 @@ public class ProductoController {
 
             ;return dto.map(ResponseEntity::ok)
                     .orElseGet(() -> ResponseEntity.status(500)
-                            .body(new ProductoDTO(null, null, null, null, null, null)));
+                            .body(new ProductoDTO(null, null, null, null, null, null, null)));
 
         } catch (IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
@@ -259,6 +259,29 @@ public class ProductoController {
     public ResponseEntity<ProductoDTO> asignarCategoria(@PathVariable Long id, @RequestBody Long categoriaId) {
         ProductoDTO actualizado = productoService.asignarCategoria(id, categoriaId);
         return ResponseEntity.ok(actualizado);
+    }
+
+    /**
+     * PUT /api/producto/{id}/caracteristicas
+     *
+     * Asigna una lista de características a un producto existente.
+     *
+     * Recibe una lista de IDs de características y devuelve el ProductoDTO actualizado.
+     *
+     * @param id ID del producto
+     * @param caracteristicasId lista de IDs de características
+     * @return ProductoDTO actualizado
+     */
+    @PutMapping("/{id}/caracteristicas")
+    public ResponseEntity<ProductoDTO> asignarCaracteristicas(
+            @PathVariable Long id,
+            @RequestBody List<Long> caracteristicasId) {
+
+        ProductoDTO actualizado =
+                productoService.asignarCaracteristicas(id, caracteristicasId);
+
+        return ResponseEntity.ok(actualizado);
+
     }
 
     /**

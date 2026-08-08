@@ -58,4 +58,14 @@ public class CaracteristicaController {
 
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CaracteristicaDTO> obtenerPorId(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                caracteristicaService.obtenerPorId(id)
+        );
+
+    }
+
 }

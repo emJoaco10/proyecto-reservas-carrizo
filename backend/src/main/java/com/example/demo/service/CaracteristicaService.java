@@ -77,4 +77,13 @@ public class CaracteristicaService {
 
         return "Característica eliminada correctamente";
     }
+
+    public CaracteristicaDTO obtenerPorId(Long id) {
+
+        Caracteristica caracteristica = caracteristicaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Característica no encontrada"));
+
+        return mapearCaracteristicaADTO(caracteristica);
+
+    }
 }

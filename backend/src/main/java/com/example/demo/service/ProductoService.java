@@ -1,9 +1,12 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.CaracteristicaDTO;
 import com.example.demo.dto.ProductoDTO;
 import com.example.demo.dto.CategoriaDTO;
+import com.example.demo.model.Caracteristica;
 import com.example.demo.model.Categoria;
 import com.example.demo.model.Producto;
+import com.example.demo.repository.CaracteristicaRepository;
 import com.example.demo.repository.CategoriaRepository;
 import com.example.demo.repository.ProductoRepository;
 import org.springframework.data.domain.Page;
@@ -11,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -35,14 +39,16 @@ public class ProductoService {
 
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
+    private final CaracteristicaRepository caracteristicaRepository;
 
     /**
      * Inyección de dependencia del Repository.
      * Spring instancia automáticamente ProductoRepository.
      */
-    public ProductoService(ProductoRepository productoRepository, CategoriaRepository categoriaRepository) {
+    public ProductoService(ProductoRepository productoRepository, CategoriaRepository categoriaRepository, CaracteristicaRepository caracteristicaRepository) {
         this.productoRepository = productoRepository;
         this.categoriaRepository = categoriaRepository;
+        this.caracteristicaRepository = caracteristicaRepository;
     }
 
     /**
@@ -207,20 +213,44 @@ public class ProductoService {
      * @param producto Entidad Producto a mapear     * @return ProductoDTO mapeado con CategoriaDTO si existe
      */
     private ProductoDTO mapearProductoADTO(Producto producto) {
+
         CategoriaDTO categoriaDTO = null;
 
         if (producto.getCategoria() != null) {
+
             Categoria categoria = producto.getCategoria();
-            categoriaDTO = new CategoriaDTO(categoria.getId(), categoria.getNombre());
+
+            categoriaDTO = new CategoriaDTO(
+
+                    categoria.getId(),
+                    categoria.getNombre()
+            );
         }
 
+        List<CaracteristicaDTO> caracteristicasDTO = List.of();
+
+        if (producto.getCaracteristicas() != null) {
+
+            caracteristicasDTO = producto.getCaracteristicas()
+                    .stream()
+                    .map(caracteristica -> new CaracteristicaDTO(
+
+                            caracteristica.getId(),
+                            caracteristica.getNombre(),
+                            caracteristica.getIcono()
+
+                    ))
+                    .toList();
+        }
         return new ProductoDTO(
+
                 producto.getId(),
                 producto.getNombre(),
                 producto.getDescripcion(),
                 producto.getTipo(),
                 producto.getImagenes(),
-                categoriaDTO
+                categoriaDTO,
+                caracteristicasDTO
         );
     }
 
@@ -256,9 +286,46 @@ public class ProductoService {
         } else {
             producto.setCategoria(null); // opcional: limpiar categoría si no se envía
         }
+        // Actualizar características
+        if (productoDTO.getCaracteristicas() != null) {
+
+            List<Caracteristica> caracteristicas = productoDTO.getCaracteristicas()
+                    .stream()
+                    .map(caracteristicaDTO -> caracteristicaRepository.findById(caracteristicaDTO.getId())
+                            .orElseThrow(() -> new IllegalArgumentException(
+                                    "Característica no encontrada: " + caracteristicaDTO.getId())))
+                    .toList();
+
+            producto.setCaracteristicas(caracteristicas);
+        }
 
         Producto actualizado = productoRepository.save(producto);
         return mapearProductoADTO(actualizado);
+    }
+
+    public ProductoDTO asignarCaracteristicas(
+            Long productoId,
+            List<Long> caracteristicasId) {
+
+        Producto producto = productoRepository.findById(productoId)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Producto no encontrado"));
+
+        List<Caracteristica> caracteristicas = new ArrayList<>(
+                caracteristicasId.stream()
+                        .map(id -> caracteristicaRepository.findById(id)
+                                .orElseThrow(() ->
+                                        new IllegalArgumentException(
+                                                "Característica no encontrada: " + id)))
+                        .toList()
+        );
+
+        producto.setCaracteristicas(caracteristicas);
+
+        Producto actualizado = productoRepository.save(producto);
+
+        return mapearProductoADTO(actualizado);
+
     }
 }
 
