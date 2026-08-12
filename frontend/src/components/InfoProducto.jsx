@@ -1,12 +1,13 @@
 import React from 'react'
 import '../styles/components/InfoProducto.css'
+import CaracteristicasListado from './CaracteristicasListado'
 
  const InfoProducto = ({ producto, onVerMas }) => {
   if (!producto) {
     return <div>No hay producto disponible</div>
   }
 
-  const { nombre, descripcion, imagenes = [], id } = producto
+  const { nombre, descripcion, imagenes = [], caracteristicas = [], id } = producto
   const imagenPrincipal = imagenes && imagenes.length > 0 ? imagenes[0] : null
 
   return (
@@ -27,6 +28,9 @@ import '../styles/components/InfoProducto.css'
       >
         Ver más
       </button>
+
+      <CaracteristicasListado caracteristicas={caracteristicas} />
+      
     </div>
   )
 }

@@ -1,0 +1,234 @@
+/* ==========================================
+   BLOQUE CARACTERÍSTICAS
+========================================== */
+
+.caracteristicas-producto {
+
+    width: 100%;
+
+    margin-top: 32px;
+
+    padding: 28px;
+
+    box-sizing: border-box;
+
+    background: #FFFFFF;
+
+    border: 1px solid #E5E7EB;
+
+    border-radius: 16px;
+
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+
+}
+
+
+/* ==========================================
+   TÍTULO
+========================================== */
+
+.caracteristicas-producto h2 {
+
+    margin: 0 0 24px;
+
+    color: #383B58;
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+}
+
+
+/* ==========================================
+   LISTADO
+========================================== */
+
+.caracteristicas-lista {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 16px;
+
+}
+
+/* ==========================================
+   ITEM
+========================================== */
+
+.caracteristica-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-height: 64px;
+
+    padding: 14px 16px;
+
+    box-sizing: border-box;
+
+    background: #F8FAFA;
+
+    border: 1px solid #E5E7EB;
+
+    border-radius: 10px;
+
+    color: #383B58;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+
+}
+
+
+/* ==========================================
+   HOVER
+========================================== */
+
+.caracteristica-item:hover {
+
+    transform: translateY(-2px);
+
+    border-color: #1DBEB4;
+
+    box-shadow:
+        0 4px 12px rgba(29, 190, 180, .12);
+
+}
+
+
+/* ==========================================
+   ICONO
+========================================== */
+
+.caracteristica-item-icono {
+
+    width: 30px;
+
+    height: 30px;
+
+    flex-shrink: 0;
+
+    color: #1DBEB4;
+
+}
+
+
+/* ==========================================
+   SIN CARACTERÍSTICAS
+========================================== */
+
+.sin-caracteristicas {
+
+    margin: 0;
+
+    color: #666;
+
+    font-size: 15px;
+
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 768px) {
+
+    .caracteristicas-producto {
+
+        margin-top: 28px;
+
+        padding: 22px;
+
+    }
+
+
+    .caracteristicas-producto h2 {
+
+        font-size: 22px;
+
+        margin-bottom: 20px;
+
+    }
+
+
+    .caracteristicas-lista {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 14px;
+
+    }
+
+}
+
+
+/* ==========================================
+   MÓVIL
+========================================== */
+
+@media (max-width: 480px) {
+
+    .caracteristicas-producto {
+
+        margin-top: 24px;
+
+        padding: 18px;
+
+        border-radius: 12px;
+
+    }
+
+
+    .caracteristicas-producto h2 {
+
+        font-size: 21px;
+
+        margin-bottom: 18px;
+
+    }
+
+
+    .caracteristicas-lista {
+
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+
+    }
+
+
+    .caracteristica-item {
+
+        min-height: 58px;
+
+        padding: 12px 14px;
+
+        font-size: 15px;
+
+    }
+
+
+    .caracteristica-item-icono {
+
+        width: 28px;
+
+        height: 28px;
+
+    }
+
+}
