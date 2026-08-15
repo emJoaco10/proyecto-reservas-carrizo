@@ -298,6 +298,14 @@ public class ProductoController {
         List<ProductoDTO> dtos = productoService.obtenerPorCategoria(id);
         return ResponseEntity.ok(dtos);
     }
+
+    @GetMapping("/categoriasFiltro")
+    public ResponseEntity<List<ProductoDTO>> obtenerPorCategorias(@RequestParam List<Long> ids) {
+
+        return ResponseEntity.ok(
+                productoService.obtenerPorCategorias(ids)
+        );
+    }
 //Crear un endpoint para obtener
     @GetMapping("/categorias")
 public ResponseEntity<List<CategoriaDTO>> getCategorias() {

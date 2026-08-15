@@ -255,6 +255,24 @@ public class ProductoService {
     }
 
     /**
+     * Obtiene todos los productos pertenecientes
+     * a una o varias categorías.
+     *
+     * @param categoriaIds lista de IDs de categorías
+     * @return Lista de productos pertenecientes
+     *         a cualquiera de las categorías indicadas
+     */
+    public List<ProductoDTO> obtenerPorCategorias(List<Long> categoriaIds) {
+
+        List<Producto> productos =
+                productoRepository.findByCategoriaIdIn(categoriaIds);
+
+        return productos.stream()
+                .map(this::mapearProductoADTO)
+                .toList();
+    }
+
+    /**
      * Actualiza un producto existente con todos sus campos.
      *
      * FLUJO:
