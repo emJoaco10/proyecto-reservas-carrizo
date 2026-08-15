@@ -9,7 +9,8 @@ import {
   getPaginados,
   asignarCategoria,
   asignarCaracteristicas,
-  getCategorias
+  getCategorias,
+  getProductosPorCategorias
 } from '../services/productoService';
 import { obtenerProductosAleatorios } from '../helpers/productoUtils';
 import { useState, useEffect } from 'react';
@@ -184,6 +185,27 @@ export default function useProductoAPI() {
     return obtenerProductosAleatorios(productos, cantidad);
   };
 
+  const fetchProductosPorCategorias = async (categoriaIds) => {
+    try {
+
+      return await getProductosPorCategorias(categoriaIds);
+
+    } catch (err) {
+
+      console.error(
+        '[fetchProductosPorCategorias] Error:',
+        err
+      );
+
+      setError(
+        'Error al obtener productos por categorías'
+      );
+
+      return [];
+
+    }
+  }
+
   const fetchCategorias = async () => {
     try {
       const data = await getCategorias();
@@ -203,6 +225,7 @@ export default function useProductoAPI() {
     fetchProductos,
     fetchProductoById,
     fetchCategorias,
+    fetchProductosPorCategorias,
     addProducto,
     editProducto,
     setCategoriaProducto,

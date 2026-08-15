@@ -1,0 +1,308 @@
+/* ==========================================
+   CONTENEDOR DE RESULTADOS
+========================================== */
+
+.listado-productos-filtrados {
+
+    width: 100%;
+
+    margin-top: 20px;
+
+    background: #FFFFFF;
+
+    border: 1px solid #E5E7EB;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .06);
+
+}
+
+
+/* ==========================================
+   ENCABEZADO DEL DESPLEGABLE
+========================================== */
+
+.resultados-filtro-header {
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 16px 20px;
+
+    border: none;
+
+    background: #F8FAFA;
+
+    color: #383B58;
+
+    font-size: 16px;
+
+    font-weight: 500;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background-color .2s ease;
+
+}
+
+
+.resultados-filtro-header:hover {
+
+    background: #EEF8F7;
+
+}
+
+
+.resultados-filtro-header strong {
+
+    color: #169B93;
+
+}
+
+
+/* ==========================================
+   FLECHA
+========================================== */
+
+.resultados-filtro-flecha {
+
+    font-size: 14px;
+
+    transition: transform .2s ease;
+
+}
+
+
+.resultados-filtro-flecha.abierto {
+
+    transform: rotate(180deg);
+
+}
+
+
+/* ==========================================
+   LISTADO
+========================================== */
+
+.resultados-filtro-lista {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+/* ==========================================
+   FILA DE PRODUCTO
+========================================== */
+
+.producto-filtrado-fila {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 16px 20px;
+
+    border-top: 1px solid #E5E7EB;
+
+    background: #FFFFFF;
+
+    transition:
+        background-color .2s ease;
+
+}
+
+
+.producto-filtrado-fila:hover {
+
+    background: #FAFAFA;
+
+}
+
+
+/* ==========================================
+   INFORMACIÓN
+========================================== */
+
+.producto-filtrado-info {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    min-width: 0;
+
+}
+
+
+.producto-filtrado-info h3 {
+
+    margin: 0;
+
+    color: #383B58;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+}
+
+
+/* ==========================================
+   TIPO
+========================================== */
+
+.producto-filtrado-tipo {
+
+    padding: 5px 9px;
+
+    border-radius: 6px;
+
+    background: #E8FAF9;
+
+    color: #169B93;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+}
+
+
+/* ==========================================
+   VER MÁS
+========================================== */
+
+.producto-filtrado-ver {
+
+    flex-shrink: 0;
+
+    color: #169B93;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+        color .2s ease;
+
+}
+
+
+.producto-filtrado-ver:hover {
+
+    color: #117D76;
+
+    text-decoration: underline;
+
+}
+
+
+/* ==========================================
+   SIN RESULTADOS
+========================================== */
+
+.resultados-filtro-vacio {
+
+    margin-top: 20px;
+
+    padding: 18px 20px;
+
+    background: #FFFFFF;
+
+    border: 1px solid #E5E7EB;
+
+    border-radius: 12px;
+
+    color: #666;
+
+}
+
+
+.resultados-filtro-vacio p {
+
+    margin: 0;
+
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 768px) {
+
+    .producto-filtrado-fila {
+
+        padding: 15px 16px;
+
+    }
+
+}
+
+
+/* ==========================================
+   MÓVIL
+========================================== */
+
+@media (max-width: 600px) {
+
+    .resultados-filtro-header {
+
+        padding: 15px 16px;
+
+    }
+
+
+    .producto-filtrado-fila {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 12px;
+
+        padding: 16px;
+
+    }
+
+
+    .producto-filtrado-info {
+
+        width: 100%;
+
+        flex-wrap: wrap;
+
+    }
+
+
+    .producto-filtrado-ver {
+
+        align-self: flex-end;
+
+    }
+
+}

@@ -119,6 +119,35 @@ export const asignarCategoria = async (id, categoriaId) => {
   }
 };
 
+// Obtener productos filtrados por una o varias categorías
+export const getProductosPorCategorias = async (categoriaIds) => {
+
+  try {
+
+    const response = await axios.get(
+      `${URL_BASE}/categoriasFiltro`,
+      {
+        params: {
+          ids: categoriaIds
+        }
+      }
+    );
+
+    return response.data;
+
+  } catch (error) {
+
+    console.error(
+      'Error al obtener productos por categorías:',
+      error
+    );
+
+    throw error;
+
+  }
+
+};
+
 // Asignar características a un producto
 export const asignarCaracteristicas = async (id, caracteristicasId) => {
 

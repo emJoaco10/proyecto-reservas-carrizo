@@ -1,7 +1,15 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+
+
 import '../styles/pages/Main.css';
+
 import ListadoProductos from '../components/ListadoProductos';
-import {leerLocal} from "../helpers/storageUtils";
+import CategoryFilter from '../components/CategoryFilter';
+import ListadoProductosFiltrados from '../components/ListadoProductosFiltrados';
+
+import { leerLocal } from "../helpers/storageUtils";
+import useProductoAPI from '../hooks/useProductoAPI';
 
 /**
  * Página principal (Home) de la aplicación.
@@ -31,14 +39,74 @@ const Main = () => {
 
   const usuario = leerLocal("usuario");
 
+  const {
+    categorias,
+    fetchCategorias,
+    fetchProductosPorCategorias
+  } = useProductoAPI();
+
+  const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([]);
+  const [productosFiltrados, setProductosFiltrados] = useState([]);
+
+  //Cargar categorías al montar el componente
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+
+    fetchCategorias();
+
+  }, []);
+
+  const handleCambiarCategorias = async (nuevasCategorias) => {
+
+    setCategoriasSeleccionadas(nuevasCategorias);
+
+    if (nuevasCategorias.length === 0) {
+
+      setProductosFiltrados([]);
+
+      return;
+    }
+
+    const resultados =
+      await fetchProductosPorCategorias(
+        nuevasCategorias
+      );
+
+    setProductosFiltrados(resultados);
+
+  };
+
+  const handleLimpiarFiltros = () => {
+
+    setCategoriasSeleccionadas([]);
+
+    setProductosFiltrados([]);
+
+  };
+
   return (
     <div className="main-container">
 
       {/* Placeholder para buscador - futuro desarrollo */}
       <section className="bloque">Buscador</section>
 
-      {/* Placeholder para categorías - futuro desarrollo */}
-      <section className="bloque">Categorías</section>
+      <section className="bloque">
+
+        <CategoryFilter
+          categorias={categorias}
+          categoriasSeleccionadas={categoriasSeleccionadas}
+          onCambiarCategorias={handleCambiarCategorias}
+          onLimpiarFiltros={handleLimpiarFiltros}
+        />
+
+        {categoriasSeleccionadas.length > 0 && (
+
+          <ListadoProductosFiltrados
+            productos={productosFiltrados}
+          />
+
+        )}
+      </section>
 
       {/* Sección funcional: Productos aleatorios */}
       <section className="bloque">
