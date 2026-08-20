@@ -20,6 +20,8 @@ import AgregarCaracteristicas from './pages/AgregarCaracteristicas';
 import ListaUsuariosAdmin from './pages/ListaUsuariosAdmin';
 import EditarCaracteristica from './pages/EditarCaracteristica';
 import AsociarProductoCaracteristica from './pages/AsociarProductoCaracteristica';
+import AgregarCategorias from './pages/AgregarCategorias';
+import AdministracionCategorias from './pages/AdministracionCategorias';
 
 /**
  * Componente principal de la aplicación React.
@@ -81,6 +83,8 @@ const App = () => {
 
           <Route path="/caracteristicas-admin" element={<AdministracionCaracteristicas />} />
 
+          <Route path="/categorias-admin" element={<AdministracionCategorias />} />
+
           <Route path="/lista-caracteristicas" element={<ListaCaracteristicas />} />
 
           <Route path="/agregar-caracteristica" element={<AgregarCaracteristicas />} />
@@ -90,6 +94,8 @@ const App = () => {
           <Route path="/asociar-producto-caracteristica/:id" element={<AsociarProductoCaracteristica />} />
 
           <Route path="/lista-usuarios" element={<ListaUsuariosAdmin />} />
+
+          <Route path="/agregar-categoria" element={<AgregarCategorias />} />
         </Routes>
       </main>
 
