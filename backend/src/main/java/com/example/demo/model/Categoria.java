@@ -25,6 +25,12 @@ public class Categoria {
     @Column(unique = true, nullable = false)
     private String nombre;
 
+    @Column
+    private String descripcion;
+
+    @Column(columnDefinition = "TEXT")
+    private String imagen;
+
     /**     * Relación OneToMany con Producto.
      *Una categoría puede tener muchos productos asociados.
      * mappedBy = "categoria" indica que la FK está en Producto.
@@ -40,6 +46,12 @@ public class Categoria {
      */
     public Categoria(String nombre) {
         this.nombre = nombre;
+    }
+
+    public Categoria(String nombre, String descripcion, String imagen) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.imagen = imagen;
     }
 
     /**     * Constructor sin parámetros.
@@ -64,6 +76,18 @@ public class Categoria {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+    public void setImagen(String imagen) {}
 
     public List<Producto> getProductos() {
         return productos;
