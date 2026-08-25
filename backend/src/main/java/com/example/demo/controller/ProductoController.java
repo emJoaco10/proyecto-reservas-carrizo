@@ -13,27 +13,13 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Controller REST para gestionar productos.
+ * Controller REST encargado de exponer las operaciones relacionadas
+ * con productos y algunas consultas relacionadas con categorías.
  *
- * PROPÓSITO: Exponer endpoints HTTP para operaciones CRUD de productos.
+ * Ruta base: /api/producto
  *
- * RUTA BASE: /api/producto
- *
- * Endpoints:
- * - POST /api/producto → Registrar nuevo producto
- * - GET /api/producto/aleatorios → Obtener aleatorios
- * - GET /api/producto/{id} → Obtener por ID
- * - GET /api/producto/paginados → Obtener paginados
- * - GET /api/producto/admin → Obtener todos (para admin)
- * - DELETE /api/producto → Eliminar todos
- * - DELETE /api/producto/{id} → Eliminar uno
- *
- * PATRÓN: Siempre se retorna ProductoDTO, nunca Entity directo.
- *
- * CORS: Habilitado para http://localhost:5173 (frontend Vite)
- *
- * @author Backend Team
- * @version 1.0
+ * El Controller recibe las solicitudes HTTP, delega la lógica de negocio
+ * al ProductoService y devuelve DTOs al frontend.
  */
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -48,7 +34,8 @@ public class ProductoController {
     private final CategoriaRepository categoriaRepository;
 
     /**
-     * Constructor con inyección de ProductoService.
+     * Constructor utilizado por Spring para inyectar las dependencias
+     * necesarias para gestionar productos y consultar categorías.
      */
     public ProductoController(ProductoService productoService, CategoriaRepository categoriaRepository) {
         this.productoService = productoService;
@@ -56,22 +43,16 @@ public class ProductoController {
     }
 
     /**
-     * POST /api/producto
+     * Registra un nuevo producto.
      *
-     * Registra un nuevo producto en la base de datos.
+     * Recibe un ProductoDTO, convierte los datos necesarios a una entidad
+     * Producto y delega el guardado al ProductoService.
      *
-     * FLUJO:
-     * 1. Recibe ProductoDTO en cuerpo JSON
-     * 2. Convierte DTO → Entity (Producto)
-     * 3. Llama a ProductoService.guardarProducto() para validación y persistencia
-     * 4. Convierte Entity guardado → DTO para respuesta JSON
-     * 5. Retorna 200 OK con producto creado
+     * El Service se encarga de validar que no exista otro producto
+     * con el mismo nombre.
      *
-     * VALIDACIÓN: El Service valida que el nombre no sea duplicado.
-     * Si falla, retorna 400 Bad Request con mensaje de error.
-     *
-     * @param productoDTO DTO con datos del producto a crear
-     * @return ResponseEntity con ProductoDTO guardado (id asignado por BD)
+     * @param productoDTO datos del producto que se desea registrar
+     * @return producto creado convertido a ProductoDTO
      */
     @PostMapping
     public ResponseEntity<?> registrarProducto(@RequestBody ProductoDTO productoDTO) {
@@ -81,18 +62,21 @@ public class ProductoController {
             Producto producto = new Producto();
             producto.setNombre(productoDTO.getNombre());
             producto.setDescripcion(productoDTO.getDescripcion());
-            producto.setTipo(productoDTO.getTipo());
             producto.setImagenes(productoDTO.getImagenes());
 
             // 2. Guardar en servicio (valida duplicados, persiste)
             Producto nuevo = productoService.guardarProducto(producto);
 
-        // 3. Obtener DTO usando el método del servicio que ya maneja el mapeo
-        Optional<ProductoDTO> dto = productoService.obtenerPorId(nuevo.getId());
+            /*
+             * Se vuelve a consultar el producto mediante el Service
+             * para obtener el DTO completo, incluyendo las relaciones
+             * que correspondan.
+             */
+            Optional<ProductoDTO> dto = productoService.obtenerPorId(nuevo.getId());
 
             ;return dto.map(ResponseEntity::ok)
                     .orElseGet(() -> ResponseEntity.status(500)
-                            .body(new ProductoDTO(null, null, null, null, null, null, null)));
+                            .body(new ProductoDTO(null, null, null, null, null, null)));
 
         } catch (IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
@@ -100,19 +84,11 @@ public class ProductoController {
     }
 
     /**
-     * GET /api/producto/aleatorios
+     * Obtiene una cantidad fija de productos aleatorios.
      *
-     * Obtiene una lista de productos aleatorios.
+     * Actualmente solicita 10 productos al Service.
      *
-     * FLUJO:
-     * 1. Llama a ProductoService.obtenerProductosAleatorios(10)
-     * 2. Convierte cada Entity a DTO
-     * 3. Retorna lista de DTOs
-     *
-     * USAR: En frontend para mostrar recomendaciones en home.
-     * Cada llamada retorna productos diferentes (baraja la lista).
-     *
-     * @return ResponseEntity con List<ProductoDTO> aleatorios
+     * @return lista de productos aleatorios como ProductoDTO
      */
     @GetMapping("/aleatorios")
     public ResponseEntity<List<ProductoDTO>> obtenerAleatorios() {
@@ -122,20 +98,10 @@ public class ProductoController {
     }
 
     /**
-     * GET /api/producto/{id}
-     * <p>
-     * Obtiene un producto específico por su ID.
-     * <p>
-     * FLUJO:
-     * 1. Extrae ID de la URL (path variable)
-     * 2. Llama a ProductoService.obtenerPorId(id)
-     * 3. Si existe, convierte Entity → DTO y retorna 200
-     * 4. Si no existe, retorna 404 Not Found
-     * <p>
-     * USAR: En frontend para cargar detalle de producto.
+     * Obtiene un producto específico mediante su ID.
      *
-     * @param id ID del producto a obtener
-     * @return ResponseEntity con ProductoDTO si existe, 404 si no
+     * @param id identificador del producto
+     * @return ProductoDTO correspondiente al producto encontrado
      */
     @GetMapping("/{id}")
     public ResponseEntity<ProductoDTO> obtenerPorId(@PathVariable Long id) {
@@ -145,25 +111,18 @@ public class ProductoController {
     }
 
     /**
-     * GET /api/producto/paginados?page=0&size=10
+     * Obtiene productos utilizando paginación.
      *
-     * Obtiene productos con paginación.
+     * Los parámetros permiten indicar qué página consultar y cuántos
+     * productos incluir en cada página.
      *
-     * FLUJO:
-     * 1. Extrae parámetros page y size de la query string
-     * 2. Llama a ProductoService.obtenerPaginados(page, size)
-     * 3. Convierte Page<Entity> → Page<DTO>
-     * 4. Retorna objeto Page con metadata (total, páginas, etc.)
+     * Valores predeterminados:
+     * - page = 0
+     * - size = 10
      *
-     * USAR: En admin panel o listado con scroll infinito.
-     *
-     * PARÁMETROS POR DEFECTO:
-     * - page: 0 (primera página)
-     * - size: 10 (10 elementos por página)
-     *
-     * @param page Número de página (0-indexed)
-     * @param size Elementos por página
-     * @return ResponseEntity con Page<ProductoDTO>
+     * @param page número de página, comenzando desde 0
+     * @param size cantidad de productos por página
+     * @return página de productos como ProductoDTO
      */
     @GetMapping("/paginados")
     public ResponseEntity<Page<ProductoDTO>> obtenerPaginados(
@@ -175,22 +134,11 @@ public class ProductoController {
     }
 
     /**
-     * GET /api/producto/admin
+     * Obtiene todos los productos para las funcionalidades administrativas.
      *
-     * Obtiene TODOS los productos sin paginación.
-     * Destinado al panel de administración.
+     * La consulta no utiliza paginación.
      *
-     * FLUJO:
-     * 1. Llama a ProductoService.obtenerTodos()
-     * 2. Convierte cada Entity a DTO
-     * 3. Retorna lista completa
-     *
-     * CUIDADO: Para tablas grandes, puede ser lento.
-     * Considerar paginar en el futuro.
-     *
-     * USAR: En ListaProductosAdmin.jsx para llenar tabla de admin.
-     *
-     * @return ResponseEntity con List<ProductoDTO> todos
+     * @return lista completa de productos como ProductoDTO
      */
     @GetMapping("/admin")
     public ResponseEntity<List<ProductoDTO>> obtenerTodosParaAdmin() {
@@ -201,16 +149,12 @@ public class ProductoController {
 
 
     /**
-     * DELETE /api/producto
+     * Elimina todos los productos registrados.
      *
-     * Elimina TODOS los productos de la base de datos.
+     * Es una operación destructiva y debe utilizarse principalmente
+     * durante tareas de testing o reseteo de datos.
      *
-     * ⚠️ PELIGRO: Operación destructiva sin recuperación.
-     *
-     * USAR: Solo en testing o reseteo de datos.
-     * En producción, proteger con JWT o admin-only.
-     *
-     * @return ResponseEntity con mensaje de confirmación
+     * @return mensaje de confirmación
      */
     @DeleteMapping
     public ResponseEntity<String> borrarTodos() {
@@ -220,24 +164,14 @@ public class ProductoController {
 
 
     /**
-     * DELETE /api/producto/{id}
+     * Elimina un producto específico mediante su ID.
      *
-     * Elimina un producto específico por su ID.
+     * El Service verifica previamente que el producto exista.
      *
-     * FLUJO:
-     * 1. Extrae ID de la URL
-     * 2. Llama a ProductoService.eliminarProducto(id)
-     * 3. Si existe y se elimina, retorna 200 OK
-     * 4. Si no existe, retorna 404 Not Found
-     *
-     * VALIDACIÓN: El Service verifica que el producto exista antes de eliminar.
-     * Si no existe, retorna 404 con mensaje de error.
-     *
-     * USAR: En panel admin para eliminar productos.
-     *
-     * @param id ID del producto a eliminar
-     * @return ResponseEntity con mensaje de confirmación o error
+     * @param id identificador del producto a eliminar
+     * @return mensaje de confirmación
      */
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> eliminarProducto(@PathVariable Long id) {
         String mensaje = productoService.eliminarProducto(id);
@@ -246,14 +180,13 @@ public class ProductoController {
 
 
     /**
-     * PUT /api/producto/{id}/categoria
+     * Asigna una categoría existente a un producto.
      *
-     * Asigna una categoría a un producto existente.
-     * Recibe el ID de la categoría en el body (JSON number) y devuelve el ProductoDTO actualizado.
+     * Recibe el ID de la categoría en el cuerpo de la solicitud.
      *
-     * @param id ID del producto al que se asignará la categoría
-     * @param categoriaId ID de la categoría en el body
-     * @return ResponseEntity con ProductoDTO actualizado
+     * @param id identificador del producto
+     * @param categoriaId identificador de la categoría
+     * @return producto actualizado como ProductoDTO
      */
     @PutMapping("/{id}/categoria")
     public ResponseEntity<ProductoDTO> asignarCategoria(@PathVariable Long id, @RequestBody Long categoriaId) {
@@ -262,15 +195,11 @@ public class ProductoController {
     }
 
     /**
-     * PUT /api/producto/{id}/caracteristicas
+     * Asigna una lista de características existentes a un producto.
      *
-     * Asigna una lista de características a un producto existente.
-     *
-     * Recibe una lista de IDs de características y devuelve el ProductoDTO actualizado.
-     *
-     * @param id ID del producto
+     * @param id identificador del producto
      * @param caracteristicasId lista de IDs de características
-     * @return ProductoDTO actualizado
+     * @return producto actualizado como ProductoDTO
      */
     @PutMapping("/{id}/caracteristicas")
     public ResponseEntity<ProductoDTO> asignarCaracteristicas(
@@ -285,13 +214,12 @@ public class ProductoController {
     }
 
     /**
-     * GET /api/producto/categoria/{id}
+     * Obtiene los productos asociados a una categoría específica.
      *
-     * Obtiene los productos que pertenecen a una categoría específica.
-     * Llama a productoService.obtenerPorCategoria(id) y retorna la lista de ProductoDTO.
+     * Se utiliza para el filtrado por categoría.
      *
-     * @param id ID de la categoría por la cual filtrar
-     * @return ResponseEntity con List<ProductoDTO> filtrados por la categoría
+     * @param id identificador de la categoría
+     * @return lista de productos pertenecientes a la categoría
      */
     @GetMapping("/categoria/{id}")
     public ResponseEntity<List<ProductoDTO>> obtenerPorCategoria(@PathVariable Long id) {
@@ -299,6 +227,18 @@ public class ProductoController {
         return ResponseEntity.ok(dtos);
     }
 
+    /**
+     * Obtiene productos pertenecientes a una o varias categorías.
+     *
+     * Recibe los IDs de las categorías mediante el parámetro de consulta
+     * "ids".
+     *
+     * Ejemplo:
+     * /api/producto/categoriasFiltro?ids=1,2
+     *
+     * @param ids lista de IDs de categorías
+     * @return productos pertenecientes a las categorías indicadas
+     */
     @GetMapping("/categoriasFiltro")
     public ResponseEntity<List<ProductoDTO>> obtenerPorCategorias(@RequestParam List<Long> ids) {
 
@@ -306,9 +246,20 @@ public class ProductoController {
                 productoService.obtenerPorCategorias(ids)
         );
     }
-//Crear un endpoint para obtener
+
+    /**
+     * Obtiene las categorías disponibles.
+     *
+     * Consulta el CategoriaRepository y convierte cada entidad Categoria
+     * a un CategoriaDTO antes de enviarla al frontend.
+     *
+     * Este endpoint es utilizado para cargar las categorías disponibles
+     * en las funcionalidades de filtrado y gestión de productos.
+     *
+     * @return lista de categorías como CategoriaDTO
+     */
     @GetMapping("/categorias")
-public ResponseEntity<List<CategoriaDTO>> getCategorias() {
+    public ResponseEntity<List<CategoriaDTO>> getCategorias() {
     List<CategoriaDTO> categorias = categoriaRepository.findAll()
             .stream()
             .map(c -> new CategoriaDTO(c.getId(), c.getNombre()))
@@ -317,6 +268,20 @@ public ResponseEntity<List<CategoriaDTO>> getCategorias() {
     return ResponseEntity.ok(categorias);
 }
 
+
+    /**
+     * Actualiza un producto existente.
+     *
+     * Recibe un ProductoDTO con los nuevos datos y delega la actualización
+     * al ProductoService.
+     *
+     * La lógica de actualización incluye los datos principales del producto,
+     * su categoría y sus características.
+     *
+     * @param id identificador del producto
+     * @param productoDTO datos actualizados del producto
+     * @return producto actualizado como ProductoDTO
+     */
     @PutMapping("/{id}")
     public ResponseEntity<ProductoDTO> actualizarProducto(
             @PathVariable Long id,

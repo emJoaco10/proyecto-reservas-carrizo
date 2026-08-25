@@ -22,17 +22,16 @@ import java.util.Optional;
 /**
  * Servicio de lógica de negocio para la entidad Producto.
  *
- * Encapsula todas las operaciones relacionadas con productos:
- * - Validación de duplicados
- * - Recuperación de datos (aleatorios, paginados, todos)
- * - Eliminación de productos
+ * Centraliza las operaciones relacionadas con productos, incluyendo:
+ * - Creación y actualización.
+ * - Consultas y filtrado.
+ * - Asociación de categorías.
+ * - Asociación de características.
+ * - Eliminación.
+ * - Conversión de entidades a DTOs.
  *
- * Comunica con ProductoRepository para acceso a datos.
- *
- * IMPORTANTE: La validación se realiza AQUÍ, no en el Controller.
- *
- * @author Backend Team
- * @version 1.0
+ * La comunicación con la base de datos se realiza mediante los repositories
+ * correspondientes.
  */
 @Service
 public class ProductoService {
@@ -42,8 +41,8 @@ public class ProductoService {
     private final CaracteristicaRepository caracteristicaRepository;
 
     /**
-     * Inyección de dependencia del Repository.
-     * Spring instancia automáticamente ProductoRepository.
+     * Constructor utilizado por Spring para inyectar los repositories
+     * necesarios para gestionar productos, categorías y características.
      */
     public ProductoService(ProductoRepository productoRepository, CategoriaRepository categoriaRepository, CaracteristicaRepository caracteristicaRepository) {
         this.productoRepository = productoRepository;
@@ -52,14 +51,14 @@ public class ProductoService {
     }
 
     /**
-     * Guarda un nuevo producto en la base de datos.
+     * Registra un nuevo producto.
      *
-     * VALIDACIÓN: Verifica que no exista otro producto con el mismo nombre.
-     * Si existe, lanza IllegalArgumentException.
+     * Antes de guardarlo verifica que no exista otro producto con el mismo
+     * nombre para evitar registros duplicados.
      *
-     * @param producto Objeto Producto a guardar
-     * @return Producto guardado con ID asignado por la BD
-     * @throws IllegalArgumentException si el nombre ya está en uso
+     * @param producto producto que se desea registrar
+     * @return producto guardado con su ID generado
+     * @throws IllegalArgumentException si ya existe un producto con el mismo nombre
      */
     public Producto guardarProducto (Producto producto){
         // Validación: buscar duplicados por nombre
@@ -71,17 +70,13 @@ public class ProductoService {
     }
 
     /**
-     * Obtiene una cantidad limitada de productos de forma aleatoria.
+     * Obtiene una cantidad determinada de productos de forma aleatoria.
      *
-     * Flujo:
-     * 1. Obtiene TODOS los productos de la BD
-     * 2. Baraja la lista con Collections.shuffle()
-     * 3. Limita el resultado a la cantidad solicitada
+     * Primero obtiene todos los productos, luego mezcla la lista y finalmente
+     * limita la cantidad de resultados solicitada.
      *
-     * NOTA: Para bases de datos grandes, considerar usar SQL RANDOM() en el futuro.
-     *
-     * @param cantidad Número máximo de productos a retornar
-     * @return Lista de productos aleatorios (máx. 'cantidad' elementos)
+     * @param cantidad cantidad máxima de productos a retornar
+     * @return lista de productos aleatorios convertidos a ProductoDTO
      */
     public List<ProductoDTO> obtenerProductosAleatorios(int cantidad) {
         List<Producto> todos = productoRepository.findAll();
@@ -93,10 +88,11 @@ public class ProductoService {
     }
 
     /**
-     * Obtiene un producto por su ID.
+     * Busca un producto por su identificador.
      *
-     * @param id ID único del producto
-     * @return Optional<Producto> con el producto si existe, vacío si no
+     * @param id identificador del producto
+     * @return Optional que contiene el ProductoDTO encontrado
+     * @throws IllegalArgumentException si no existe un producto con ese ID
      */
     public Optional<ProductoDTO> obtenerPorId(Long id) {
         Producto producto = productoRepository.findById(id)
@@ -106,18 +102,14 @@ public class ProductoService {
     }
 
     /**
-     * Obtiene productos con paginación.
+     * Obtiene los productos utilizando paginación.
      *
-     * Útil para listados grandes en el frontend.
-     * Retorna un objeto Page con:
-     * - content: lista de productos en la página actual
-     * - totalElements: cantidad total de productos
-     * - totalPages: cantidad total de páginas
-     * - currentPage: página solicitada
+     * La paginación permite consultar únicamente una parte de los productos
+     * en cada solicitud, evitando cargar toda la información de una vez.
      *
-     * @param page Número de página (0-indexed)
-     * @param size Cantidad de elementos por página
-     * @return Page<Producto> con datos paginados
+     * @param page número de página, comenzando desde 0
+     * @param size cantidad de productos por página
+     * @return página de productos convertidos a ProductoDTO
      */
     public Page<ProductoDTO> obtenerPaginados(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -127,12 +119,12 @@ public class ProductoService {
     }
 
     /**
-     * Obtiene TODOS los productos sin paginación.
+     * Obtiene todos los productos registrados.
      *
-     * CUIDADO: Para tablas muy grandes, puede ser lento.
-     * Preferir obtenerPaginados() para producción.
+     * Este método no utiliza paginación, por lo que para una gran cantidad
+     * de registros se recomienda utilizar obtenerPaginados().
      *
-     * @return Lista completa de todos los productos
+     * @return lista completa de productos convertidos a ProductoDTO
      */
     public List<ProductoDTO> obtenerTodos() {
         List<Producto> productos = productoRepository.findAll();
@@ -143,10 +135,12 @@ public class ProductoService {
     }
 
     /**
-     * Elimina TODOS los productos de la base de datos.
+     * Elimina todos los productos registrados.
      *
-     * CUIDADO: Operación destructiva sin recuperación.
-     * Usar solo en casos de reseteo o testing.
+     * Es una operación destructiva y debe utilizarse únicamente cuando
+     * sea necesario realizar un reseteo o durante tareas de testing.
+     *
+     * @return mensaje indicando que los productos fueron eliminados
      */
     public String borrarTodos() {
         productoRepository.deleteAll();
@@ -171,12 +165,17 @@ public class ProductoService {
         return "Producto eliminado correctamente";
     }
 
-    /**     * Asigna una categoría a un producto y retorna el ProductoDTO actualizado.*
-     *  * @param productoId  id del producto
-     *  * @param categoriaId id de la categoría a asignar
-     *  * @return ProductoDTO actualizado con la categoría asignada
-     *  * @throws IllegalArgumentException si producto o categoría no existen
-     *  */
+    /**
+     * Asocia una categoría existente a un producto.
+     *
+     * Busca tanto el producto como la categoría y actualiza la relación
+     * antes de guardar los cambios.
+     *
+     * @param categoriaId identificador de la categoría
+     * @param productoId identificador del producto
+     * @return producto actualizado convertido a ProductoDTO
+     * @throws IllegalArgumentException si el producto o la categoría no existen
+     */
     public ProductoDTO asignarCategoria(Long productoId, Long categoriaId) {
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado"));
@@ -190,12 +189,14 @@ public class ProductoService {
         return mapearProductoADTO(actualizado);
     }
 
-    /** * Obtiene todos los productos pertenecientes a una categoría determinada.
-     * FLUJO:
-     * 1. Llama a productoRepository.findByCategoriaId(categoriaId)
-     * 2. Convierte cada entidad Producto a ProductoDTO incluyendo la categoría
-     * 3. Retorna la lista de DTOs * * USAR: Endpoint de filtrado por categoría en el frontend (lista por categoría).
-     * @param categoriaId id de la categoría por la cual filtrar productos * @return List<ProductoDTO> con los productos que pertenecen a la categoría */
+    /**
+     * Obtiene todos los productos asociados a una categoría específica.
+     *
+     * Se utiliza principalmente para el filtrado de productos por categoría.
+     *
+     * @param categoriaId identificador de la categoría
+     * @return lista de productos pertenecientes a la categoría
+     */
     public List<ProductoDTO> obtenerPorCategoria(Long categoriaId) {
         List<Producto> productos = productoRepository.findByCategoriaId(categoriaId);
 
@@ -204,13 +205,17 @@ public class ProductoService {
                 .toList();
     }
 
-    /**     * Método auxiliar privado para mapear una entidad Producto a ProductoDTO.
-     * FLUJO:
-     * 1. Extrae datos de la entidad Producto
-     * 2. Si la categoría existe, mapea Categoria a CategoriaDTO
-     * 3. Construye y retorna ProductoDTO con todos los datos
-     * VENTAJA: Centraliza la lógica de mapeo para evitar duplicación en todos los métodos.
-     * @param producto Entidad Producto a mapear     * @return ProductoDTO mapeado con CategoriaDTO si existe
+    /**
+     * Convierte una entidad Producto en un ProductoDTO.
+     *
+     * Además de los datos básicos del producto, incluye la información
+     * necesaria de su categoría y características para enviarla al frontend.
+     *
+     * Este método centraliza el mapeo y evita repetir esta lógica en
+     * los diferentes métodos del servicio.
+     *
+     * @param producto entidad Producto que se desea convertir
+     * @return ProductoDTO correspondiente a la entidad recibida
      */
     private ProductoDTO mapearProductoADTO(Producto producto) {
 
@@ -247,7 +252,6 @@ public class ProductoService {
                 producto.getId(),
                 producto.getNombre(),
                 producto.getDescripcion(),
-                producto.getTipo(),
                 producto.getImagenes(),
                 categoriaDTO,
                 caracteristicasDTO
@@ -255,12 +259,13 @@ public class ProductoService {
     }
 
     /**
-     * Obtiene todos los productos pertenecientes
-     * a una o varias categorías.
+     * Obtiene los productos asociados a cualquiera de las categorías
+     * indicadas.
      *
-     * @param categoriaIds lista de IDs de categorías
-     * @return Lista de productos pertenecientes
-     *         a cualquiera de las categorías indicadas
+     * Se utiliza para soportar el filtrado mediante múltiples categorías.
+     *
+     * @param categoriaIds lista de identificadores de categorías
+     * @return lista de productos pertenecientes a las categorías indicadas
      */
     public List<ProductoDTO> obtenerPorCategorias(List<Long> categoriaIds) {
 
@@ -273,18 +278,19 @@ public class ProductoService {
     }
 
     /**
-     * Actualiza un producto existente con todos sus campos.
+     * Actualiza un producto existente.
      *
-     * FLUJO:
-     * 1. Busca el producto por ID
-     * 2. Actualiza nombre, descripción, tipo e imágenes
-     * 3. Si el DTO incluye categoría, la asigna; si no, la limpia
-     * 4. Persiste los cambios y retorna el ProductoDTO actualizado
+     * Actualiza sus datos principales, categoría y características.
+     * Si no se recibe una categoría, se elimina la asociación existente.
      *
-     * @param id ID del producto a actualizar
-     * @param productoDTO DTO con los datos actualizados
-     * @return ProductoDTO actualizado
-     * @throws IllegalArgumentException si el producto o la categoría no existen
+     * Las características recibidas se buscan en la base de datos antes
+     * de asociarlas al producto.
+     *
+     * @param id identificador del producto a actualizar
+     * @param productoDTO datos actualizados del producto
+     * @return producto actualizado convertido a ProductoDTO
+     * @throws IllegalArgumentException si el producto, categoría o característica
+     *                                  indicada no existe
      */
     public ProductoDTO actualizarProducto(Long id, ProductoDTO productoDTO) {
         Producto producto = productoRepository.findById(id)
@@ -293,7 +299,6 @@ public class ProductoService {
         // Actualizar campos básicos
         producto.setNombre(productoDTO.getNombre());
         producto.setDescripcion(productoDTO.getDescripcion());
-        producto.setTipo(productoDTO.getTipo());
         producto.setImagenes(productoDTO.getImagenes());
 
         // Actualizar categoría si viene en el DTO
@@ -321,6 +326,18 @@ public class ProductoService {
         return mapearProductoADTO(actualizado);
     }
 
+    /**
+     * Reemplaza las características asociadas a un producto.
+     *
+     * Recibe una lista de IDs, busca cada característica en la base de datos
+     * y establece la lista resultante en el producto.
+     *
+     * @param productoId identificador del producto
+     * @param caracteristicasId IDs de las características a asociar
+     * @return producto actualizado convertido a ProductoDTO
+     * @throws IllegalArgumentException si el producto o alguna característica
+     *                                  no existe
+     */
     public ProductoDTO asignarCaracteristicas(
             Long productoId,
             List<Long> caracteristicasId) {

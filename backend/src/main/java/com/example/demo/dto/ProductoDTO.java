@@ -45,11 +45,6 @@ public class ProductoDTO {
     private String descripcion;
 
     /**
-     * Tipo de propiedad: 'casa', 'departamento', 'hotel'
-     */
-    private String tipo;
-
-    /**
      * Lista de URLs o base64 de imágenes.
      */
     @Column(columnDefinition = "TEXT")
@@ -72,14 +67,12 @@ public class ProductoDTO {
      * @param id ID del producto
      * @param nombre Nombre del producto
      * @param descripcion Descripción del producto
-     * @param tipo Tipo de propiedad
      * @param imagenes Lista de imágenes
      */
-    public ProductoDTO(Long id, String nombre, String descripcion, String tipo, List<String> imagenes, CategoriaDTO categoriaDTO, List<CaracteristicaDTO> caracteristicas) {
+    public ProductoDTO(Long id, String nombre, String descripcion, List<String> imagenes, CategoriaDTO categoriaDTO, List<CaracteristicaDTO> caracteristicas) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.tipo = tipo;
         this.imagenes = imagenes;
         this.categoriaDTO = categoriaDTO;
         this.caracteristicas = caracteristicas;
@@ -95,9 +88,6 @@ public class ProductoDTO {
 
     public String getDescripcion() {return descripcion;}
     public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
-
-    public String getTipo() {return tipo;}
-    public void setTipo(String tipo) {this.tipo = tipo;}
 
     public List<String> getImagenes() {return imagenes;}
     public void setImagenes(List<String> imagenes) {this.imagenes = imagenes;}

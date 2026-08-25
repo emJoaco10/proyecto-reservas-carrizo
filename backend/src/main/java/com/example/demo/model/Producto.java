@@ -39,12 +39,6 @@ public class Producto {
     private String descripcion;
 
     /**
-     * Clasificación del tipo de propiedad.
-     * Valores válidos: 'casa', 'departamento', 'hotel'
-     */
-    private String tipo;
-
-    /**
      * Lista de URLs o base64 de imágenes del producto.
      * Almacenada como tabla separada en BD (ElementCollection).
      * Puede ser vacía si no hay imágenes disponibles.
@@ -71,13 +65,11 @@ public class Producto {
      *
      * @param nombre Nombre único del producto
      * @param descripcion Descripción del producto
-     * @param tipo Tipo de propiedad (casa|departamento|hotel)
      * @param imagenes Lista de URLs/base64 de imágenes
      */
-    public Producto(String nombre, String descripcion, String tipo, List<String> imagenes) {
+    public Producto(String nombre, String descripcion, List<String> imagenes) {
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.tipo = tipo;
         this.imagenes = imagenes;
     }
 
@@ -97,9 +89,6 @@ public class Producto {
 
     public String getDescripcion() {return descripcion;}
     public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
-
-    public String getTipo() {return tipo;}
-    public void setTipo(String tipo) {this.tipo = tipo;}
 
     public List<String> getImagenes() {return imagenes;}
     public void setImagenes(List<String> imagenes) {this.imagenes = imagenes;}
