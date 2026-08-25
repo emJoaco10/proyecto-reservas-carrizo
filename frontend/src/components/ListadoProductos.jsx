@@ -92,7 +92,9 @@ const ListadoProductos = () => {
               {/* Información del producto */}
               <h3>{producto.nombre}</h3>
               <p>{producto.descripcion}</p>
-              <span className="tipo">{producto.tipo}</span>
+              <span className="categoria">
+                {producto.categoria?.nombre || "Sin categoría"}
+              </span>
 
             </div>
           </Link>

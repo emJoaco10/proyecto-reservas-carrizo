@@ -9,7 +9,6 @@
  *   id: number|string,   // generado por el backend
  *   nombre: string,      // requerido, sin duplicados
  *   descripcion: string, // requerido
- *   tipo: string,        // 'casa' | 'departamento' | 'hotel'
  *   categoria?: string,  // opcional, manejado por backend
  *   imagenes: string[]   // Array de base64 o URLs
  * }
@@ -24,7 +23,6 @@ export const crearProducto = (
     id: p.id,
     nombre: typeof p.nombre === 'string' ? p.nombre.trim() : (p.nombre ?? ''),
     descripcion: typeof p.descripcion === 'string' ? p.descripcion.trim() : (p.descripcion ?? ''),
-    tipo: typeof p.tipo === 'string' ? p.tipo.trim() : '',
     categoria: p.categoria ? {id: p.categoria.id, nombre: p.categoria.nombre} : null,
     imagenes: Array.isArray(p.imagenes) ? p.imagenes : []
   };

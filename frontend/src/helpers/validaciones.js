@@ -12,17 +12,14 @@
  * @param {Object} params
  * @param {string} params.nombre - Nombre del producto
  * @param {string} params.descripcion - Descripción del producto
- * @param {string} params.tipo - Tipo de propiedad (p. ej. 'casa'|'departamento'|'hotel')
  * @returns {string} - Mensaje de error si hay fallo, o cadena vacía si todo OK
  *
  * @example
- * validarProducto({ nombre: 'Mi Casa', descripcion: 'Muy linda', tipo: 'casa' }) // => ''
- * validarProducto({ nombre: '', descripcion: 'x', tipo: '' }) // => 'Seleccioná un tipo de propiedad'
+ * validarProducto({ nombre: 'Mi Casa', descripcion: 'Muy linda' }) // => ''
+ * validarProducto({ nombre: '', descripcion: 'x' }) // => 'El nombre es obligatorio'
  */
-export const validarProducto = ({ nombre = '', descripcion = '', tipo = '' } = {}) => {
-  // Tipo
-  if (!tipo || String(tipo).trim() === '') return 'Seleccioná un tipo de propiedad';
-
+export const validarProducto = ({ nombre = '', descripcion = '' } = {}) => {
+  
   // Nombre
   const errNombre = validarNombre(nombre);
   if (errNombre) return errNombre;

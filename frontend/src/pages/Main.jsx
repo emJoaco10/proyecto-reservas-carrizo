@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-
 import '../styles/pages/Main.css';
 
 import ListadoProductos from '../components/ListadoProductos';
@@ -12,28 +11,13 @@ import { leerLocal } from "../helpers/storageUtils";
 import useProductoAPI from '../hooks/useProductoAPI';
 
 /**
- * Página principal (Home) de la aplicación.
+ * Página principal de la aplicación.
  *
- * ESTRUCTURA:
- * - 4 bloques principales en layout vertical
- * - Fondo verde claro según identidad de marca
- * - Contenido centrado con ancho máximo
+ * Se encarga de mostrar el filtro de categorías, los productos
+ * filtrados y las recomendaciones de productos.
  *
- * BLOQUES:
- * 1. "Buscador" - Placeholder para futuras funcionalidades
- * 2. "Categorías" - Placeholder para futuras funcionalidades
- * 3. "Recomendaciones" - Lista de productos aleatorios (funcional)
- * 4. "Panel de administración" - Enlace al panel admin
- *
- * FUNCIONALIDAD ACTUAL:
- * - Solo el bloque de recomendaciones está implementado
- * - Los otros bloques son placeholders con estilos
- * - Enlace al panel admin con navegación React Router
- *
- * FUTURO:
- * - Implementar buscador real
- * - Agregar filtros por categoría
- * - Posiblemente más secciones dinámicas
+ * También muestra el acceso al panel de administración cuando
+ * existe un usuario autenticado con rol ADMIN.
  */
 const Main = () => {
 
@@ -48,7 +32,12 @@ const Main = () => {
   const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([]);
   const [productosFiltrados, setProductosFiltrados] = useState([]);
 
-  //Cargar categorías al montar el componente
+  /**
+   * Carga las categorías disponibles cuando se monta la página.
+   *
+   * Las categorías obtenidas desde el backend se utilizan
+   * posteriormente en CategoryFilter.
+   */
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
 
@@ -56,6 +45,15 @@ const Main = () => {
 
   }, []);
 
+  /**
+   * Actualiza las categorías seleccionadas y obtiene los productos
+   * correspondientes cuando el usuario aplica un filtro.
+   *
+   * Si no se selecciona ninguna categoría, se limpia el listado
+   * de productos filtrados.
+   *
+   * @param {number[]} nuevasCategorias IDs de las categorías seleccionadas.
+   */
   const handleCambiarCategorias = async (nuevasCategorias) => {
 
     setCategoriasSeleccionadas(nuevasCategorias);
@@ -73,21 +71,23 @@ const Main = () => {
       );
 
     setProductosFiltrados(resultados);
-
   };
 
+  /**
+   * Restablece el estado de los filtros y elimina los resultados
+   * de la búsqueda por categorías.
+   */
   const handleLimpiarFiltros = () => {
 
     setCategoriasSeleccionadas([]);
 
     setProductosFiltrados([]);
-
   };
 
   return (
     <div className="main-container">
 
-      {/* Placeholder para buscador - futuro desarrollo */}
+      {/* Sección reservada para futuras funcionalidades de búsqueda. */}
       <section className="bloque">Buscador</section>
 
       <section className="bloque">
@@ -108,13 +108,13 @@ const Main = () => {
         )}
       </section>
 
-      {/* Sección funcional: Productos aleatorios */}
+      {/* Muestra el listado de productos utilizado como recomendaciones. */}
       <section className="bloque">
         <h2>Recomendaciones</h2>
         <ListadoProductos />
       </section>
 
-      {/* Sección funcional: Enlace al panel admin */}
+      {/* Solo los usuarios con rol ADMIN pueden acceder al panel administrativo. */}
       {usuario?.rol === "ADMIN" && (
 
         <section className="bloque">

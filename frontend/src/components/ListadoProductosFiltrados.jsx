@@ -57,8 +57,8 @@ const ListadoProductosFiltrados = ({ productos = [] }) => {
                                     {producto.nombre}
                                 </h3>
 
-                                <span className="producto-filtrado-tipo">
-                                    {producto.tipo}
+                                <span className="categoria">
+                                    {producto.categoria?.nombre || "Sin categoría"}
                                 </span>
 
                             </div>
