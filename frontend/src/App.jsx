@@ -22,6 +22,7 @@ import EditarCaracteristica from './pages/EditarCaracteristica';
 import AsociarProductoCaracteristica from './pages/AsociarProductoCaracteristica';
 import AgregarCategorias from './pages/AgregarCategorias';
 import AdministracionCategorias from './pages/AdministracionCategorias';
+import Reserva from './pages/Reserva';
 
 /**
  * Componente principal de la aplicación React.
@@ -96,6 +97,8 @@ const App = () => {
           <Route path="/lista-usuarios" element={<ListaUsuariosAdmin />} />
 
           <Route path="/agregar-categoria" element={<AgregarCategorias />} />
+
+          <Route path="/reserva/:id" element={<Reserva />} />
         </Routes>
       </main>
 
