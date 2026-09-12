@@ -85,4 +85,26 @@ public class CategoriaController {
                 .status(HttpStatus.CREATED)
                 .body(categoriaCreada);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoriaDTO> actualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody CategoriaDTO dto
+    ) {
+
+        CategoriaDTO categoriaActualizada =
+                categoriaService.actualizar(id, dto);
+
+        return ResponseEntity.ok(categoriaActualizada);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(
+            @PathVariable Long id
+    ) {
+
+        categoriaService.eliminar(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import java.util.Optional;
+import jakarta.validation.Valid;
 
 /**
  * Controller REST encargado de exponer las operaciones relacionadas
@@ -55,32 +56,64 @@ public class ProductoController {
      * @return producto creado convertido a ProductoDTO
      */
     @PostMapping
-    public ResponseEntity<?> registrarProducto(@RequestBody ProductoDTO productoDTO) {
+    public ResponseEntity<?> registrarProducto(
+            @Valid @RequestBody ProductoDTO productoDTO) {
 
-        try{
+        try {
+
             // 1. Mapeo DTO → Entity
             Producto producto = new Producto();
+
             producto.setNombre(productoDTO.getNombre());
             producto.setDescripcion(productoDTO.getDescripcion());
             producto.setImagenes(productoDTO.getImagenes());
 
-            // 2. Guardar en servicio (valida duplicados, persiste)
-            Producto nuevo = productoService.guardarProducto(producto);
+            // 2. Asociar categoría seleccionada
+            if (productoDTO.getCategoria() == null
+                    || productoDTO.getCategoria().getId() == null) {
 
-            /*
-             * Se vuelve a consultar el producto mediante el Service
-             * para obtener el DTO completo, incluyendo las relaciones
-             * que correspondan.
-             */
-            Optional<ProductoDTO> dto = productoService.obtenerPorId(nuevo.getId());
+                throw new IllegalArgumentException(
+                        "La categoría es obligatoria"
+                );
+            }
 
-            ;return dto.map(ResponseEntity::ok)
-                    .orElseGet(() -> ResponseEntity.status(500)
-                            .body(new ProductoDTO(null, null, null, null, null, null)));
+            Categoria categoria = categoriaRepository
+                    .findById(productoDTO.getCategoria().getId())
+                    .orElseThrow(() ->
+                            new IllegalArgumentException(
+                                    "Categoría no encontrada"
+                            )
+                    );
+
+            producto.setCategoria(categoria);
+
+            // 3. Guardar producto
+            Producto nuevo =
+                    productoService.guardarProducto(producto);
+
+            // 4. Obtener DTO completo
+            Optional<ProductoDTO> dto =
+                    productoService.obtenerPorId(nuevo.getId());
+
+            return dto.map(ResponseEntity::ok)
+                    .orElseGet(() ->
+                            ResponseEntity.status(500)
+                                    .body(new ProductoDTO(
+                                            null,
+                                            null,
+                                            null,
+                                            null,
+                                            null,
+                                            null
+                                    ))
+                    );
 
         } catch (IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     /**
@@ -95,6 +128,25 @@ public class ProductoController {
         List<ProductoDTO> dtos = productoService.obtenerProductosAleatorios(10);
 
         return ResponseEntity.ok(dtos);
+    }
+
+    /**
+     * Busca productos cuyo nombre contenga el texto indicado.
+     *
+     * Recibe el texto de búsqueda mediante el parámetro "texto"
+     * y delega la consulta al ProductoService.
+     *
+     * @param texto texto utilizado como criterio de búsqueda
+     * @return lista de productos coincidentes como ProductoDTO
+     */
+    @GetMapping("/buscar")
+    public ResponseEntity<List<ProductoDTO>> buscarPorNombre(
+            @RequestParam String texto) {
+
+        List<ProductoDTO> productos =
+                productoService.buscarPorNombre(texto);
+
+        return ResponseEntity.ok(productos);
     }
 
     /**
@@ -285,7 +337,7 @@ public class ProductoController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductoDTO> actualizarProducto(
             @PathVariable Long id,
-            @RequestBody ProductoDTO productoDTO) {
+            @Valid @RequestBody ProductoDTO productoDTO) {
         ProductoDTO actualizado = productoService.actualizarProducto(id, productoDTO);
         return ResponseEntity.ok(actualizado);
     }

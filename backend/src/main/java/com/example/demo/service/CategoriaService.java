@@ -99,6 +99,59 @@ public class CategoriaService {
         return convertirADTO(guardada);
     }
 
+    public CategoriaDTO actualizar(Long id, CategoriaDTO dto) {
+
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "No se encontró la categoría con id: " + id
+                        )
+                );
+
+        // Verificar que el nuevo nombre no pertenezca a otra categoría.
+        if (categoriaRepository.findByNombre(dto.getNombre()).isPresent()
+                && !categoriaRepository.findByNombre(dto.getNombre())
+                .get()
+                .getId()
+                .equals(id)) {
+
+            throw new RuntimeException(
+                    "Ya existe una categoría con el nombre: "
+                            + dto.getNombre()
+            );
+        }
+
+        categoria.setNombre(dto.getNombre());
+        categoria.setDescripcion(dto.getDescripcion());
+        categoria.setImagen(dto.getImagen());
+
+        Categoria actualizada =
+                categoriaRepository.save(categoria);
+
+        return convertirADTO(actualizada);
+    }
+
+    public void eliminar(Long id) {
+
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "No se encontró la categoría con id: " + id
+                        )
+                );
+
+        // No permitir eliminar categorías que tengan productos asociados.
+        if (categoria.getProductos() != null
+                && !categoria.getProductos().isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "No se puede eliminar la categoría porque tiene productos asociados."
+            );
+        }
+
+        categoriaRepository.delete(categoria);
+    }
+
     /**
      * Convierte una entidad Categoria en un CategoriaDTO.
      *

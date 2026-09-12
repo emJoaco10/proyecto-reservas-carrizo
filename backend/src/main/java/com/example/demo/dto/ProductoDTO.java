@@ -1,7 +1,7 @@
 package com.example.demo.dto;
 
-import com.example.demo.model.Categoria;
-import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,21 +11,6 @@ import java.util.List;
  *
  * PROPÓSITO: Transferir datos de Producto entre Backend y Frontend.
  * Desacopla la estructura interna (Entity) de la API REST.
- *
- * DIFERENCIA Entity vs DTO:
- * - Entity (Producto): Mapea tabla en BD, contiene toda la lógica persistencia
- * - DTO (ProductoDTO): Ligero, solo datos necesarios para el cliente
- *
- * CONVERSIÓN: En ProductoController, siempre se convierte:
- * Producto (Entity) → ProductoDTO (respuesta JSON)
- *
- * VENTAJAS:
- * - Frontend recibe solo datos necesarios
- * - Cambios en Entity no afectan API REST
- * - Seguridad: no exponer campos internos sensibles
- *
- * @author Backend Team
- * @version 1.0
  */
 public class ProductoDTO {
 
@@ -37,39 +22,41 @@ public class ProductoDTO {
     /**
      * Nombre único del producto.
      */
+    @NotBlank(message = "El nombre del producto es obligatorio")
     private String nombre;
 
     /**
      * Descripción del producto.
      */
+    @NotBlank(message = "La descripción del producto es obligatoria")
     private String descripcion;
 
     /**
      * Lista de URLs o base64 de imágenes.
      */
-    @Column(columnDefinition = "TEXT")
     private List<String> imagenes;
 
+    @NotNull(message = "La categoría es obligatoria")
     private CategoriaDTO categoriaDTO;
 
     private List<CaracteristicaDTO> caracteristicas = new ArrayList<>();
 
     /**
-     * Constructor sin parámetros (default).
-     * Utilizado por Jackson para deserializar JSON a objeto.
+     * Constructor sin parámetros.
      */
     public ProductoDTO() {}
 
     /**
-     * Constructor con todos los parámetros.
-     * Utilizado en Controllers para mapear Entity → DTO.
-     *
-     * @param id ID del producto
-     * @param nombre Nombre del producto
-     * @param descripcion Descripción del producto
-     * @param imagenes Lista de imágenes
+     * Constructor completo.
      */
-    public ProductoDTO(Long id, String nombre, String descripcion, List<String> imagenes, CategoriaDTO categoriaDTO, List<CaracteristicaDTO> caracteristicas) {
+    public ProductoDTO(
+            Long id,
+            String nombre,
+            String descripcion,
+            List<String> imagenes,
+            CategoriaDTO categoriaDTO,
+            List<CaracteristicaDTO> caracteristicas) {
+
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;

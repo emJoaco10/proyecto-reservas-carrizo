@@ -1,10 +1,12 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.LoginResponseDTO;
 import com.example.demo.dto.RolDTO;
 import com.example.demo.dto.UsuarioDTO;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.UsuarioRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.demo.service.JwtService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +22,8 @@ import java.util.List;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
-
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
     /**
      * Constructor utilizado por Spring para inyectar el repository
      * encargado de acceder a los usuarios.
@@ -29,9 +31,10 @@ public class UsuarioService {
      * También inicializa BCryptPasswordEncoder para el tratamiento
      * seguro de las contraseñas.
      */
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder,  JwtService jwtService) {
         this.usuarioRepository = usuarioRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder();
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     /**
@@ -69,11 +72,7 @@ public class UsuarioService {
         );
 
         // Si no se especifica un rol, se asigna USER por defecto.
-        usuario.setRol(
-                dto.getRol() != null
-                        ? dto.getRol()
-                        : "USER"
-        );
+        usuario.setRol("USER");
 
         Usuario guardado =
                 usuarioRepository.save(usuario);
@@ -104,7 +103,7 @@ public class UsuarioService {
      * @return UsuarioDTO con los datos del usuario autenticado
      * @throws IllegalArgumentException si las credenciales son incorrectas
      */
-    public UsuarioDTO iniciarSesion(UsuarioDTO dto) {
+    public LoginResponseDTO iniciarSesion(UsuarioDTO dto) {
 
         // Buscar el usuario mediante su email.
         Usuario usuario = usuarioRepository.findByEmail(dto.getEmail())
@@ -121,8 +120,7 @@ public class UsuarioService {
                     "Correo o contraseña incorrectos");
         }
 
-        // Devolver los datos del usuario sin exponer la contraseña.
-        return new UsuarioDTO(
+        UsuarioDTO usuarioDTO = new UsuarioDTO(
                 usuario.getId(),
                 usuario.getNombre(),
                 usuario.getApellido(),
@@ -130,6 +128,13 @@ public class UsuarioService {
                 null,
                 usuario.getRol()
         );
+
+        String token = jwtService.generarToken(
+                usuario.getEmail(),
+                usuario.getRol()
+        );
+
+        return new LoginResponseDTO(usuarioDTO, token);
     }
 
     /**
