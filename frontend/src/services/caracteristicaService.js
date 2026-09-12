@@ -1,77 +1,78 @@
-const API_BASE = "http://localhost:8080/api/caracteristica";
+import apiService from "./apiService";
 
+const URL_BASE = "/caracteristica";
+
+// Obtener todas las características
 export const getCaracteristicas = async () => {
-
-    const response = await fetch(API_BASE);
-
-    if (!response.ok) {
-        throw new Error("No se pudieron obtener las características.");
+    try {
+        const response = await apiService.get(URL_BASE);
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtener características:", error);
+        throw error;
     }
-
-    return await response.json();
-
 };
 
+// Obtener una característica por ID
 export const obtenerCaracteristicaPorId = async (id) => {
-
-    const response = await fetch(
-        `${API_BASE}/${id}`
-    );
-
-    if (!response.ok) {
-        throw new Error("No se pudo obtener la característica.");
+    try {
+        const response = await apiService.get(`${URL_BASE}/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error(
+            `Error al obtener característica con id ${id}:`,
+            error
+        );
+        throw error;
     }
-
-    return await response.json();
-
 };
 
+// Crear una característica
 export const postCaracteristica = async (caracteristica) => {
+    try {
+        const response = await apiService.post(
+            URL_BASE,
+            caracteristica
+        );
 
-    const response = await fetch(API_BASE, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(caracteristica)
-    });
-
-    if (!response.ok) {
-        throw new Error("No se pudo crear la característica.");
+        return response.data;
+    } catch (error) {
+        console.error("Error al crear característica:", error);
+        throw error;
     }
-
-    return await response.json();
-
 };
 
+// Actualizar una característica
 export const putCaracteristica = async (id, caracteristica) => {
+    try {
+        const response = await apiService.put(
+            `${URL_BASE}/${id}`,
+            caracteristica
+        );
 
-    const response = await fetch(`${API_BASE}/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(caracteristica)
-    });
-
-    if (!response.ok) {
-        throw new Error("No se pudo actualizar la característica.");
+        return response.data;
+    } catch (error) {
+        console.error(
+            `Error al actualizar característica con id ${id}:`,
+            error
+        );
+        throw error;
     }
-
-    return await response.json();
-
 };
 
+// Eliminar una característica
 export const deleteCaracteristica = async (id) => {
+    try {
+        const response = await apiService.delete(
+            `${URL_BASE}/${id}`
+        );
 
-    const response = await fetch(`${API_BASE}/${id}`, {
-        method: "DELETE"
-    });
-
-    if (!response.ok) {
-        throw new Error("No se pudo eliminar la característica.");
+        return response.data;
+    } catch (error) {
+        console.error(
+            `Error al eliminar característica con id ${id}:`,
+            error
+        );
+        throw error;
     }
-
-    return await response.text();
-
 };

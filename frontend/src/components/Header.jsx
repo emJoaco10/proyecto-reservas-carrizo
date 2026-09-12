@@ -1,7 +1,7 @@
 import '../styles/components/Header.css';
 import logo from '../assets/logo.png';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { leerLocal , removerLocal } from '../helpers/storageUtils';
+import { leerLocal, removerLocal } from '../helpers/storageUtils';
 import { useState } from 'react';
 import menuIcon from '../assets/menu-icon.png';
 
@@ -32,17 +32,19 @@ const Header = () => {
   const iniciales = usuario
     ? `${usuario.nombre.charAt(0)}${usuario.apellido.charAt(0)}`.toUpperCase() : "";
 
-    const handleCerrarSesion = () => {
+  const handleCerrarSesion = () => {
 
     const confirmar = window.confirm(
-        "¿Está seguro que desea cerrar la sesión?"
+      "¿Está seguro que desea cerrar la sesión?"
     );
 
     if (!confirmar) {
-        return;
+      return;
     }
 
     removerLocal("usuario");
+
+    removerLocal("token");
 
     setMostrarMenu(false);
 
@@ -52,7 +54,7 @@ const Header = () => {
 
     window.location.reload();
 
-};
+  };
 
   return (
     <header className="app-header">
@@ -107,23 +109,41 @@ const Header = () => {
 
               <div className="usuario-logueado">
 
-                <div className="usuario-info">
+                {/* Panel de administración */}
+                {usuario.rol === "ADMIN" && (
+                  <button
+                    type="button"
+                    className="btn-panel-admin"
+                    onClick={() => {
+                      setMostrarMenu(false);
+                      navigate("/administracion");
+                    }}
+                  >
+                    Panel de administración
+                  </button>
+                )}
 
-                  <div className="avatar">
+                {/* Perfil del usuario */}
+                <div className="header-perfil">
+
+                  <div className="header-avatar">
                     {iniciales}
                   </div>
 
-                  <div className="datos-usuario">
+                  <div className="header-datos">
                     <span>Hola,</span>
                     <strong>{usuario.nombre}</strong>
                   </div>
 
                 </div>
-
+                
+                {/* Menú */}
                 <button
                   type="button"
                   className="btn-menu-usuario"
                   onClick={() => setMostrarMenu(!mostrarMenu)}
+                  aria-label="Abrir menú de usuario"
+                  aria-expanded={mostrarMenu}
                 >
                   <img src={menuIcon} alt="Menú" />
                 </button>

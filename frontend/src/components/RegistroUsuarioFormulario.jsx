@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import useUsuarioAPI from "../hooks/useUsuarioAPI";
+import { validarUsuario } from "../helpers/validaciones";
 import "../styles/components/Formulario.css";
 
 const RegistroUsuarioFormulario = () => {
@@ -20,14 +21,22 @@ const RegistroUsuarioFormulario = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await registerUsuario(formData);
-      alert("Usuario registrado con éxito");
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
+  e.preventDefault();
+
+  const errorValidacion = validarUsuario(formData);
+
+  if (errorValidacion) {
+    alert(errorValidacion);
+    return;
+  }
+
+  try {
+    await registerUsuario(formData);
+    alert("Usuario registrado con éxito");
+  } catch (err) {
+    console.error(err.message);
+  }
+};
 
   return (
     <form className="formulario" onSubmit={handleSubmit}>

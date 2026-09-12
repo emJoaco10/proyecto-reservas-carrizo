@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { loginUsuario } from "../services/usuarioService";
+import { loginUsuario, obtenerUsuarios } from "../services/usuarioService";
 import { escribirLocal } from "../helpers/storageUtils";
 import { useNavigate } from "react-router-dom";
 import '../styles/components/Formulario.css';
@@ -34,7 +34,10 @@ const IniciarSesionFormulario = () => {
             const usuario = await loginUsuario(formData);
 
             // Persistimos la sesión
-            escribirLocal("usuario", usuario);
+            escribirLocal("usuario", usuario.usuario);
+
+            //Persistimos el token
+            escribirLocal("token", usuario.token);
 
             // Redirigimos al Home
             navigate("/");

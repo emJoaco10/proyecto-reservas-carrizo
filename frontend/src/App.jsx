@@ -22,7 +22,7 @@ import EditarCaracteristica from './pages/EditarCaracteristica';
 import AsociarProductoCaracteristica from './pages/AsociarProductoCaracteristica';
 import AgregarCategorias from './pages/AgregarCategorias';
 import AdministracionCategorias from './pages/AdministracionCategorias';
-import Reserva from './pages/Reserva';
+import AdminRoute from "./components/AdminRoute";
 
 /**
  * Componente principal de la aplicación React.
@@ -51,54 +51,128 @@ const App = () => {
       {/* Contenido principal - cambia según ruta */}
       <main>
         <Routes>
-          {/* Página principal - productos aleatorios */}
+
+          {/* =========================
+      RUTAS PÚBLICAS
+      ========================= */}
+
+          {/* Página principal */}
           <Route path="/" element={<Main />} />
 
-          {/* Panel de administración - solo desktop */}
-          <Route path="/administración" element={<Administracion />} />
-
-          {/* Agregar nuevo producto */}
-          <Route path='/agregar-producto' element={<AgregarProducto />} />
-
-          {/* Listar productos para admin */}
-          <Route path='/lista-productos' element={<ListaProductosAdmin />} />
-
-          {/* Detalle de producto - parámetro dinámico :id */}
+          {/* Detalle de producto */}
           <Route path="/producto/:id" element={<DetalleProductos />} />
 
-          {/* Detalle de producto para galería - con ID */}
-          <Route path="/producto/:id/galeria" element={<DetalleProductosGaleria />} />
+          {/* Galería del producto */}
+          <Route
+            path="/producto/:id/galeria"
+            element={<DetalleProductosGaleria />}
+          />
 
-          {/* Edición de producto - parámetro dinámico :id */}
-          <Route path="/admin/producto/editar/:id" element={<EditarProducto />} />
+          {/* Registro */}
+          <Route
+            path="/registro-usuario"
+            element={<RegistroUsuario />}
+          />
 
-          <Route path="/registro-usuario" element={<RegistroUsuario />} />
+          {/* Login */}
+          <Route
+            path="/iniciar-sesion"
+            element={<IniciarSesion />}
+          />
 
-          <Route path="/iniciar-sesion" element={<IniciarSesion />} />
+          {/* Perfil del usuario */}
+          <Route
+            path="/mi-perfil"
+            element={<MiPerfil />}
+          />
 
-          <Route path="/mi-perfil" element={<MiPerfil />} />
 
-          <Route path="/usuarios-admin" element={<AdministracionUsuarios />} />
+          {/* =========================
+      RUTAS ADMINISTRATIVAS
+      ========================= */}
 
-          <Route path="/productos-admin" element={<AdministracionProductos />} />
+          <Route element={<AdminRoute />}>
 
-          <Route path="/caracteristicas-admin" element={<AdministracionCaracteristicas />} />
+            {/* Panel principal */}
+            <Route
+              path="/administracion"
+              element={<Administracion />}
+            />
 
-          <Route path="/categorias-admin" element={<AdministracionCategorias />} />
+            {/* Administración de productos */}
+            <Route
+              path="/productos-admin"
+              element={<AdministracionProductos />}
+            />
 
-          <Route path="/lista-caracteristicas" element={<ListaCaracteristicas />} />
+            <Route
+              path="/lista-productos"
+              element={<ListaProductosAdmin />}
+            />
 
-          <Route path="/agregar-caracteristica" element={<AgregarCaracteristicas />} />
+            <Route
+              path="/agregar-producto"
+              element={<AgregarProducto />}
+            />
 
-          <Route path="/editar-caracteristica/:id" element={<EditarCaracteristica />} />
+            <Route
+              path="/admin/producto/editar/:id"
+              element={<EditarProducto />}
+            />
 
-          <Route path="/asociar-producto-caracteristica/:id" element={<AsociarProductoCaracteristica />} />
 
-          <Route path="/lista-usuarios" element={<ListaUsuariosAdmin />} />
+            {/* Administración de usuarios */}
+            <Route
+              path="/usuarios-admin"
+              element={<AdministracionUsuarios />}
+            />
 
-          <Route path="/agregar-categoria" element={<AgregarCategorias />} />
+            <Route
+              path="/lista-usuarios"
+              element={<ListaUsuariosAdmin />}
+            />
 
-          <Route path="/reserva/:id" element={<Reserva />} />
+
+            {/* Administración de características */}
+            <Route
+              path="/caracteristicas-admin"
+              element={<AdministracionCaracteristicas />}
+            />
+
+            <Route
+              path="/lista-caracteristicas"
+              element={<ListaCaracteristicas />}
+            />
+
+            <Route
+              path="/agregar-caracteristica"
+              element={<AgregarCaracteristicas />}
+            />
+
+            <Route
+              path="/editar-caracteristica/:id"
+              element={<EditarCaracteristica />}
+            />
+
+            <Route
+              path="/asociar-producto-caracteristica/:id"
+              element={<AsociarProductoCaracteristica />}
+            />
+
+
+            {/* Administración de categorías */}
+            <Route
+              path="/categorias-admin"
+              element={<AdministracionCategorias />}
+            />
+
+            <Route
+              path="/agregar-categoria"
+              element={<AgregarCategorias />}
+            />
+
+          </Route>
+
         </Routes>
       </main>
 

@@ -208,6 +208,95 @@ button[type="submit"]:focus-visible,
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* =========================
+   ZONA DE PELIGRO
+   ========================= */
+
+.zona-peligro {
+  margin-top: 40px;
+  padding: 22px;
+  border: 1px solid #f1b5b5;
+  border-radius: 10px;
+  background-color: #fff7f7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.zona-peligro__contenido {
+  flex: 1;
+}
+
+.zona-peligro__titulo {
+  margin: 0 0 6px;
+  color: #8b1e1e;
+  font-size: 1.1rem;
+}
+
+.zona-peligro__subtitulo {
+  margin: 0 0 8px;
+  color: #333;
+  font-weight: 600;
+}
+
+.zona-peligro__descripcion {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.zona-peligro__button {
+  flex-shrink: 0;
+  padding: 11px 18px;
+  border: 1px solid #c62828;
+  border-radius: 7px;
+  background-color: #c62828;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+}
+
+.zona-peligro__button:hover {
+  background-color: #a61b1b;
+}
+
+.zona-peligro__button:active {
+  transform: translateY(1px);
+}
+
+.mensaje-error-campo {
+  margin: 6px 0 10px;
+  font-size: 0.9rem;
+  color: #c62828;
+}
+
+.input-error {
+  border: 1px solid #c62828 !important;
+}
+
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 650px) {
+
+  .zona-peligro {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .zona-peligro__button {
+    width: 100%;
+  }
+
+}
 
 /* Responsive previews */
 @media (max-width: 640px){

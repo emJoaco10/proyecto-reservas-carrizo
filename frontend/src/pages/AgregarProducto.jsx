@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import useProductoAPI from '../hooks/useProductoAPI';
 import { filesToObjectURLs, revokeObjectURLs } from '../helpers/imageUtils';
 import { validarProducto } from '../helpers/validaciones';
+import useCategoriaAPI from '../hooks/useCategoriaAPI';
 import '../styles/pages/AgregarProducto.css';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
@@ -16,21 +17,27 @@ const MAX_FILES = 10;
  */
 const AgregarProducto = () => {
   const { addProducto, removeAllProductos } = useProductoAPI();
+  const { categorias, fetchCategorias } = useCategoriaAPI();
 
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
+  const [categoriaId, setCategoriaId] = useState('');
   const [imagenesFiles, setImagenesFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
-  const [error, setError] = useState('');
+
+  const [errores, setErrores] = useState({
+    nombre: '',
+    descripcion: '',
+    categoria: '',
+    imagenes: ''
+  });
+
   const [exito, setExito] = useState('');
   const [subiendo, setSubiendo] = useState(false);
 
   /**
-   * Genera las URLs temporales utilizadas para mostrar la vista previa
-   * de las imágenes seleccionadas.
-   *
-   * Las URLs se revocan cuando cambian los archivos o el componente
-   * se desmonta para evitar mantener recursos innecesarios en memoria.
+   * Genera las URLs temporales utilizadas para mostrar
+   * la vista previa de las imágenes seleccionadas.
    */
   useEffect(() => {
     if (!imagenesFiles || imagenesFiles.length === 0) {
@@ -44,10 +51,12 @@ const AgregarProducto = () => {
         maxSize: MAX_FILE_SIZE,
         allowedTypes: ALLOWED_TYPES
       },
-      (err) =>
-        setError(
-          err.message || 'Error procesando imágenes'
-        )
+      (err) => {
+        setErrores((prev) => ({
+          ...prev,
+          imagenes: err.message || 'Error procesando imágenes'
+        }));
+      }
     );
 
     setPreviews(urls);
@@ -58,127 +67,171 @@ const AgregarProducto = () => {
   }, [imagenesFiles]);
 
   /**
-   * Convierte un archivo de imagen en una cadena Base64.
-   *
-   * Este formato permite enviar las imágenes dentro del objeto
-   * del producto hacia el backend.
-   *
-   * @param {File} file Archivo de imagen seleccionado.
-   * @returns {Promise<string>} Imagen convertida a Base64.
+   * Obtiene las categorías disponibles.
+   */
+  useEffect(() => {
+    fetchCategorias();
+  }, []);
+
+  /**
+   * Convierte un archivo de imagen a Base64.
    */
   const fileToBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
 
-      reader.onloadend = () =>
-        resolve(reader.result);
-
+      reader.onloadend = () => resolve(reader.result);
       reader.onerror = reject;
 
       reader.readAsDataURL(file);
     });
 
   /**
-   * Procesa el envío del formulario de creación de producto.
-   *
-   * Antes de realizar la petición valida los datos principales
-   * y las imágenes seleccionadas. Si las validaciones son correctas,
-   * convierte las imágenes a Base64 y utiliza addProducto() para
-   * registrar el producto.
+   * Envía el formulario de creación del producto.
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setError('');
     setExito('');
 
-    // Validar los datos principales del producto.
-    const errMsg = validarProducto({
+    const nuevosErrores = {
+      nombre: '',
+      descripcion: '',
+      categoria: '',
+      imagenes: ''
+    };
+
+    // --------------------------------
+    // Validar nombre y descripción
+    // --------------------------------
+
+    const errNombre = validarProducto({
       nombre,
+      descripcion: ''
+    });
+
+    if (errNombre) {
+      nuevosErrores.nombre = errNombre;
+    }
+
+    const errDescripcion = validarProducto({
+      nombre: 'Producto válido',
       descripcion
     });
 
-    if (errMsg) {
-      setError(errMsg);
-      return;
+    if (errDescripcion) {
+      nuevosErrores.descripcion = errDescripcion;
     }
 
-    // Validar cantidad, formato y tamaño de las imágenes.
+    // --------------------------------
+    // Validar categoría
+    // --------------------------------
+
+    if (!categoriaId) {
+      nuevosErrores.categoria = 'La categoría es obligatoria.';
+    }
+
+    // --------------------------------
+    // Validar imágenes
+    // --------------------------------
+
     if (imagenesFiles?.length > 0) {
 
       if (imagenesFiles.length > MAX_FILES) {
-        setError(
-          `Máximo ${MAX_FILES} imágenes permitidas.`
+        nuevosErrores.imagenes =
+          `Máximo ${MAX_FILES} imágenes permitidas.`;
+      } else {
+
+        const invalidType = imagenesFiles.find(
+          (f) => !ALLOWED_TYPES.includes(f.type)
         );
-        return;
-      }
 
-      const invalidType = imagenesFiles.find(
-        (f) => !ALLOWED_TYPES.includes(f.type)
-      );
+        if (invalidType) {
+          nuevosErrores.imagenes =
+            `Formato no permitido: ${invalidType.name}`;
+        }
 
-      if (invalidType) {
-        setError(
-          `Formato no permitido: ${invalidType.name}`
+        const tooLarge = imagenesFiles.find(
+          (f) => f.size > MAX_FILE_SIZE
         );
-        return;
-      }
 
-      const tooLarge = imagenesFiles.find(
-        (f) => f.size > MAX_FILE_SIZE
-      );
-
-      if (tooLarge) {
-        setError(
-          `La imagen ${tooLarge.name} supera ${
-            Math.round(
+        if (tooLarge && !nuevosErrores.imagenes) {
+          nuevosErrores.imagenes =
+            `La imagen ${tooLarge.name} supera ${Math.round(
               MAX_FILE_SIZE / (1024 * 1024)
-            )
-          }MB`
-        );
-        return;
+            )}MB.`;
+        }
       }
     }
+
+    // --------------------------------
+    // Mostrar errores y detener envío
+    // --------------------------------
+
+    if (Object.values(nuevosErrores).some(Boolean)) {
+      setErrores(nuevosErrores);
+      return;
+    }
+
+    setErrores({
+      nombre: '',
+      descripcion: '',
+      categoria: '',
+      imagenes: ''
+    });
 
     setSubiendo(true);
 
     try {
-      // Convertir todas las imágenes seleccionadas a Base64.
-      const imagenesBase64 =
-        await Promise.all(
-          imagenesFiles.map(fileToBase64)
-        );
 
-      // Crear el producto mediante el hook de comunicación con la API.
+      // Convertir imágenes a Base64
+      const imagenesBase64 = await Promise.all(
+        imagenesFiles.map(fileToBase64)
+      );
+
+      // Crear producto
       const nuevo = await addProducto({
         nombre,
         descripcion,
-        imagenes: imagenesBase64
+        imagenes: imagenesBase64,
+        categoria: {
+          id: Number(categoriaId)
+        }
       });
 
       setSubiendo(false);
 
       if (!nuevo) {
-        revokeObjectURLs(previews);
-        setError(
-          'No se pudo guardar el producto'
-        );
+        setErrores({
+          nombre: '',
+          descripcion: '',
+          categoria: '',
+          imagenes: 'No se pudo guardar el producto.'
+        });
         return;
       }
 
-      // Limpiar el formulario después de una creación exitosa.
+      // --------------------------------
+      // Limpiar formulario
+      // --------------------------------
+
       setImagenesFiles([]);
       setNombre('');
       setDescripcion('');
-      setError('');
-      setExito(
-        'Producto guardado correctamente.'
-      );
+      setCategoriaId('');
 
-      setTimeout(
-        () => setExito(''),
-        4000
-      );
+      setErrores({
+        nombre: '',
+        descripcion: '',
+        categoria: '',
+        imagenes: ''
+      });
+
+      setExito('Producto guardado correctamente.');
+
+      setTimeout(() => {
+        setExito('');
+      }, 4000);
 
     } catch (err) {
 
@@ -187,21 +240,19 @@ const AgregarProducto = () => {
         err
       );
 
-      setError(
-        'Error inesperado al guardar el producto'
-      );
+      setErrores({
+        nombre: '',
+        descripcion: '',
+        categoria: '',
+        imagenes: 'Error inesperado al guardar el producto.'
+      });
 
       setSubiendo(false);
     }
   };
 
   /**
-   * Procesa los archivos seleccionados en el input de imágenes.
-   *
-   * Verifica la cantidad máxima, el formato permitido y el tamaño
-   * de cada archivo antes de almacenarlos en el estado.
-   *
-   * @param {Event} e Evento generado por el input de archivos.
+   * Procesa los archivos seleccionados.
    */
   const handleImagenes = (e) => {
     const files = Array.from(
@@ -211,52 +262,66 @@ const AgregarProducto = () => {
     if (files.length === 0) {
       setImagenesFiles([]);
       setPreviews([]);
-      setError('');
+
+      setErrores((prev) => ({
+        ...prev,
+        imagenes: ''
+      }));
+
       return;
     }
 
+    // Cantidad máxima
     if (files.length > MAX_FILES) {
-      setError(
-        `Podés subir hasta ${MAX_FILES} imágenes por producto.`
-      );
+      setErrores((prev) => ({
+        ...prev,
+        imagenes:
+          `Podés subir hasta ${MAX_FILES} imágenes por producto.`
+      }));
       return;
     }
 
+    // Formato
     const invalidType = files.find(
       (f) => !ALLOWED_TYPES.includes(f.type)
     );
 
     if (invalidType) {
-      setError(
-        `Formato no permitido: ${invalidType.name}`
-      );
+      setErrores((prev) => ({
+        ...prev,
+        imagenes:
+          `Formato no permitido: ${invalidType.name}`
+      }));
       return;
     }
 
+    // Tamaño
     const tooLarge = files.find(
       (f) => f.size > MAX_FILE_SIZE
     );
 
     if (tooLarge) {
-      setError(
-        `La imagen "${tooLarge.name}" supera el límite de ${
-          Math.round(
+      setErrores((prev) => ({
+        ...prev,
+        imagenes:
+          `La imagen "${tooLarge.name}" supera el límite de ${Math.round(
             MAX_FILE_SIZE / (1024 * 1024)
-          )
-        }MB.`
-      );
+          )}MB.`
+      }));
       return;
     }
 
-    setError('');
+    // Archivos correctos
+    setErrores((prev) => ({
+      ...prev,
+      imagenes: ''
+    }));
+
     setImagenesFiles(files);
   };
 
   /**
-   * Elimina todos los productos mediante el endpoint correspondiente.
-   *
-   * Esta función está destinada a la operación administrativa
-   * de borrado completo de productos.
+   * Elimina todos los productos.
    */
   const handleBorrarTodo = async () => {
     try {
@@ -267,7 +332,12 @@ const AgregarProducto = () => {
         'Todos los productos han sido eliminados.'
       );
 
-      setError('');
+      setErrores({
+        nombre: '',
+        descripcion: '',
+        categoria: '',
+        imagenes: ''
+      });
 
     } catch (err) {
 
@@ -276,9 +346,10 @@ const AgregarProducto = () => {
         err
       );
 
-      setError(
-        'No se pudo borrar todo'
-      );
+      setErrores((prev) => ({
+        ...prev,
+        imagenes: 'No se pudo borrar todo.'
+      }));
     }
   };
 
@@ -292,8 +363,13 @@ const AgregarProducto = () => {
         onSubmit={handleSubmit}
       >
 
-        {/* Datos principales del producto. */}
+        {/* ========================= */}
+        {/* DATOS DEL PRODUCTO */}
+        {/* ========================= */}
+
         <div className="form-section">
+
+          {/* NOMBRE */}
 
           <label htmlFor="nombre">
             Nombre del producto:
@@ -304,16 +380,31 @@ const AgregarProducto = () => {
             name="nombre"
             type="text"
             value={nombre}
-            onChange={(e) =>
-              setNombre(e.target.value)
-            }
+            onChange={(e) => {
+              setNombre(e.target.value);
+
+              if (errores.nombre) {
+                setErrores((prev) => ({
+                  ...prev,
+                  nombre: ''
+                }));
+              }
+            }}
             required
             className={
-              error && error.includes('nombre')
+              errores.nombre
                 ? 'input-error'
                 : ''
             }
           />
+
+          {errores.nombre && (
+            <p className="mensaje-error-campo">
+              {errores.nombre}
+            </p>
+          )}
+
+          {/* DESCRIPCIÓN */}
 
           <label htmlFor="descripcion">
             Descripción:
@@ -323,20 +414,85 @@ const AgregarProducto = () => {
             id="descripcion"
             name="descripcion"
             value={descripcion}
-            onChange={(e) =>
-              setDescripcion(e.target.value)
-            }
+            onChange={(e) => {
+              setDescripcion(e.target.value);
+
+              if (errores.descripcion) {
+                setErrores((prev) => ({
+                  ...prev,
+                  descripcion: ''
+                }));
+              }
+            }}
             required
             className={
-              error && error.includes('descripcion')
+              errores.descripcion
                 ? 'input-error'
                 : ''
             }
           />
 
+          {errores.descripcion && (
+            <p className="mensaje-error-campo">
+              {errores.descripcion}
+            </p>
+          )}
+
+          {/* CATEGORÍA */}
+
+          <label htmlFor="categoria">
+            Categoría:
+          </label>
+
+          <select
+            id="categoria"
+            name="categoria"
+            value={categoriaId}
+            onChange={(e) => {
+              setCategoriaId(e.target.value);
+
+              if (errores.categoria) {
+                setErrores((prev) => ({
+                  ...prev,
+                  categoria: ''
+                }));
+              }
+            }}
+            required
+            className={
+              errores.categoria
+                ? 'input-error'
+                : ''
+            }
+          >
+
+            <option value="">
+              Seleccioná una categoría
+            </option>
+
+            {categorias.map((categoria) => (
+              <option
+                key={categoria.id}
+                value={categoria.id}
+              >
+                {categoria.nombre}
+              </option>
+            ))}
+
+          </select>
+
+          {errores.categoria && (
+            <p className="mensaje-error-campo">
+              {errores.categoria}
+            </p>
+          )}
+
         </div>
 
-        {/* Selección de imágenes y envío del formulario. */}
+        {/* ========================= */}
+        {/* IMÁGENES */}
+        {/* ========================= */}
+
         <div className="form-actions">
 
           <label htmlFor="imagenes">
@@ -350,7 +506,18 @@ const AgregarProducto = () => {
             multiple
             accept="image/*"
             onChange={handleImagenes}
+            className={
+              errores.imagenes
+                ? 'input-error'
+                : ''
+            }
           />
+
+          {errores.imagenes && (
+            <p className="mensaje-error-campo">
+              {errores.imagenes}
+            </p>
+          )}
 
           {previews.length > 0 && (
             <div className="preview-imagenes">
@@ -376,32 +543,58 @@ const AgregarProducto = () => {
           </button>
 
         </div>
+
       </form>
 
-      {/* Operación administrativa de borrado completo. */}
-      <button
-        className="btn btn-danger"
-        onClick={() => {
-          if (
-            confirm(
-              '¿Seguro que querés borrar todos los productos?'
-            )
-          ) {
-            handleBorrarTodo();
-          }
-        }}
-      >
-        Borrar todos los productos
-      </button>
+      {/* ========================= */}
+      {/* ZONA DE PELIGRO */}
+      {/* ========================= */}
 
-      {error && (
-        <p
-          className="mensaje-error"
-          aria-live="assertive"
+      <section className="zona-peligro">
+
+        <div className="zona-peligro__contenido">
+
+          <h3 className="zona-peligro__titulo">
+            Zona de administración
+          </h3>
+
+          <p className="zona-peligro__subtitulo">
+            Eliminación de productos
+          </p>
+
+          <p className="zona-peligro__descripcion">
+            Esta acción eliminará todos los productos registrados.
+            Esta operación no se puede deshacer.
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          className="zona-peligro__button"
+          onClick={() => {
+
+            const confirmar = window.confirm(
+              '⚠️ ATENCIÓN\n\n' +
+              'Estás a punto de eliminar TODOS los productos.\n\n' +
+              'Esta operación no se puede deshacer.\n\n' +
+              '¿Querés continuar?'
+            );
+
+            if (confirmar) {
+              handleBorrarTodo();
+            }
+
+          }}
         >
-          {error}
-        </p>
-      )}
+          🗑️ Borrar todos los productos
+        </button>
+
+      </section>
+
+      {/* ========================= */}
+      {/* MENSAJE DE ÉXITO */}
+      {/* ========================= */}
 
       {exito && (
         <p
