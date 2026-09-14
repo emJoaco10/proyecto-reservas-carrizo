@@ -1,341 +1,408 @@
-import React from 'react'
+import { useState, useEffect } from "react";
+
 import {
-  getProductos,
-  getProductoById,
-  createProducto,
-  updateProducto,
-  deleteProductoById,
-  deleteProducto,
-  getPaginados,
-  asignarCategoria,
-  asignarCaracteristicas,
-  getCategorias,
-  getProductosPorCategorias
-} from '../services/productoService';
-import { obtenerProductosAleatorios } from '../helpers/productoUtils';
-import { useState, useEffect } from 'react';
+    getProductosPublicos,
+    getProductosAdmin,
+    getProductoById,
+    createProducto,
+    updateProducto,
+    deleteProductoById,
+    deleteProducto,
+    getPaginados,
+    asignarCategoria,
+    asignarCaracteristicas,
+    getCategorias,
+    getProductosPorCategorias,
+    buscarProductos
+} from "../services/productoService";
 
-/**
- * Hook personalizado que centraliza la comunicación con la API
- * relacionada con productos y categorías.
- *
- * También mantiene el estado local de los productos, categorías,
- * estados de carga y errores para que los componentes puedan
- * reutilizar esta lógica.
- */
-export default function useProductoAPI() {
-  const [productos, setProductos] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [categorias, setCategorias] = useState([]);
+import { obtenerProductosAleatorios } from "../helpers/productoUtils";
 
-  // Carga automáticamente los productos cuando el hook se monta.
-  useEffect(() => {
-    fetchProductos();
-  }, []);
+const useProductoAPI = () => {
 
-  /**
-   * Obtiene todos los productos desde el backend y actualiza
-   * el estado local de productos.
-   *
-   * También controla los estados de carga y error de la petición.
-   */
-  const fetchProductos = async () => {
-    setLoading(true);
-    try {
-      const data = await getProductos();
-      setProductos(data);
-    } catch (err) {
-      console.error('[fetchProductos] Error:', err);
-      setError('Mensaje de error para el usuario');
-    } finally {
-      setLoading(false);
-    }
-  };
+    const [productos, setProductos] = useState([]);
+    const [categorias, setCategorias] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-  /**
-   * Obtiene un producto específico mediante su ID.
-   *
-   * @param {number} id Identificador del producto.
-   * @returns {Promise<Object|null>} Producto encontrado o null si ocurre un error.
-   */
-  const fetchProductoById = async (id) => {
-    try {
-      return await getProductoById(id);
-    } catch (err) {
-      console.error('[fetchProductoById] Error:', err);
-      setError(`Error al obtener producto con id ${id}`);
-      return null;
-    }
-  };
+    // ============================================================
+    // PRODUCTOS PÚBLICOS
+    // ============================================================
 
-  /**
-   * Crea un nuevo producto mediante la API y lo incorpora
-   * al estado local de productos.
-   *
-   * @param {Object} producto Datos del producto a crear.
-   * @returns {Promise<Object|null>} Producto creado o null si ocurre un error.
-   */
-  const addProducto = async (producto) => {
-    try {
-      const nuevo = await createProducto(producto);
-      setProductos((prev) => [...prev, nuevo]);
-      return nuevo;
-    } catch (err) {
-      console.error('[addProducto] Error:', err);
-      setError('Error al crear producto');
-      return null;
-    }
-  };
+    // Cargar productos públicos automáticamente
+    useEffect(() => {
+        fetchProductos();
+    }, []);
 
-  /**
-   * Actualiza un producto existente.
-   *
-   * Después de recibir la respuesta del backend, reemplaza
-   * el producto correspondiente dentro del estado local.
-   *
-   * @param {number} id Identificador del producto.
-   * @param {Object} cambios Datos actualizados del producto.
-   * @returns {Promise<Object|null>} Producto actualizado o null si ocurre un error.
-   */
-  const editProducto = async (id, cambios) => {
-    try {
-      const actualizado = await updateProducto(id, cambios);
+    // Obtener productos públicos
+    const fetchProductos = async () => {
+        setLoading(true);
+        setError(null);
 
-      setProductos((prev) =>
-        prev.map((p) => (p.id === id ? actualizado : p))
-      );
+        try {
+            const data = await getProductosPublicos();
 
-      return actualizado;
-    } catch (err) {
-      console.error('[editProducto] Error:', err);
-      setError(`Error al actualizar producto con id ${id}`);
-      return null;
-    }
-  };
+            setProductos(
+                Array.isArray(data) ? data : []
+            );
 
-  /**
-   * Asigna una categoría a un producto existente utilizando
-   * el endpoint específico de categorías del backend.
-   *
-   * @param {number} id Identificador del producto.
-   * @param {number} categoriaId Identificador de la categoría.
-   * @returns {Promise<Object|null>} Producto actualizado o null si ocurre un error.
-   */
-  const setCategoriaProducto = async (id, categoriaId) => {
-    try {
-      const actualizado = await asignarCategoria(id, categoriaId);
+            return data;
+        } catch (err) {
+            console.error(
+                "[fetchProductos] Error:",
+                err
+            );
 
-      setProductos((prev) =>
-        prev.map((p) => (p.id === id ? actualizado : p))
-      );
+            setError(
+                "Error al obtener productos"
+            );
 
-      return actualizado;
-    } catch (err) {
-      console.error('[setCategoriaProducto] Error:', err);
-      setError(`Error al asignar categoría al producto ${id}`);
-      return null;
-    }
-  };
+            return [];
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  /**
-   * Asigna una lista de características a un producto.
-   *
-   * Después de la actualización, reemplaza el producto correspondiente
-   * en el estado local con la información devuelta por el backend.
-   *
-   * @param {number} id Identificador del producto.
-   * @param {number[]} caracteristicasId IDs de las características.
-   * @returns {Promise<Object|null>} Producto actualizado o null si ocurre un error.
-   */
-  const setCaracteristicasProducto = async (
-    id,
-    caracteristicasId
-  ) => {
+    // Obtener producto por ID
+    const fetchProductoById = async (id) => {
+        try {
+            const data = await getProductoById(id);
 
-    try {
-      const actualizado = await asignarCaracteristicas(
+            return data;
+        } catch (err) {
+            console.error(
+                "[fetchProductoById] Error:",
+                err
+            );
+
+            setError(
+                `Error al obtener producto con id ${id}`
+            );
+
+            return null;
+        }
+    };
+
+    // Obtener productos paginados
+    const fetchPaginados = async (page, size) => {
+        try {
+            return await getPaginados(page, size);
+        } catch (err) {
+            console.error(
+                "[fetchPaginados] Error:",
+                err
+            );
+
+            setError(
+                "Error al obtener productos paginados"
+            );
+
+            return [];
+        }
+    };
+
+    // Obtener productos aleatorios desde el estado local
+    const getProductosAleatorios = (cantidad = 10) => {
+        return obtenerProductosAleatorios(
+            productos,
+            cantidad
+        );
+    };
+
+    // Obtener productos por categorías
+    const fetchProductosPorCategorias = async (categoriaIds) => {
+        try {
+            return await getProductosPorCategorias(
+                categoriaIds
+            );
+        } catch (err) {
+            console.error(
+                "[fetchProductosPorCategorias] Error:",
+                err
+            );
+
+            setError(
+                "Error al obtener productos por categorías"
+            );
+
+            return [];
+        }
+    };
+
+    // Buscar productos
+    const fetchProductosPorBusqueda = async (texto) => {
+        try {
+            return await buscarProductos(texto);
+        } catch (err) {
+            console.error(
+                "[fetchProductosPorBusqueda] Error:",
+                err
+            );
+
+            setError(
+                "Error al buscar productos"
+            );
+
+            return [];
+        }
+    };
+
+    // ============================================================
+    // PRODUCTOS ADMINISTRATIVOS
+    // ============================================================
+
+    // Obtener todos los productos para administración
+    const fetchProductosAdmin = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const data = await getProductosAdmin();
+
+            setProductos(
+                Array.isArray(data) ? data : []
+            );
+
+            return data;
+        } catch (err) {
+            console.error(
+                "[fetchProductosAdmin] Error:",
+                err
+            );
+
+            setError(
+                "Error al obtener productos administrativos"
+            );
+
+            return [];
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Crear producto
+    const addProducto = async (producto) => {
+        try {
+            const nuevo = await createProducto(producto);
+
+            setProductos((prev) => [
+                ...prev,
+                nuevo
+            ]);
+
+            return nuevo;
+        } catch (err) {
+            console.error(
+                "[addProducto] Error:",
+                err
+            );
+
+            setError(
+                "Error al crear producto"
+            );
+
+            return null;
+        }
+    };
+
+    // Actualizar producto
+    const editProducto = async (id, cambios) => {
+        try {
+            const actualizado = await updateProducto(
+                id,
+                cambios
+            );
+
+            setProductos((prev) =>
+                prev.map((producto) =>
+                    producto.id === id
+                        ? actualizado
+                        : producto
+                )
+            );
+
+            return actualizado;
+        } catch (err) {
+            console.error(
+                "[editProducto] Error:",
+                err
+            );
+
+            setError(
+                `Error al actualizar producto con id ${id}`
+            );
+
+            return null;
+        }
+    };
+
+    // Eliminar producto por ID
+    const removeProductoById = async (id) => {
+        try {
+            await deleteProductoById(id);
+
+            setProductos((prev) =>
+                prev.filter(
+                    (producto) => producto.id !== id
+                )
+            );
+        } catch (err) {
+            console.error(
+                "[removeProductoById] Error:",
+                err
+            );
+
+            setError(
+                `Error al eliminar producto con id ${id}`
+            );
+        }
+    };
+
+    // Eliminar todos los productos
+    const removeAllProductos = async () => {
+        try {
+            await deleteProducto();
+
+            setProductos([]);
+        } catch (err) {
+            console.error(
+                "[removeAllProductos] Error:",
+                err
+            );
+
+            setError(
+                "Error al eliminar todos los productos"
+            );
+        }
+    };
+
+    // Asignar categoría
+    const setCategoriaProducto = async (
+        id,
+        categoriaId
+    ) => {
+        try {
+            const actualizado = await asignarCategoria(
+                id,
+                categoriaId
+            );
+
+            setProductos((prev) =>
+                prev.map((producto) =>
+                    producto.id === id
+                        ? actualizado
+                        : producto
+                )
+            );
+
+            return actualizado;
+        } catch (err) {
+            console.error(
+                "[setCategoriaProducto] Error:",
+                err
+            );
+
+            setError(
+                `Error al asignar categoría al producto ${id}`
+            );
+
+            return null;
+        }
+    };
+
+    // Asignar características
+    const setCaracteristicasProducto = async (
         id,
         caracteristicasId
-      );
+    ) => {
+        try {
+            const actualizado =
+                await asignarCaracteristicas(
+                    id,
+                    caracteristicasId
+                );
 
-      setProductos((prev) =>
-        prev.map((p) =>
-          p.id === id
-            ? actualizado
-            : p
-        )
-      );
+            setProductos((prev) =>
+                prev.map((producto) =>
+                    producto.id === id
+                        ? actualizado
+                        : producto
+                )
+            );
 
-      return actualizado;
+            return actualizado;
+        } catch (err) {
+            console.error(
+                "[setCaracteristicasProducto] Error:",
+                err
+            );
 
-    } catch (err) {
+            setError(
+                `Error al asignar características al producto ${id}`
+            );
 
-      console.error(
-        "[setCaracteristicasProducto] Error:",
-        err
-      );
+            return null;
+        }
+    };
 
-      setError(
-        `Error al asignar características al producto ${id}`
-      );
+    // ============================================================
+    // CATEGORÍAS
+    // ============================================================
 
-      return null;
-    }
-  };
+    // Obtener categorías
+    const fetchCategorias = async () => {
+        try {
+            const data = await getCategorias();
 
-  /**
-   * Elimina un producto mediante su ID.
-   *
-   * Si la eliminación en el backend es exitosa, también se elimina
-   * el producto del estado local para mantener actualizada la interfaz.
-   *
-   * @param {number} id Identificador del producto.
-   */
-  const removeProductoById = async (id) => {
-    try {
-      await deleteProductoById(id);
+            const lista = Array.isArray(data)
+                ? data
+                : [];
 
-      setProductos((prev) =>
-        prev.filter((p) => p.id !== id)
-      );
+            setCategorias(lista);
 
-    } catch (err) {
-      console.error('[removeProductoById] Error:', err);
-      setError(`Error al eliminar producto con id ${id}`);
-    }
-  };
+            return lista;
+        } catch (err) {
+            console.error(
+                "[fetchCategorias] Error:",
+                err
+            );
 
-  /**
-   * Elimina todos los productos mediante la API.
-   *
-   * Si la operación se completa correctamente, limpia también
-   * el estado local de productos.
-   */
-  const removeAllProductos = async () => {
-    try {
-      await deleteProducto();
-      setProductos([]);
-    } catch (err) {
-      console.error('[removeAllProductos] Error:', err);
-      setError('Error al eliminar todos los productos');
-    }
-  };
+            setError(
+                "Error al obtener categorías"
+            );
 
-  /**
-   * Obtiene productos de forma paginada.
-   *
-   * La respuesta se devuelve directamente para que el componente
-   * que utiliza el hook pueda manejar la información de paginación.
-   *
-   * @param {number} page Número de página.
-   * @param {number} size Cantidad de productos por página.
-   * @returns {Promise<Object|Array>} Resultado de la consulta paginada
-   * o un array vacío si ocurre un error.
-   */
-  const fetchPaginados = async (page, size) => {
-    try {
-      return await getPaginados(page, size);
-    } catch (err) {
-      console.error('[fetchPaginados] Error:', err);
-      setError('Error al obtener productos paginados');
-      return [];
-    }
-  };
+            setCategorias([]);
 
-  /**
-   * Obtiene una cantidad determinada de productos aleatorios
-   * a partir de los productos disponibles en el estado local.
-   *
-   * @param {number} cantidad Cantidad de productos solicitada.
-   * @returns {Array} Lista de productos aleatorios.
-   */
-  const getProductosAleatorios = (cantidad = 10) => {
-    return obtenerProductosAleatorios(
-      productos,
-      cantidad
-    );
-  };
+            return [];
+        }
+    };
 
-  /**
-   * Obtiene los productos asociados a una o varias categorías.
-   *
-   * Los IDs de las categorías se envían al backend y la respuesta
-   * se devuelve al componente que realizó la consulta.
-   *
-   * @param {number[]} categoriaIds IDs de las categorías seleccionadas.
-   * @returns {Promise<Array>} Productos correspondientes a las categorías
-   * o un array vacío si ocurre un error.
-   */
-  const fetchProductosPorCategorias = async (categoriaIds) => {
-    try {
-      return await getProductosPorCategorias(
-        categoriaIds
-      );
+    return {
+        productos,
+        categorias,
+        loading,
+        error,
 
-    } catch (err) {
+        fetchProductos,
+        fetchProductosAdmin,
+        fetchProductoById,
+        fetchPaginados,
+        getProductosAleatorios,
 
-      console.error(
-        '[fetchProductosPorCategorias] Error:',
-        err
-      );
+        fetchProductosPorCategorias,
+        fetchProductosPorBusqueda,
 
-      setError(
-        'Error al obtener productos por categorías'
-      );
+        fetchCategorias,
 
-      return [];
-    }
-  };
+        addProducto,
+        editProducto,
 
-  /**
-   * Obtiene las categorías disponibles desde el backend
-   * y actualiza el estado local de categorías.
-   *
-   * Si la respuesta no tiene el formato esperado, se utiliza
-   * un array vacío para mantener un estado válido.
-   */
-  const fetchCategorias = async () => {
-    try {
-      const data = await getCategorias();
+        setCategoriaProducto,
+        setCaracteristicasProducto,
 
-      setCategorias(
-        Array.isArray(data)
-          ? data
-          : []
-      );
+        removeProductoById,
+        removeAllProductos
+    };
+};
 
-    } catch (err) {
-
-      console.error(
-        "[fetchCategorias] Error:",
-        err
-      );
-
-      setError(
-        "Error al obtener categorías"
-      );
-
-      setCategorias([]);
-    }
-  };
-
-  return {
-    productos,
-    categorias,
-    loading,
-    error,
-    fetchProductos,
-    fetchProductoById,
-    fetchCategorias,
-    fetchProductosPorCategorias,
-    addProducto,
-    editProducto,
-    setCategoriaProducto,
-    setCaracteristicasProducto,
-    removeProductoById,
-    removeAllProductos,
-    fetchPaginados,
-    getProductosAleatorios
-  };
-}
+export default useProductoAPI;

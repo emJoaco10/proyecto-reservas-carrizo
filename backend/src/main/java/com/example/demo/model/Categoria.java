@@ -87,12 +87,12 @@ public class Categoria {
     public String getImagen() {
         return imagen;
     }
-    public void setImagen(String imagen) {}
-
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
     public List<Producto> getProductos() {
         return productos;
     }
-
     public void setProductos(List<Producto> productos) {
         this.productos = productos;
     }

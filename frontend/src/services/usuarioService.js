@@ -1,72 +1,62 @@
-import axios from 'axios';
+import apiService from "./apiService";
 
-const API_BASE = 'http://localhost:8080/api/usuario';
+const URL_BASE = "/usuario";
 
+// Registrar usuario
 export const registerUsuario = async (usuarioData) => {
-  try {
-    const response = await axios.post(`${API_BASE}/registro`, usuarioData);
-    return response.data;
-  } catch (error) {
-    // Re-throw a normalized error for callers to handle
-    if (error.response && error.response.data) {
-      throw new Error(error.response.data); // mensaje del backend (ej: email duplicado)
-    } else {
-      throw new Error("Error al registrar usuario");
-    }
-  }
-}
+    try {
+        const response = await apiService.post(
+            `${URL_BASE}/registro`,
+            usuarioData
+        );
 
+        return response.data;
+    } catch (error) {
+        console.error("Error al registrar usuario:", error);
+        throw error;
+    }
+};
+
+// Iniciar sesión
 export const loginUsuario = async (credenciales) => {
+    try {
+        const response = await apiService.post(
+            `${URL_BASE}/login`,
+            credenciales
+        );
 
-    const response = await fetch(`${API_BASE}/login`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credenciales),
-    });
-
-    if (!response.ok) {
-        throw new Error(await response.text());
+        return response.data;
+    } catch (error) {
+        console.error("Error al iniciar sesión:", error);
+        throw error;
     }
-
-    return await response.json();
 };
 
+// Obtener todos los usuarios
 export const obtenerUsuarios = async () => {
-
-    const response = await fetch(API_BASE);
-
-    if (!response.ok) {
-        throw new Error("No se pudieron obtener los usuarios.");
+    try {
+        const response = await apiService.get(URL_BASE);
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtener usuarios:", error);
+        throw error;
     }
-
-    return await response.json();
-
 };
 
+// Cambiar rol de usuario
 export const cambiarRol = async (id, rol) => {
+    try {
+        const response = await apiService.put(
+            `${URL_BASE}/${id}/rol`,
+            { rol }
+        );
 
-    const response = await fetch(
-        `${API_BASE}/${id}/rol`,
-        {
-            method: "PUT",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-                rol
-            })
-        }
-    );
-
-    if (!response.ok) {
-        throw new Error("No se pudo actualizar el rol.");
+        return response.data;
+    } catch (error) {
+        console.error(
+            `Error al actualizar rol del usuario ${id}:`,
+            error
+        );
+        throw error;
     }
-
-    return await response.json();
-
 };
-

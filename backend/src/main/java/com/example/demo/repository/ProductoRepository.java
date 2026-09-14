@@ -37,6 +37,15 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
     Optional<Producto> findByNombre(String nombre);
 
     /**
+     * Busca productos cuyo nombre contenga el texto indicado,
+     * ignorando diferencias entre mayúsculas y minúsculas.
+     *
+     * @param nombre texto utilizado como criterio de búsqueda
+     * @return lista de productos que coinciden parcialmente con el nombre
+     */
+    List<Producto> findByNombreContainingIgnoreCase(String nombre);
+
+    /**
      * Busca todos los productos que pertenezcan a la categoría indicada por su id.
      *
      * @param categoriaId id de la categoría

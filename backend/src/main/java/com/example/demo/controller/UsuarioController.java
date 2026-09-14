@@ -5,8 +5,10 @@ import com.example.demo.dto.UsuarioDTO;
 import com.example.demo.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.example.demo.dto.LoginResponseDTO;
 
 import java.util.List;
+import jakarta.validation.Valid;
 
 /**
  * Controller REST encargado de exponer las operaciones relacionadas
@@ -48,7 +50,7 @@ public class UsuarioController {
      */
     @PostMapping("/registro")
     public ResponseEntity<?> registrar(
-            @RequestBody UsuarioDTO usuarioDTO) {
+          @Valid @RequestBody UsuarioDTO usuarioDTO) {
 
         try {
             UsuarioDTO creado =
@@ -77,13 +79,13 @@ public class UsuarioController {
      * @return UsuarioDTO correspondiente al usuario autenticado
      */
     @PostMapping("/login")
-    public ResponseEntity<UsuarioDTO> iniciarSesion(
+    public ResponseEntity<LoginResponseDTO> iniciarSesion(
             @RequestBody UsuarioDTO dto) {
 
-        UsuarioDTO usuario =
+        LoginResponseDTO respuesta =
                 usuarioService.iniciarSesion(dto);
 
-        return ResponseEntity.ok(usuario);
+        return ResponseEntity.ok(respuesta);
     }
 
     /**

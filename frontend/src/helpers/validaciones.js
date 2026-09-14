@@ -71,3 +71,52 @@ export const validarDescripcion = (descripcion = '') => {
   if (d.length < 5) return 'La descripción debe tener al menos 5 caracteres';
   return '';
 };
+
+/**
+ * Valida los datos mínimos de un usuario.
+ *
+ * @param {Object} params
+ * @param {string} params.nombre
+ * @param {string} params.apellido
+ * @param {string} params.email
+ * @param {string} params.password
+ * @returns {string} Mensaje de error o '' si todo es válido.
+ */
+export const validarUsuario = ({
+  nombre = '',
+  apellido = '',
+  email = '',
+  password = ''
+} = {}) => {
+
+  if (!String(nombre).trim()) {
+    return 'El nombre es obligatorio';
+  }
+
+  if (!String(apellido).trim()) {
+    return 'El apellido es obligatorio';
+  }
+
+  if (!String(email).trim()) {
+    return 'El email es obligatorio';
+  }
+
+  const emailValido =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+      String(email).trim()
+    );
+
+  if (!emailValido) {
+    return 'El email no tiene un formato válido';
+  }
+
+  if (!String(password)) {
+    return 'La contraseña es obligatoria';
+  }
+
+  if (String(password).length < 8) {
+    return 'La contraseña debe tener al menos 8 caracteres';
+  }
+
+  return '';
+};

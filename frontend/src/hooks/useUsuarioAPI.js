@@ -1,76 +1,78 @@
-import { useState } from 'react';
-import { registerUsuario as registerUsuarioService } from "../services/usuarioService";
-import { loginUsuario as loginUsuarioService } from "../services/usuarioService";
-import { obtenerUsuarios as obtenerUsuariosService } from "../services/usuarioService";
-import { cambiarRol as cambiarRolService } from "../services/usuarioService";
+import { useState } from "react";
+import {
+    registerUsuario as registerUsuarioService,
+    loginUsuario as loginUsuarioService,
+    obtenerUsuarios as obtenerUsuariosService,
+    cambiarRol as cambiarRolService
+} from "../services/usuarioService";
 
 const useUsuarioAPI = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [usuario, setUsuario] = useState(null); // nuevo estado
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [usuario, setUsuario] = useState(null);
 
-  const registerUsuario = async (datosUsuario) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await registerUsuarioService(datosUsuario);
-      setUsuario(response); // guardamos el usuario registrado
-      return response;
-    } catch (err) {
-      const message =
-        err?.response?.data?.message || err?.message || 'Error al registrar usuario';
-      setError(message);
-      throw new Error(message);
-    } finally {
-      setLoading(false); // simplificado con finally
-    }
-  };
+    // Registrar usuario
+    const registerUsuario = async (datosUsuario) => {
+        setLoading(true);
+        setError(null);
 
-  const loginUsuario = async (credenciales) => {
-    setLoading(true);
-    setError(null);
+        try {
+            const response = await registerUsuarioService(datosUsuario);
 
-    try {
+            setUsuario(response);
 
-        const usuario = await loginUsuarioService(credenciales);
+            return response;
+        } catch (err) {
+            const message =
+                err?.response?.data?.message ||
+                err?.message ||
+                "Error al registrar usuario";
 
-        return usuario;
+            setError(message);
 
-    } catch (err) {
+            throw new Error(message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        setError(err.message);
+    // Iniciar sesión
+    const loginUsuario = async (credenciales) => {
+        setLoading(true);
+        setError(null);
 
-        throw err;
+        try {
+            const response = await loginUsuarioService(credenciales);
 
-    } finally {
+            return response;
+        } catch (err) {
+            setError(err.message);
 
-        setLoading(false);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    }
-};
+    // Obtener todos los usuarios
+    const getUsuarios = async () => {
+        return obtenerUsuariosService();
+    };
 
-const getUsuarios = async () => {
+    // Actualizar rol de usuario
+    const actualizarRol = async (id, rol) => {
+        return cambiarRolService(id, rol);
+    };
 
-    return await obtenerUsuariosService();
-
-};
-
-const actualizarRol = async (id, rol) => {
-
-    return await cambiarRolService(id, rol);
-
-};
-
-
-  return {
-    usuario,
-    loading,
-    error,
-    registerUsuario,
-    loginUsuario,
-    getUsuarios,
-    actualizarRol
-  };
+    return {
+        usuario,
+        loading,
+        error,
+        registerUsuario,
+        loginUsuario,
+        getUsuarios,
+        actualizarRol
+    };
 };
 
 export default useUsuarioAPI;

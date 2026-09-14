@@ -7,8 +7,8 @@ import ListadoProductos from '../components/ListadoProductos';
 import CategoryFilter from '../components/CategoryFilter';
 import ListadoProductosFiltrados from '../components/ListadoProductosFiltrados';
 
-import { leerLocal } from "../helpers/storageUtils";
 import useProductoAPI from '../hooks/useProductoAPI';
+import BuscadorProductos from '../components/BuscadorProductos';
 
 /**
  * Página principal de la aplicación.
@@ -20,8 +20,6 @@ import useProductoAPI from '../hooks/useProductoAPI';
  * existe un usuario autenticado con rol ADMIN.
  */
 const Main = () => {
-
-  const usuario = leerLocal("usuario");
 
   const {
     categorias,
@@ -88,7 +86,9 @@ const Main = () => {
     <div className="main-container">
 
       {/* Sección reservada para futuras funcionalidades de búsqueda. */}
-      <section className="bloque">Buscador</section>
+      <section className="bloque buscador-container">
+        <BuscadorProductos />
+      </section>
 
       <section className="bloque">
 
@@ -113,27 +113,6 @@ const Main = () => {
         <h2>Recomendaciones</h2>
         <ListadoProductos />
       </section>
-
-      {/* Solo los usuarios con rol ADMIN pueden acceder al panel administrativo. */}
-      {usuario?.rol === "ADMIN" && (
-
-        <section className="bloque">
-
-          <h2>Panel de administración</h2>
-
-          <p>
-            Aquí podés encontrar las herramientas para gestionar tu negocio.
-          </p>
-
-          <Link to="/administración">
-            <button className="btn btn-filled">
-              Acceder al panel
-            </button>
-          </Link>
-
-        </section>
-
-      )}
 
     </div>
   );

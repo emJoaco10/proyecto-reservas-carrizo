@@ -2,15 +2,6 @@ import React, { useEffect } from 'react'
 import useProductoAPI from '../hooks/useProductoAPI'
 import '../styles/components/CategorySelector.css'
 
-/**
- * Selector utilizado para mostrar las categorías disponibles
- * y asociar una categoría al producto seleccionado.
- *
- * Las categorías se obtienen mediante useProductoAPI.
- * Al seleccionar una categoría, se actualiza primero la asociación
- * mediante el endpoint correspondiente y luego se informa el cambio
- * al componente padre mediante onChange.
- */
 export const CategorySelector = ({
   producto,
   value = '',
@@ -19,12 +10,9 @@ export const CategorySelector = ({
 
   const productoApi = useProductoAPI()
 
-  /**
-   * Carga las categorías disponibles cuando se monta el componente.
-   */
   useEffect(() => {
     productoApi?.fetchCategorias?.()
-  }, [productoApi])
+  }, [])
 
   const {
     categorias = [],
@@ -42,21 +30,11 @@ export const CategorySelector = ({
       <select
         id="category-select"
         value={value}
-        onChange={async (e) => {
+        onChange={(e) => {
+          const nuevaCategoriaId = Number(e.target.value)
 
-          /*
-           * Convierte el valor seleccionado a número, actualiza
-           * la asociación del producto en el backend y luego
-           * notifica al componente padre.
-           */
-          const nuevaCategoriaId =
-            Number(e.target.value)
-
-          await productoApi?.setCategoriaProducto?.(
-            producto.id,
-            nuevaCategoriaId
-          )
-
+          // Solo informa al componente padre.
+          // La actualización en backend se hará al presionar "Guardar".
           onChange(nuevaCategoriaId)
         }}
         disabled={loading || !!error}
@@ -77,12 +55,8 @@ export const CategorySelector = ({
         {!error &&
           categorias.map((categoria) => (
             <option
-              key={
-                categoria.id ?? categoria
-              }
-              value={
-                categoria.id ?? categoria
-              }
+              key={categoria.id ?? categoria}
+              value={categoria.id ?? categoria}
             >
               {categoria.nombre ?? categoria}
             </option>

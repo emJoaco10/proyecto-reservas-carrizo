@@ -362,6 +362,26 @@ public class ProductoService {
         return mapearProductoADTO(actualizado);
 
     }
+
+    /**
+     * Busca productos cuyo nombre contenga el texto indicado.
+     *
+     * La búsqueda ignora diferencias entre mayúsculas y minúsculas.
+     * Los productos encontrados se convierten a ProductoDTO antes
+     * de ser devueltos al Controller.
+     *
+     * @param texto texto utilizado como criterio de búsqueda
+     * @return lista de productos que coinciden con el texto indicado
+     */
+    public List<ProductoDTO> buscarPorNombre(String texto) {
+
+        List<Producto> productos =
+                productoRepository.findByNombreContainingIgnoreCase(texto);
+
+        return productos.stream()
+                .map(this::mapearProductoADTO)
+                .toList();
+    }
 }
 
 

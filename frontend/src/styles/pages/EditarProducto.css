@@ -1,50 +1,408 @@
 .editar-producto {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 1.5rem;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  width: 100%;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 32px;
+  background-color: #ffffff;
+  border: 1px solid #e1e5e8;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
 }
 
-.editar-producto h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #333;
+
+/* =========================
+   ENCABEZADO
+   ========================= */
+
+.editar-producto__header {
+  margin-bottom: 30px;
 }
 
-.editar-producto p {
-  margin: 0.5rem 0;
-  color: #555;
+.editar-producto__title {
+  margin: 0 0 8px;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #263238;
 }
+
+.editar-producto__subtitle {
+  margin: 0;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+
+/* =========================
+   ERROR
+   ========================= */
 
 .editar-producto__error-message {
-  color: #d9534f;
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  background-color: #fff1f1;
+  border: 1px solid #f3b5b5;
+  border-radius: 8px;
+  color: #c62828;
   font-weight: 600;
 }
 
+
+/* =========================
+   LOADING
+   ========================= */
+
 .editar-producto__loading-message {
+  padding: 30px;
+  text-align: center;
   color: #007bff;
+  font-size: 1rem;
+}
+
+
+/* =========================
+   FORMULARIO
+   ========================= */
+
+.editar-producto__form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+
+/* =========================
+   CAMPOS
+   ========================= */
+
+.campo-edicion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.campo-edicion label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #263238;
+}
+
+.campo-edicion input,
+.campo-edicion textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cfd4da;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
+  color: #263238;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.campo-edicion input:focus,
+.campo-edicion textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.12);
+}
+
+.campo-edicion textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+
+/* =========================
+   CATEGORÍA
+   ========================= */
+
+.editar-producto__category-selector {
+  padding-top: 4px;
+}
+
+
+/* =========================
+   SECCIÓN IMÁGENES
+   ========================= */
+
+.imagenes-edicion {
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.imagenes-edicion__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.imagenes-edicion__header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #263238;
+}
+
+.imagenes-edicion__contador {
+  padding: 5px 10px;
+  background-color: #f1f5f9;
+  border-radius: 20px;
+  color: #475569;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+
+/* =========================
+   TÍTULOS DE IMÁGENES
+   ========================= */
+
+.imagenes-seccion {
+  margin-bottom: 28px;
+}
+
+.imagenes-seccion__titulo {
+  margin: 0 0 14px;
+  color: #374151;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+
+/* =========================
+   GRID DE IMÁGENES
+   ========================= */
+
+.imagenes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 18px;
+}
+
+
+/* =========================
+   TARJETA DE IMAGEN
+   ========================= */
+
+.imagen-edicion {
+  overflow: hidden;
+  background-color: #ffffff;
+  border: 1px solid #dfe3e8;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.imagen-edicion__preview {
+  width: 100%;
+  height: 150px;
+  background-color: #f8fafc;
+}
+
+.imagen-edicion__preview img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+
+/* =========================
+   ELIMINAR IMAGEN
+   ========================= */
+
+.imagen-edicion__eliminar {
+  width: 100%;
+  padding: 9px;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  color: #c62828;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.imagen-edicion__eliminar:hover {
+  background-color: #fff1f1;
+  color: #a61b1b;
+}
+
+
+/* =========================
+   SIN IMÁGENES
+   ========================= */
+
+.imagenes-vacias {
+  padding: 24px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  text-align: center;
+  color: #64748b;
+}
+
+
+/* =========================
+   SUBIR IMÁGENES
+   ========================= */
+
+.imagenes-agregar {
+  margin-top: 10px;
+}
+
+.imagenes-upload {
+  min-height: 130px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 10px;
+  background-color: #f8fafc;
+  color: #007bff;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.imagenes-upload:hover {
+  border-color: #007bff;
+  background-color: #f0f7ff;
+}
+
+.imagenes-upload__icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.imagenes-upload small {
+  color: #64748b;
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.imagenes-input {
+  display: none;
+}
+
+
+/* =========================
+   NUEVAS IMÁGENES
+   ========================= */
+
+.nuevas-imagenes {
+  padding-top: 22px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.imagen-edicion--nueva {
+  position: relative;
+}
+
+.imagen-nueva-label {
+  display: block;
+  padding: 8px;
+  text-align: center;
+  background-color: #f0f7ff;
+  color: #007bff;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+
+/* =========================
+   ACCIONES
+   ========================= */
+
+.editar-producto__acciones {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
 }
 
 .editar-producto__guardar-button {
-  margin-top: 1rem;
-  padding: 0.6rem 1.2rem;
-  background-color: #007bff;
-  color: #fff;
+  padding: 12px 24px;
   border: none;
-  border-radius: 6px;
-  font-size: 0.95rem;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 }
 
 .editar-producto__guardar-button:hover {
   background-color: #0056b3;
 }
 
-.editar-producto__fields {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid #eee;
+.editar-producto__guardar-button:active {
+  transform: translateY(1px);
+}
+
+
+/* =========================
+   PRODUCTO NO ENCONTRADO
+   ========================= */
+
+.editar-producto__not-found {
+  padding: 30px;
+  text-align: center;
+  color: #64748b;
+}
+
+.input-error {
+  border: 1px solid #c62828 !important;
+}
+
+.mensaje-error-campo {
+  margin: 6px 0 10px;
+  color: #c62828;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 700px) {
+
+  .editar-producto {
+    margin: 20px 12px;
+    padding: 22px;
+  }
+
+  .editar-producto__title {
+    font-size: 1.6rem;
+  }
+
+  .imagenes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .imagen-edicion__preview {
+    height: 130px;
+  }
+
+  .editar-producto__acciones {
+    justify-content: stretch;
+  }
+
+  .editar-producto__guardar-button {
+    width: 100%;
+  }
+
 }
