@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import useProductoAPI from '../hooks/useProductoAPI';
 import { filesToObjectURLs, revokeObjectURLs } from '../helpers/imageUtils';
-import { validarProducto } from '../helpers/validaciones';
+import { validarNombre, validarDescripcion } from '../helpers/validaciones';
 import useCategoriaAPI from '../hooks/useCategoriaAPI';
 import '../styles/pages/AgregarProducto.css';
 
@@ -105,19 +105,13 @@ const AgregarProducto = () => {
     // Validar nombre y descripción
     // --------------------------------
 
-    const errNombre = validarProducto({
-      nombre,
-      descripcion: ''
-    });
+    const errNombre = validarNombre(nombre);
 
     if (errNombre) {
       nuevosErrores.nombre = errNombre;
     }
 
-    const errDescripcion = validarProducto({
-      nombre: 'Producto válido',
-      descripcion
-    });
+    const errDescripcion = validarDescripcion(descripcion);
 
     if (errDescripcion) {
       nuevosErrores.descripcion = errDescripcion;
