@@ -3,16 +3,19 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/components/BuscadorProductos.css';
 import useProductoAPI from '../hooks/useProductoAPI';
+
 /**
  * Bloque principal de búsqueda de productos.
  *
  * Permite ingresar una palabra clave y seleccionar
- * un rango de fechas para realizar posteriormente
- * la búsqueda de productos.
+ * un rango de fechas para realizar la búsqueda de productos.
  */
 const BuscadorProductos = () => {
 
-  const { fetchProductosPorBusqueda } = useProductoAPI();
+  const {
+    productos,
+    fetchProductosPorBusqueda
+  } = useProductoAPI();
 
   const [textoBusqueda, setTextoBusqueda] = useState('');
   const [fechaInicio, setFechaInicio] = useState(null);
@@ -21,6 +24,110 @@ const BuscadorProductos = () => {
   const [resultados, setResultados] = useState([]);
   const [buscando, setBuscando] = useState(false);
   const [mensaje, setMensaje] = useState('');
+
+  const [mostrarSugerencias, setMostrarSugerencias] = useState(false);
+
+  /**
+ * Normaliza un texto para comparar palabras
+ * ignorando mayúsculas, minúsculas y acentos.
+ */
+  const normalizarTexto = (texto = '') => {
+    return String(texto)
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim();
+  };
+
+  /**
+   * Ordena los resultados según su relevancia
+   * respecto del texto buscado.
+   */
+  const ordenarResultadosPorRelevancia = (
+    resultados,
+    texto
+  ) => {
+
+    const busqueda = normalizarTexto(texto);
+
+    return [...resultados].sort((a, b) => {
+
+      const nombreA = normalizarTexto(a.nombre);
+      const nombreB = normalizarTexto(b.nombre);
+
+      const palabrasA = nombreA.split(/\s+/);
+      const palabrasB = nombreB.split(/\s+/);
+
+      const puntajeA =
+        nombreA === busqueda
+          ? 1
+          : nombreA.startsWith(busqueda)
+            ? 2
+            : palabrasA.some((palabra) =>
+              palabra.startsWith(busqueda)
+            )
+              ? 3
+              : nombreA.includes(busqueda)
+                ? 4
+                : 5;
+
+      const puntajeB =
+        nombreB === busqueda
+          ? 1
+          : nombreB.startsWith(busqueda)
+            ? 2
+            : palabrasB.some((palabra) =>
+              palabra.startsWith(busqueda)
+            )
+              ? 3
+              : nombreB.includes(busqueda)
+                ? 4
+                : 5;
+
+      return puntajeA - puntajeB;
+    });
+  };
+
+
+
+  /**
+   * Obtiene sugerencias a partir de los productos
+   * disponibles.
+   *
+   * Se buscan coincidencias dentro del nombre
+   * del producto.
+   */
+  const sugerencias = textoBusqueda.trim()
+    ? productos
+      .filter((producto) =>
+        producto?.nombre
+          ?.toLowerCase()
+          .includes(textoBusqueda.trim().toLowerCase())
+      )
+      .slice(0, 5)
+    : [];
+
+  /**
+   * Actualiza el texto de búsqueda.
+   */
+  const handleCambioBusqueda = (e) => {
+
+    const valor = e.target.value;
+
+    setTextoBusqueda(valor);
+    setMensaje('');
+    setMostrarSugerencias(true);
+  };
+
+  /**
+   * Selecciona una sugerencia.
+   */
+  const handleSeleccionarSugerencia = (nombre) => {
+
+    setTextoBusqueda(nombre);
+    setMostrarSugerencias(false);
+    setMensaje('');
+  };
 
   /**
    * Actualiza la fecha inicial y final seleccionadas.
@@ -61,9 +168,13 @@ const BuscadorProductos = () => {
 
     const texto = textoBusqueda.trim();
 
+    setMostrarSugerencias(false);
+
     if (!texto) {
       setResultados([]);
-      setMensaje('Ingresá una palabra clave para realizar la búsqueda.');
+      setMensaje(
+        'Ingresá una palabra clave para realizar la búsqueda.'
+      );
       return;
     }
 
@@ -75,9 +186,15 @@ const BuscadorProductos = () => {
       const productosEncontrados =
         await fetchProductosPorBusqueda(texto);
 
-      setResultados(productosEncontrados);
+      const resultadosOrdenados =
+        ordenarResultadosPorRelevancia(
+          productosEncontrados,
+          texto
+        );
 
-      if (productosEncontrados.length === 0) {
+      setResultados(resultadosOrdenados);
+
+      if (resultadosOrdenados.length === 0) {
         setMensaje('No se encontraron productos.');
       }
 
@@ -122,13 +239,50 @@ const BuscadorProductos = () => {
             ¿Qué estás buscando?
           </label>
 
-          <input
-            id="busqueda-producto"
-            type="text"
-            placeholder="Ingresá una palabra clave..."
-            value={textoBusqueda}
-            onChange={(e) => setTextoBusqueda(e.target.value)}
-          />
+          <div className="buscador-productos__autocompletado">
+
+            <input
+              id="busqueda-producto"
+              type="text"
+              placeholder="Ingresá una palabra clave..."
+              value={textoBusqueda}
+              onChange={handleCambioBusqueda}
+              onFocus={() => {
+                if (textoBusqueda.trim()) {
+                  setMostrarSugerencias(true);
+                }
+              }}
+              autoComplete="off"
+            />
+
+            {mostrarSugerencias &&
+              sugerencias.length > 0 && (
+                <ul
+                  className="buscador-productos__sugerencias"
+                  role="listbox"
+                >
+
+                  {sugerencias.map((producto) => (
+
+                    <li
+                      key={producto.id}
+                      role="option"
+                      aria-selected="false"
+                      onMouseDown={() =>
+                        handleSeleccionarSugerencia(
+                          producto.nombre
+                        )
+                      }
+                    >
+                      {producto.nombre}
+                    </li>
+
+                  ))}
+
+                </ul>
+              )}
+
+          </div>
 
         </div>
 
@@ -238,4 +392,5 @@ const BuscadorProductos = () => {
     </section>
   );
 };
+
 export default BuscadorProductos;

@@ -4,7 +4,6 @@
   margin: 0 auto;
   padding: 40px 50px;
   box-sizing: border-box;
-
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
@@ -42,6 +41,15 @@
   font-weight: 600;
 }
 
+/* ============================================================
+   AUTOCOMPLETADO
+   ============================================================ */
+
+.buscador-productos__autocompletado {
+  position: relative;
+  width: 100%;
+}
+
 .buscador-productos__campo input {
   width: 100%;
   padding: 13px;
@@ -55,6 +63,46 @@
   outline: none;
   border-color: #555555;
 }
+
+.buscador-productos__sugerencias {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+
+  overflow: hidden;
+}
+
+.buscador-productos__sugerencias li {
+  padding: 12px 14px;
+  cursor: pointer;
+  font-size: 15px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.buscador-productos__sugerencias li:last-child {
+  border-bottom: none;
+}
+
+.buscador-productos__sugerencias li:hover {
+  background-color: #f5f5f5;
+}
+
+/* ============================================================
+   DATEPICKER
+   ============================================================ */
 
 .buscador-productos__datepicker {
   width: 100%;
@@ -70,6 +118,10 @@
   border-color: #555555;
 }
 
+/* ============================================================
+   BOTÓN
+   ============================================================ */
+
 .buscador-productos__boton {
   padding: 13px 22px;
   border: none;
@@ -80,12 +132,20 @@
   white-space: nowrap;
 }
 
+.buscador-productos__boton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* ============================================================
+   RANGO DE FECHAS
+   ============================================================ */
+
 .buscador-productos__rango {
   margin-top: 25px;
   padding: 15px 20px;
   border-radius: 8px;
   background-color: #f5f5f5;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -106,10 +166,18 @@
   white-space: nowrap;
 }
 
+/* ============================================================
+   MENSAJES
+   ============================================================ */
+
 .buscador-productos__mensaje {
   margin-top: 20px;
   font-size: 15px;
 }
+
+/* ============================================================
+   RESULTADOS
+   ============================================================ */
 
 .buscador-productos__resultados {
   margin-top: 30px;
