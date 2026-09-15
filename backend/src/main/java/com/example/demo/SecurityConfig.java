@@ -269,6 +269,12 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
+                        // Consultas públicas de disponibilidad
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/reserva/disponibilidad/**"
+                        )
+                        .permitAll()
 
                         // =========================
                         // RESTO DE ENDPOINTS
