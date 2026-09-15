@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import {
     getProductosPublicos,
@@ -64,7 +64,7 @@ const useProductoAPI = () => {
     };
 
     // Obtener producto por ID
-    const fetchProductoById = async (id) => {
+    const fetchProductoById = useCallback(async (id) => {
         try {
             const data = await getProductoById(id);
 
@@ -81,7 +81,7 @@ const useProductoAPI = () => {
 
             return null;
         }
-    };
+    }, []);
 
     // Obtener productos paginados
     const fetchPaginados = async (page, size) => {

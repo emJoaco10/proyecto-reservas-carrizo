@@ -1,107 +1,281 @@
-.detalle-producto {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  background: #ffffff;
-  align-items: flex-start;
-  padding: 24px;
-  margin: 0;
-}
+/* =========================================================
+   PÁGINA DETALLE DEL PRODUCTO
+   ========================================================= */
 
 .detalle-producto-page {
-  display: flex;
-  justify-content: flex-start;
   width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 40px 20px 60px;
+  background-color: #f4f8ef;
 }
 
-.detalle-producto header {
+.detalle-producto {
   width: 100%;
-  padding: 16px 0;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
+
+/* =========================================================
+   BLOQUE PRINCIPAL
+   ========================================================= */
+
+.detalle-producto__principal {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: start;
+  gap: 28px;
+}
+
+/* =========================================================
+   INFORMACIÓN DEL PRODUCTO
+   ========================================================= */
 
 .info-producto {
   width: 100%;
-  max-width: 920px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 18px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-  padding: 26px;
-  overflow: hidden;
+  max-width: none;
+  padding: 28px;
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+
   color: #1f2937;
   font-family: Inter, system-ui, sans-serif;
 }
 
+.info-producto__contenido h2 {
+  margin: 0 0 10px;
+
+  color: #173b5f;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.info-producto__contenido p {
+  margin: 0 0 22px;
+
+  color: #64748b;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   IMAGEN PRINCIPAL
+   ========================================================= */
+
 .info-producto img {
   width: 100%;
-  max-height: 400px;
+  height: 400px;
+
   object-fit: cover;
-  border-radius: 16px;
+
+  border-radius: 14px;
   display: block;
 }
 
-.btn-ver-mas,
-.btn-volver {
+.info-producto .imagen-principal {
+  width: 100%;
+}
+
+.placeholder-imagen {
+  width: 100%;
+  height: 400px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #f1f5f9;
+  border-radius: 14px;
+
+  color: #94a3b8;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* =========================================================
+   BOTÓN GALERÍA
+   ========================================================= */
+
+.btn-ver-mas {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  font-weight: 600;
-  padding: 12px 18px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-}
 
-.btn-ver-mas {
-  background: #16a34a;
+  margin-top: 18px;
+  padding: 11px 22px;
+
+  border: none;
+  border-radius: 9px;
+
+  background-color: #20bf6b;
   color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .btn-ver-mas:hover {
-  background: #15803d;
+  background-color: #18a85b;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 12px rgba(32, 191, 107, 0.2);
 }
 
-.btn-volver {
-  background: transparent;
-  color: #111827;
+.btn-ver-mas:active {
+  transform: translateY(0);
 }
 
-.detalle-producto main .loading {
-  color: #6b7280;
-  font-weight: 300;
-  font-size: 1rem;
+.btn-ver-mas:focus-visible {
+  outline: 3px solid rgba(32, 191, 107, 0.25);
+  outline-offset: 2px;
 }
 
-.detalle-producto main .error {
-  background: #fee2e2;
-  border: 1px solid #fca5a5;
-  color: #b91c1c;
+/* =========================================================
+   CALENDARIO
+   ========================================================= */
+
+.detalle-producto__principal .calendario-disponibilidad {
+  width: 100%;
+  margin-top: 0;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   CARACTERÍSTICAS
+   ========================================================= */
+
+.detalle-producto__caracteristicas {
+  width: 100%;
+  margin-top: 28px;
+  padding: 30px;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+}
+
+.detalle-producto__seccion-header {
+  margin-bottom: 24px;
+}
+
+.detalle-producto__seccion-header h2 {
+  margin: 0 0 6px;
+
+  color: #173b5f;
+  font-size: 26px;
   font-weight: 700;
-  padding: 14px 18px;
-  border-radius: 12px;
 }
 
-@media (max-width: 600px) {
-  .detalle-producto {
-    width: 100%;
-    padding: 16px;
+.detalle-producto__seccion-header p {
+  margin: 0;
+
+  color: #64748b;
+  font-size: 15px;
+}
+
+/* =========================================================
+   ESTADOS
+   ========================================================= */
+
+.detalle-producto__estado {
+  width: 100%;
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+  border-radius: 12px;
+
+  text-align: center;
+
+  color: #64748b;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.detalle-producto__estado--error {
+  background-color: #fff7f7;
+  border: 1px solid #f3c2c2;
+  color: #9f2d2d;
+}
+
+/* =========================================================
+   RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+  .detalle-producto-page {
+    padding: 30px 16px 50px;
   }
 
-  .btn-ver-mas,
-  .btn-volver {
-    width: 100%;
+  .detalle-producto__principal {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .info-producto img,
+  .placeholder-imagen {
+    height: 380px;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — CELULAR
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .detalle-producto-page {
+    padding: 20px 12px 40px;
   }
 
   .info-producto {
     padding: 20px;
+    border-radius: 14px;
   }
 
-  .info-producto img {
-    max-height: none;
+  .info-producto__contenido h2 {
+    font-size: 25px;
+  }
+
+  .info-producto__contenido p {
+    font-size: 15px;
+  }
+
+  .info-producto img,
+  .placeholder-imagen {
+    height: 250px;
+    border-radius: 12px;
+  }
+
+  .btn-ver-mas {
     width: 100%;
+    margin-top: 16px;
+  }
+
+  .detalle-producto__caracteristicas {
+    padding: 20px;
+    border-radius: 14px;
+  }
+
+  .detalle-producto__seccion-header h2 {
+    font-size: 23px;
   }
 }

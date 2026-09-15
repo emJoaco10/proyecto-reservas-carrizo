@@ -1,38 +1,52 @@
-import React from 'react'
-import '../styles/components/InfoProducto.css'
-import CaracteristicasListado from './CaracteristicasListado'
+import React from 'react';
+import '../styles/components/InfoProducto.css';
 
- const InfoProducto = ({ producto, onVerMas }) => {
+const InfoProducto = ({ producto, onVerMas }) => {
   if (!producto) {
-    return <div>No hay producto disponible</div>
+    return <div>No hay producto disponible</div>;
   }
 
-  const { nombre, descripcion, imagenes = [], caracteristicas = [], id } = producto
-  const imagenPrincipal = imagenes && imagenes.length > 0 ? imagenes[0] : null
+  const {
+    nombre,
+    descripcion,
+    imagenes = [],
+    id
+  } = producto;
+
+  const imagenPrincipal =
+    imagenes && imagenes.length > 0
+      ? imagenes[0]
+      : null;
 
   return (
     <div className="info-producto">
-      <h2>{nombre}</h2>
-      <p>{descripcion}</p>
+      <div className="info-producto__contenido">
+        <h2>{nombre}</h2>
 
-      {imagenPrincipal ? (
-        <img className="imagen-principal" src={imagenPrincipal} alt={`Imagen principal de ${nombre}`} />
-      ) : (
-        <div className="placeholder-imagen">Sin imagen</div>
-      )}
+        <p>{descripcion}</p>
 
-      <button
-        type="button"
-        className="btn-ver-mas"
-        onClick={() => onVerMas && onVerMas(id)}
-      >
-        Ver más
-      </button>
+        {imagenPrincipal ? (
+          <img
+            className="imagen-principal"
+            src={imagenPrincipal}
+            alt={`Imagen principal de ${nombre}`}
+          />
+        ) : (
+          <div className="placeholder-imagen">
+            Sin imagen
+          </div>
+        )}
 
-      <CaracteristicasListado caracteristicas={caracteristicas} />
-      
+        <button
+          type="button"
+          className="btn-ver-mas"
+          onClick={() => onVerMas && onVerMas(id)}
+        >
+          Ver galería
+        </button>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default InfoProducto 
+export default InfoProducto;

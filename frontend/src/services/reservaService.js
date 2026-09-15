@@ -1,30 +1,14 @@
-import axios from 'axios';
-
-const API_URL = 'http://localhost:8080/api/reserva';
+import apiService from './apiService';
 
 /**
- * Consulta si un producto está disponible para un rango
- * determinado de fechas.
+ * Obtiene los períodos reservados de un producto.
  *
  * @param {number|string} productoId ID del producto.
- * @param {string} fechaInicio Fecha inicial en formato YYYY-MM-DD.
- * @param {string} fechaFin Fecha final en formato YYYY-MM-DD.
- * @returns {Promise<boolean>} true si está disponible.
+ * @returns {Promise<Array>} lista de períodos reservados.
  */
-export const getDisponibilidad = async (
-  productoId,
-  fechaInicio,
-  fechaFin
-) => {
-
-  const response = await axios.get(
-    `${API_URL}/disponibilidad/${productoId}`,
-    {
-      params: {
-        fechaInicio,
-        fechaFin
-      }
-    }
+export const getDisponibilidad = async (productoId) => {
+  const response = await apiService.get(
+    `/reserva/disponibilidad/${productoId}`
   );
 
   return response.data;
@@ -34,6 +18,9 @@ export const getDisponibilidad = async (
  * Obtiene los productos disponibles para un rango
  * determinado de fechas.
  *
+ * Este endpoint será utilizado cuando se implemente
+ * la búsqueda de productos disponibles.
+ *
  * @param {string} fechaInicio Fecha inicial en formato YYYY-MM-DD.
  * @param {string} fechaFin Fecha final en formato YYYY-MM-DD.
  * @returns {Promise<Array>} productos disponibles.
@@ -42,9 +29,8 @@ export const getProductosDisponibles = async (
   fechaInicio,
   fechaFin
 ) => {
-
-  const response = await axios.get(
-    `${API_URL}/disponibles`,
+  const response = await apiService.get(
+    '/reserva/disponibles',
     {
       params: {
         fechaInicio,
@@ -59,17 +45,15 @@ export const getProductosDisponibles = async (
 /**
  * Crea una nueva reserva.
  *
+ * Este endpoint será utilizado cuando se implemente
+ * la creación de reservas.
+ *
  * @param {Object} reserva Datos de la reserva.
- * @param {number} reserva.usuarioId ID del usuario.
- * @param {number} reserva.productoId ID del producto.
- * @param {string} reserva.fechaInicio Fecha inicial.
- * @param {string} reserva.fechaFin Fecha final.
  * @returns {Promise<Object>} reserva creada.
  */
 export const createReserva = async (reserva) => {
-
-  const response = await axios.post(
-    API_URL,
+  const response = await apiService.post(
+    '/reserva',
     reserva
   );
 
