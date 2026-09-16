@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 @Entity
 @Table(name = "usuarios", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email")
@@ -30,6 +32,14 @@ public class Usuario {
     private String password;
 
     private String rol = "USER";
+
+    @ManyToMany
+    @JoinTable(
+            name = "usuario_favorito",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "producto_id")
+    )
+    private List<Producto> favoritos;
 
     // 🔹 Constructor vacío (requerido por JPA)
     public Usuario() {}
@@ -90,6 +100,14 @@ public class Usuario {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public List<Producto> getFavoritos() {
+        return favoritos;
+    }
+
+    public void setFavoritos(List<Producto> favoritos) {
+        this.favoritos = favoritos;
     }
 
 }

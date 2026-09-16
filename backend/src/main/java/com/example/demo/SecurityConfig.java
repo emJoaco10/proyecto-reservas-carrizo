@@ -276,6 +276,15 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
+                                // =========================
+                                // FAVORITOS
+                                // =========================
+
+                                .requestMatchers(
+                                        "/api/favoritos/**"
+                                )
+                                .authenticated()
+
                         // =========================
                         // RESTO DE ENDPOINTS
                         // =========================

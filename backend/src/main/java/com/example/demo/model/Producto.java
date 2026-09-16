@@ -59,6 +59,9 @@ public class Producto {
     )
     private List<Caracteristica> caracteristicas;
 
+    @ManyToMany(mappedBy = "favoritos")
+    private List<Usuario> usuariosFavoritos;
+
     /**
      * Constructor con parámetros.
      * Utilizado para crear instancias de Producto con datos iniciales.
@@ -98,4 +101,7 @@ public class Producto {
 
     public List<Caracteristica> getCaracteristicas() {return caracteristicas;}
     public void setCaracteristicas(List<Caracteristica> caracteristicas) {this.caracteristicas = caracteristicas;}
+
+    public List<Usuario> getUsuariosFavoritos() {return usuariosFavoritos;}
+    public void setUsuariosFavoritos(List<Usuario> usuariosFavoritos) {this.usuariosFavoritos = usuariosFavoritos;}
 }
