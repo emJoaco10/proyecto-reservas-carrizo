@@ -18,6 +18,12 @@ import {
 
 import { obtenerProductosAleatorios } from "../helpers/productoUtils";
 
+import {
+    agregarFavorito,
+    eliminarFavorito,
+    obtenerFavoritos
+} from "../services/favoritoService";
+
 const useProductoAPI = () => {
 
     const [productos, setProductos] = useState([]);
@@ -345,6 +351,45 @@ const useProductoAPI = () => {
         }
     };
 
+    const fetchFavoritos = useCallback(async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            const data = await obtenerFavoritos();
+
+            return data;
+        } catch (err) {
+            console.error("Error al obtener favoritos:", err);
+            setError("No se pudieron obtener los favoritos.");
+            return [];
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    const addFavorito = async (productoId) => {
+        try {
+            await agregarFavorito(productoId);
+            return true;
+        } catch (err) {
+            console.error("Error al agregar favorito:", err);
+            setError("No se pudo agregar el producto a favoritos.");
+            return false;
+        }
+    };
+
+    const removeFavorito = async (productoId) => {
+        try {
+            await eliminarFavorito(productoId);
+            return true;
+        } catch (err) {
+            console.error("Error al eliminar favorito:", err);
+            setError("No se pudo eliminar el producto de favoritos.");
+            return false;
+        }
+    };
+
     // ============================================================
     // CATEGORÍAS
     // ============================================================
@@ -401,7 +446,11 @@ const useProductoAPI = () => {
         setCaracteristicasProducto,
 
         removeProductoById,
-        removeAllProductos
+        removeAllProductos,
+
+        fetchFavoritos,
+        addFavorito,
+        removeFavorito
     };
 };
 

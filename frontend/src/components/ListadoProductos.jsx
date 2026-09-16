@@ -33,10 +33,21 @@ import '../styles/components/ListadoProductos.css';
  */
 const ListadoProductos = () => {
   // Hook unificado con backend
-  const { getProductosAleatorios, loading, error } = useProductoAPI();
+  const {
+    getProductosAleatorios,
+    fetchFavoritos,
+    addFavorito,
+    removeFavorito,
+    loading,
+    error
+  } = useProductoAPI();
 
   // Estado de paginación (1-indexed para UX)
   const [paginaActual, setPaginaActual] = useState(1);
+
+  const [favoritos, setFavoritos] = useState([]);
+  const [cargandoFavoritos, setCargandoFavoritos] = useState(false);
+
   const pageSize = 4; // 4 productos por página
 
   // Selección aleatoria desde productos cargados
@@ -52,6 +63,73 @@ const ListadoProductos = () => {
       setPaginaActual(totalPaginas);
     }
   }, [totalPaginas, paginaActual]);
+
+  useEffect(() => {
+    const cargarFavoritos = async () => {
+      try {
+        setCargandoFavoritos(true);
+
+        const favoritosUsuario = await fetchFavoritos();
+
+        const idsFavoritos = favoritosUsuario.map(
+          (producto) => producto.id
+        );
+
+        setFavoritos(idsFavoritos);
+      } catch (error) {
+        console.error("Error al cargar favoritos:", error);
+        setFavoritos([]);
+      } finally {
+        setCargandoFavoritos(false);
+      }
+    };
+
+    cargarFavoritos();
+  }, [fetchFavoritos]);
+
+  // Marcar o desmarcar un producto como favorito
+  const toggleFavorito = async (e, productoId) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (cargandoFavoritos) {
+      return;
+    }
+
+    const esFavoritoActual = favoritos.includes(productoId);
+
+    try {
+      setCargandoFavoritos(true);
+
+      if (esFavoritoActual) {
+        const resultado = await removeFavorito(productoId);
+
+        if (resultado) {
+          setFavoritos((favoritosActuales) =>
+            favoritosActuales.filter((id) => id !== productoId)
+          );
+        }
+      } else {
+        const resultado = await addFavorito(productoId);
+
+        if (resultado) {
+          setFavoritos((favoritosActuales) => [
+            ...favoritosActuales,
+            productoId
+          ]);
+        }
+      }
+    } catch (error) {
+      console.error("Error al modificar favorito:", error);
+    } finally {
+      setCargandoFavoritos(false);
+    }
+  };
+
+  // Verificar si un producto está marcado como favorito
+  const esFavorito = (productoId) => {
+    return favoritos.includes(productoId);
+  };
 
   // Estados de carga y error
   if (loading) {
@@ -76,6 +154,22 @@ const ListadoProductos = () => {
         {productosVisibles.map((producto) => (
           <Link key={producto.id} to={`/producto/${producto.id}`} className="producto-link">
             <div className="producto-card">
+
+              {/* Botón de favorito */}
+              <button
+                type="button"
+                className={`producto-favorito ${esFavorito(producto.id) ? 'producto-favorito--activo' : ''
+                  }`}
+                onClick={(e) => toggleFavorito(e, producto.id)}
+                aria-label={
+                  esFavorito(producto.id)
+                    ? `Quitar ${producto.nombre} de favoritos`
+                    : `Agregar ${producto.nombre} a favoritos`
+                }
+                aria-pressed={esFavorito(producto.id)}
+              >
+                {esFavorito(producto.id) ? '♥' : '♡'}
+              </button>
 
               {/* Imagen del producto subida */}
               {Array.isArray(producto.imagenes) && producto.imagenes.length > 0 ? (
