@@ -374,7 +374,6 @@ const useProductoAPI = () => {
             return true;
         } catch (err) {
             console.error("Error al agregar favorito:", err);
-            setError("No se pudo agregar el producto a favoritos.");
             return false;
         }
     };
@@ -385,7 +384,6 @@ const useProductoAPI = () => {
             return true;
         } catch (err) {
             console.error("Error al eliminar favorito:", err);
-            setError("No se pudo eliminar el producto de favoritos.");
             return false;
         }
     };

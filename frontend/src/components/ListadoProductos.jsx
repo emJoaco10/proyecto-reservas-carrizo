@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useProductoAPI from '../hooks/useProductoAPI';
+import { leerLocal } from '../helpers/storageUtils';
 import '../styles/components/ListadoProductos.css';
 
 /**
@@ -32,6 +33,9 @@ import '../styles/components/ListadoProductos.css';
  * - Mantiene navegación SPA (Single Page Application)
  */
 const ListadoProductos = () => {
+
+  const usuario = leerLocal("usuario");
+
   // Hook unificado con backend
   const {
     getProductosAleatorios,
@@ -66,6 +70,15 @@ const ListadoProductos = () => {
 
   useEffect(() => {
     const cargarFavoritos = async () => {
+
+      // Los favoritos solo se consultan
+      // si existe un usuario autenticado.
+      if (!usuario) {
+        setFavoritos([]);
+        setCargandoFavoritos(false);
+        return;
+      }
+
       try {
         setCargandoFavoritos(true);
 
@@ -76,21 +89,30 @@ const ListadoProductos = () => {
         );
 
         setFavoritos(idsFavoritos);
+
       } catch (error) {
         console.error("Error al cargar favoritos:", error);
         setFavoritos([]);
+
       } finally {
         setCargandoFavoritos(false);
       }
     };
 
     cargarFavoritos();
-  }, [fetchFavoritos]);
+  }, [fetchFavoritos, usuario]);
 
   // Marcar o desmarcar un producto como favorito
   const toggleFavorito = async (e, productoId) => {
     e.preventDefault();
     e.stopPropagation();
+
+    // Los favoritos solo están disponibles
+    // para usuarios autenticados.
+    if (!usuario) {
+      alert("Iniciá sesión para agregar productos a favoritos.");
+      return;
+    }
 
     if (cargandoFavoritos) {
       return;

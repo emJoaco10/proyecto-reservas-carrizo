@@ -5,6 +5,7 @@ import CaracteristicasListado from '../components/CaracteristicasListado';
 import CalendarioDisponibilidad from '../components/CalendarioDisponibilidad';
 import useProductoAPI from '../hooks/useProductoAPI';
 import '../styles/pages/DetalleProductos.css';
+import PoliticasProducto from '../components/PoliticasProducto';
 
 const DetalleProductos = () => {
   const { id } = useParams();
@@ -81,6 +82,9 @@ const DetalleProductos = () => {
                 caracteristicas={producto.caracteristicas || []}
               />
             </section>
+
+            {/* Políticas */}
+            <PoliticasProducto />
           </>
         )}
 
