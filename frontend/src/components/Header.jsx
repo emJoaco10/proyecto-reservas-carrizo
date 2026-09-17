@@ -136,7 +136,7 @@ const Header = () => {
                   </div>
 
                 </div>
-                
+
                 {/* Menú */}
                 <button
                   type="button"
@@ -156,9 +156,23 @@ const Header = () => {
                   <button
                     type="button"
                     className="menu-item"
-                    onClick={() => navigate("/mi-perfil")}
+                    onClick={() => {
+                      setMostrarMenu(false);
+                      navigate("/mi-perfil");
+                    }}
                   >
                     Mi perfil
+                  </button>
+
+                  <button
+                    type="button"
+                    className="menu-item"
+                    onClick={() => {
+                      setMostrarMenu(false);
+                      navigate("/mis-favoritos");
+                    }}
+                  >
+                    Mis favoritos
                   </button>
 
                   <button

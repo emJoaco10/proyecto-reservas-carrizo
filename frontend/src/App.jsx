@@ -23,6 +23,7 @@ import AsociarProductoCaracteristica from './pages/AsociarProductoCaracteristica
 import AgregarCategorias from './pages/AgregarCategorias';
 import AdministracionCategorias from './pages/AdministracionCategorias';
 import AdminRoute from "./components/AdminRoute";
+import MisFavoritos from './pages/MisFavoritos';
 
 /**
  * Componente principal de la aplicación React.
@@ -86,6 +87,11 @@ const App = () => {
             element={<MiPerfil />}
           />
 
+          {/* Mis favoritos */}
+          <Route
+            path="/mis-favoritos"
+            element={<MisFavoritos />}
+          />
 
           {/* =========================
       RUTAS ADMINISTRATIVAS
