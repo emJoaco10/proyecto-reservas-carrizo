@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/components/InfoProducto.css';
+import CompartirProducto from './CompartirProducto';
 
 const InfoProducto = ({ producto, onVerMas }) => {
   if (!producto) {
@@ -21,7 +22,12 @@ const InfoProducto = ({ producto, onVerMas }) => {
   return (
     <div className="info-producto">
       <div className="info-producto__contenido">
-        <h2>{nombre}</h2>
+        
+        <div className="info-producto__titulo">
+          <h2>{nombre}</h2>
+
+          <CompartirProducto producto={producto} />
+        </div>
 
         <p>{descripcion}</p>
 
