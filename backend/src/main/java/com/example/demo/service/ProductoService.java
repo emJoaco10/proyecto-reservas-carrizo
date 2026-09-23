@@ -39,15 +39,17 @@ public class ProductoService {
     private final ProductoRepository productoRepository;
     private final CategoriaRepository categoriaRepository;
     private final CaracteristicaRepository caracteristicaRepository;
+    private final ValoracionService valoracionService;
 
     /**
      * Constructor utilizado por Spring para inyectar los repositories
      * necesarios para gestionar productos, categorías y características.
      */
-    public ProductoService(ProductoRepository productoRepository, CategoriaRepository categoriaRepository, CaracteristicaRepository caracteristicaRepository) {
+    public ProductoService(ProductoRepository productoRepository, CategoriaRepository categoriaRepository, CaracteristicaRepository caracteristicaRepository, ValoracionService valoracionService) {
         this.productoRepository = productoRepository;
         this.categoriaRepository = categoriaRepository;
         this.caracteristicaRepository = caracteristicaRepository;
+        this.valoracionService = valoracionService;
     }
 
     /**
@@ -247,6 +249,13 @@ public class ProductoService {
                     ))
                     .toList();
         }
+
+        Double puntuacionPromedio =
+                valoracionService.obtenerPromedio(producto.getId());
+
+        Long cantidadValoraciones =
+                valoracionService.obtenerCantidad(producto.getId());
+
         return new ProductoDTO(
 
                 producto.getId(),
@@ -254,7 +263,9 @@ public class ProductoService {
                 producto.getDescripcion(),
                 producto.getImagenes(),
                 categoriaDTO,
-                caracteristicasDTO
+                caracteristicasDTO,
+                puntuacionPromedio,
+                cantidadValoraciones
         );
     }
 

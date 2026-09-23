@@ -41,6 +41,10 @@ public class ProductoDTO {
 
     private List<CaracteristicaDTO> caracteristicas = new ArrayList<>();
 
+    private Double puntuacionPromedio;
+
+    private Long cantidadValoraciones;
+
     /**
      * Constructor sin parámetros.
      */
@@ -55,7 +59,9 @@ public class ProductoDTO {
             String descripcion,
             List<String> imagenes,
             CategoriaDTO categoriaDTO,
-            List<CaracteristicaDTO> caracteristicas) {
+            List<CaracteristicaDTO> caracteristicas,
+            Double puntuacionPromedio,
+            Long cantidadValoraciones) {
 
         this.id = id;
         this.nombre = nombre;
@@ -63,6 +69,8 @@ public class ProductoDTO {
         this.imagenes = imagenes;
         this.categoriaDTO = categoriaDTO;
         this.caracteristicas = caracteristicas;
+        this.puntuacionPromedio = puntuacionPromedio;
+        this.cantidadValoraciones = cantidadValoraciones;
     }
 
     // ===================== GETTERS Y SETTERS =====================
@@ -84,4 +92,10 @@ public class ProductoDTO {
 
     public List<CaracteristicaDTO> getCaracteristicas() {return caracteristicas;}
     public void setCaracteristicas(List<CaracteristicaDTO> caracteristicas) {this.caracteristicas = caracteristicas;}
+
+    public Double getPuntuacionPromedio() {return puntuacionPromedio;}
+    public void setPuntuacionPromedio(Double puntuacionPromedio) {this.puntuacionPromedio = puntuacionPromedio;}
+
+    public Long getCantidadValoraciones() {return cantidadValoraciones;}
+    public void setCantidadValoraciones(Long cantidadValoraciones) {this.cantidadValoraciones = cantidadValoraciones;}
 }

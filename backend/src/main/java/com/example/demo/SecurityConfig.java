@@ -124,7 +124,8 @@ public class SecurityConfig {
             HttpSecurity http) throws Exception {
 
         http
-                .cors(cors -> {})
+                .cors(cors -> {
+                })
 
                 .csrf(csrf -> csrf.disable())
 
@@ -132,149 +133,149 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // =========================
-                        // RUTAS ADMINISTRATIVAS
-                        // =========================
+                                // =========================
+                                // RUTAS ADMINISTRATIVAS
+                                // =========================
 
-                        // Usuarios
-                        .requestMatchers(
-                                "/api/usuario/*/rol",
-                                "/api/usuario"
-                        )
-                        .hasRole("ADMIN")
-
-
-                        // Productos administrativos
-                        .requestMatchers(
-                                "/api/producto/admin"
-                        )
-                        .hasRole("ADMIN")
-
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/api/producto"
-                        )
-                        .hasRole("ADMIN")
-
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/api/producto/*"
-                        )
-                        .hasRole("ADMIN")
-
-                        .requestMatchers(
-                                HttpMethod.DELETE,
-                                "/api/producto"
-                        )
-                        .hasRole("ADMIN")
-
-                        .requestMatchers(
-                                HttpMethod.DELETE,
-                                "/api/producto/*"
-                        )
-                        .hasRole("ADMIN")
-
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/api/producto/*/categoria",
-                                "/api/producto/*/caracteristicas"
-                        )
-                        .hasRole("ADMIN")
+                                // Usuarios
+                                .requestMatchers(
+                                        "/api/usuario/*/rol",
+                                        "/api/usuario"
+                                )
+                                .hasRole("ADMIN")
 
 
-                        // Categorías
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/api/categoria"
-                        )
-                        .hasRole("ADMIN")
+                                // Productos administrativos
+                                .requestMatchers(
+                                        "/api/producto/admin"
+                                )
+                                .hasRole("ADMIN")
 
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/api/categoria/*"
-                        )
-                        .hasRole("ADMIN")
+                                .requestMatchers(
+                                        HttpMethod.POST,
+                                        "/api/producto"
+                                )
+                                .hasRole("ADMIN")
 
-                        .requestMatchers(
-                                HttpMethod.DELETE,
-                                "/api/categoria/*"
-                        )
-                        .hasRole("ADMIN")
+                                .requestMatchers(
+                                        HttpMethod.PUT,
+                                        "/api/producto/*"
+                                )
+                                .hasRole("ADMIN")
 
+                                .requestMatchers(
+                                        HttpMethod.DELETE,
+                                        "/api/producto"
+                                )
+                                .hasRole("ADMIN")
 
-                        // Características
-                        .requestMatchers(
-                                HttpMethod.POST,
-                                "/api/caracteristica"
-                        )
-                        .hasRole("ADMIN")
+                                .requestMatchers(
+                                        HttpMethod.DELETE,
+                                        "/api/producto/*"
+                                )
+                                .hasRole("ADMIN")
 
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/api/caracteristica/*"
-                        )
-                        .hasRole("ADMIN")
-
-                        .requestMatchers(
-                                HttpMethod.DELETE,
-                                "/api/caracteristica/*"
-                        )
-                        .hasRole("ADMIN")
+                                .requestMatchers(
+                                        HttpMethod.PUT,
+                                        "/api/producto/*/categoria",
+                                        "/api/producto/*/caracteristicas"
+                                )
+                                .hasRole("ADMIN")
 
 
-                        // =========================
-                        // RUTAS PÚBLICAS
-                        // =========================
+                                // Categorías
+                                .requestMatchers(
+                                        HttpMethod.POST,
+                                        "/api/categoria"
+                                )
+                                .hasRole("ADMIN")
 
-                        .requestMatchers("/h2-console/**")
-                        .permitAll()
+                                .requestMatchers(
+                                        HttpMethod.PUT,
+                                        "/api/categoria/*"
+                                )
+                                .hasRole("ADMIN")
 
-                        .requestMatchers(
-                                "/api/usuario/registro",
-                                "/api/usuario/login"
-                        )
-                        .permitAll()
-
-
-                        // Consultas públicas de productos
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/producto/aleatorios",
-                                "/api/producto/buscar",
-                                "/api/producto/paginados",
-                                "/api/producto/categoria/**",
-                                "/api/producto/categoriasFiltro",
-                                "/api/producto/categorias",
-                                "/api/producto/*"
-                        )
-                        .permitAll()
+                                .requestMatchers(
+                                        HttpMethod.DELETE,
+                                        "/api/categoria/*"
+                                )
+                                .hasRole("ADMIN")
 
 
-                        // Consultas públicas de categorías
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/categoria",
-                                "/api/categoria/*"
-                        )
-                        .permitAll()
+                                // Características
+                                .requestMatchers(
+                                        HttpMethod.POST,
+                                        "/api/caracteristica"
+                                )
+                                .hasRole("ADMIN")
+
+                                .requestMatchers(
+                                        HttpMethod.PUT,
+                                        "/api/caracteristica/*"
+                                )
+                                .hasRole("ADMIN")
+
+                                .requestMatchers(
+                                        HttpMethod.DELETE,
+                                        "/api/caracteristica/*"
+                                )
+                                .hasRole("ADMIN")
 
 
-                        // Consultas públicas de características
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/caracteristica",
-                                "/api/caracteristica/*"
-                        )
-                        .permitAll()
+                                // =========================
+                                // RUTAS PÚBLICAS
+                                // =========================
 
-                        // Consultas públicas de disponibilidad
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/reserva/disponibilidad/**"
-                        )
-                        .permitAll()
+                                .requestMatchers("/h2-console/**")
+                                .permitAll()
+
+                                .requestMatchers(
+                                        "/api/usuario/registro",
+                                        "/api/usuario/login"
+                                )
+                                .permitAll()
+
+
+                                // Consultas públicas de productos
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/api/producto/aleatorios",
+                                        "/api/producto/buscar",
+                                        "/api/producto/paginados",
+                                        "/api/producto/categoria/**",
+                                        "/api/producto/categoriasFiltro",
+                                        "/api/producto/categorias",
+                                        "/api/producto/*"
+                                )
+                                .permitAll()
+
+
+                                // Consultas públicas de categorías
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/api/categoria",
+                                        "/api/categoria/*"
+                                )
+                                .permitAll()
+
+
+                                // Consultas públicas de características
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/api/caracteristica",
+                                        "/api/caracteristica/*"
+                                )
+                                .permitAll()
+
+                                // Consultas públicas de disponibilidad
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/api/reserva/disponibilidad/**"
+                                )
+                                .permitAll()
 
                                 // =========================
                                 // FAVORITOS
@@ -285,12 +286,30 @@ public class SecurityConfig {
                                 )
                                 .authenticated()
 
-                        // =========================
-                        // RESTO DE ENDPOINTS
-                        // =========================
+                                // =========================
+                                // VALORACIONES
+                                // =========================
 
-                        .anyRequest()
-                        .authenticated()
+                                // Consultar valoraciones de un producto
+                                .requestMatchers(
+                                        HttpMethod.GET,
+                                        "/api/valoraciones/producto/**"
+                                )
+                                .permitAll()
+
+                                // Crear una valoración
+                                .requestMatchers(
+                                        HttpMethod.POST,
+                                        "/api/valoraciones/producto/**"
+                                )
+                                .authenticated()
+
+                                // =========================
+                                // RESTO DE ENDPOINTS
+                                // =========================
+
+                                .anyRequest()
+                                .authenticated()
                 )
 
                 .oauth2ResourceServer(oauth2 ->

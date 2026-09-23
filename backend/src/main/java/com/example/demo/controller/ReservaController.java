@@ -4,6 +4,7 @@ import com.example.demo.dto.DisponibilidadDTO;
 import com.example.demo.service.ReservaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -32,5 +33,21 @@ public class ReservaController {
                 reservaService.obtenerDisponibilidadPorProducto(productoId);
 
         return ResponseEntity.ok(disponibilidad);
+    }
+
+    @GetMapping("/puede-valorar/{productoId}")
+    public ResponseEntity<Boolean> puedeValorar(
+            @PathVariable Long productoId,
+            Authentication authentication
+    ) {
+        String email = authentication.getName();
+
+        boolean puedeValorar =
+                reservaService.tieneReservaFinalizada(
+                        email,
+                        productoId
+                );
+
+        return ResponseEntity.ok(puedeValorar);
     }
 }

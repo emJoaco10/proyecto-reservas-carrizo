@@ -1,7 +1,5 @@
 package com.example.demo.controller;
 
-public class ValidacionController package com.example.demo.controller;
-
 import com.example.demo.dto.ValoracionDTO;
 import com.example.demo.service.ValoracionService;
 import jakarta.validation.Valid;
@@ -12,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-        import java.util.List;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/valoraciones")
@@ -31,6 +29,22 @@ public class ValoracionController {
         return ResponseEntity.ok(
                 valoracionService.obtenerValoraciones(productoId)
         );
+    }
+
+    @GetMapping("/producto/{productoId}/ya-valoro")
+    public ResponseEntity<Boolean> yaValoro(
+            @PathVariable Long productoId,
+            Authentication authentication) {
+
+        String email = authentication.getName();
+
+        boolean yaValoro =
+                valoracionService.yaValoro(
+                        email,
+                        productoId
+                );
+
+        return ResponseEntity.ok(yaValoro);
     }
 
     @PostMapping("/producto/{productoId}")
@@ -76,5 +90,4 @@ public class ValoracionController {
             this.comentario = comentario;
         }
     }
-}{
 }

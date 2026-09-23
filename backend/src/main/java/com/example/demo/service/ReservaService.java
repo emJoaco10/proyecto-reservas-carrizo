@@ -45,4 +45,24 @@ public class ReservaService {
                 reserva.getFechaFin()
         );
     }
+
+    /**
+     * Verifica si un usuario tiene una reserva finalizada
+     * para un producto.
+     *
+     * @param email email del usuario
+     * @param productoId identificador del producto
+     * @return true si existe una reserva finalizada
+     */
+    public boolean tieneReservaFinalizada(
+            String email,
+            Long productoId
+    ) {
+        return reservaRepository
+                .existsByUsuarioEmailAndProductoIdAndFechaFinBefore(
+                        email,
+                        productoId,
+                        java.time.LocalDate.now()
+                );
+    }
 }
