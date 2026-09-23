@@ -2,8 +2,11 @@ package com.example.demo.service;
 
 import com.example.demo.dto.CategoriaDTO;
 import com.example.demo.model.Categoria;
+import com.example.demo.model.Producto;
 import com.example.demo.repository.CategoriaRepository;
+import com.example.demo.repository.ProductoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
+    private final ProductoRepository productoRepository;
 
     /**
      * Constructor utilizado por Spring para inyectar el repository
@@ -26,8 +30,9 @@ public class CategoriaService {
      *
      * @param categoriaRepository repository de categorías
      */
-    public CategoriaService(CategoriaRepository categoriaRepository) {
+    public CategoriaService(CategoriaRepository categoriaRepository, ProductoRepository productoRepository) {
         this.categoriaRepository = categoriaRepository;
+        this.productoRepository = productoRepository;
     }
 
     /**
@@ -131,6 +136,7 @@ public class CategoriaService {
         return convertirADTO(actualizada);
     }
 
+    @Transactional
     public void eliminar(Long id) {
 
         Categoria categoria = categoriaRepository.findById(id)
@@ -140,15 +146,21 @@ public class CategoriaService {
                         )
                 );
 
-        // No permitir eliminar categorías que tengan productos asociados.
-        if (categoria.getProductos() != null
-                && !categoria.getProductos().isEmpty()) {
+        // Obtener los productos asociados a la categoría.
+        List<Producto> productos = categoria.getProductos();
 
-            throw new IllegalArgumentException(
-                    "No se puede eliminar la categoría porque tiene productos asociados."
-            );
+        // Desasociar la categoría de cada producto.
+        if (productos != null && !productos.isEmpty()) {
+
+            for (Producto producto : productos) {
+                producto.setCategoria(null);
+            }
+
+            // Guardar los productos con categoria = null.
+            productoRepository.saveAll(productos);
         }
 
+        // Finalmente eliminar solamente la categoría.
         categoriaRepository.delete(categoria);
     }
 

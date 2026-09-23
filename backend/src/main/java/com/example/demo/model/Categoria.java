@@ -31,13 +31,17 @@ public class Categoria {
     @Column(columnDefinition = "TEXT")
     private String imagen;
 
-    /**     * Relación OneToMany con Producto.
-     *Una categoría puede tener muchos productos asociados.
+    /**
+     * Relación OneToMany con Producto.
+     * Una categoría puede tener muchos productos asociados.
+     *
      * mappedBy = "categoria" indica que la FK está en Producto.
-     * cascade = ALL permite eliminar productos al eliminar categoría.
-     * orphanRemoval = true elimina productos huérfanos si se desasocian.
+     *
+     * Los productos NO se eliminan cuando se elimina la categoría.
+     * Antes de eliminar la categoría, el servicio desasocia los productos
+     * dejándolos con categoria = null.
      */
-    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "categoria")
     private List<Producto> productos;
 
     /**     * Constructor con parámetros.
