@@ -207,3 +207,42 @@
 .buscador-productos__resultado p {
   margin: 0;
 }
+
+/* ============================================================
+   VALORACIONES DE LOS RESULTADOS
+   ============================================================ */
+
+.buscador-productos__valoracion {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.buscador-productos__estrellas {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.buscador-productos__estrella {
+  color: #d1d5db;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.buscador-productos__estrella--activa {
+  color: #f5b301;
+}
+
+.buscador-productos__promedio {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+}
+
+.buscador-productos__cantidad {
+  font-size: 13px;
+  color: #777777;
+}

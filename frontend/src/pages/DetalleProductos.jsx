@@ -6,6 +6,7 @@ import CalendarioDisponibilidad from '../components/CalendarioDisponibilidad';
 import useProductoAPI from '../hooks/useProductoAPI';
 import '../styles/pages/DetalleProductos.css';
 import PoliticasProducto from '../components/PoliticasProducto';
+import ValoracionesProducto from '../components/ValoracionesProducto';
 
 const DetalleProductos = () => {
   const { id } = useParams();
@@ -85,6 +86,12 @@ const DetalleProductos = () => {
 
             {/* Políticas */}
             <PoliticasProducto />
+
+            {/* Valoraciones */}
+            <ValoracionesProducto
+              productoId={id}
+              producto={producto}
+            />
           </>
         )}
 

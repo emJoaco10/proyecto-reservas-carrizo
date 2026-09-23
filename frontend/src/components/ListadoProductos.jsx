@@ -100,7 +100,7 @@ const ListadoProductos = () => {
     };
 
     cargarFavoritos();
-  }, [fetchFavoritos, usuario]);
+  }, [fetchFavoritos, usuario?.email]);
 
   // Marcar o desmarcar un producto como favorito
   const toggleFavorito = async (e, productoId) => {
@@ -211,6 +211,34 @@ const ListadoProductos = () => {
               <span className="categoria">
                 {producto.categoria?.nombre || "Sin categoría"}
               </span>
+
+              {/* Valoración del producto */}
+              <div className="producto-valoracion">
+
+                <div className="producto-valoracion__estrellas">
+                  {[1, 2, 3, 4, 5].map((estrella) => (
+                    <span
+                      key={estrella}
+                      className={
+                        estrella <= Math.round(producto.puntuacionPromedio || 0)
+                          ? "producto-valoracion__estrella producto-valoracion__estrella--activa"
+                          : "producto-valoracion__estrella"
+                      }
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+
+                <span className="producto-valoracion__promedio">
+                  {(producto.puntuacionPromedio || 0).toFixed(1)}
+                </span>
+
+                <span className="producto-valoracion__cantidad">
+                  ({producto.cantidadValoraciones || 0})
+                </span>
+
+              </div>
 
             </div>
           </Link>

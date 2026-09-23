@@ -24,6 +24,13 @@ import {
     obtenerFavoritos
 } from "../services/favoritoService";
 
+import {
+    obtenerValoraciones,
+    crearValoracion,
+    verificarPuedeValorar,
+    verificarYaValoro
+} from '../services/valoracionService';
+
 const useProductoAPI = () => {
 
     const [productos, setProductos] = useState([]);
@@ -420,6 +427,55 @@ const useProductoAPI = () => {
         }
     };
 
+    const fetchValoraciones = useCallback(async (productoId) => {
+        try {
+            const data = await obtenerValoraciones(productoId);
+            return data;
+        } catch (err) {
+            console.error("Error al obtener valoraciones:", err);
+            return [];
+        }
+    }, []);
+
+    const fetchPuedeValorar = useCallback(async (productoId) => {
+        try {
+            const puedeValorar = await verificarPuedeValorar(productoId);
+            return puedeValorar;
+        } catch (err) {
+            console.error("Error al verificar si puede valorar:", err);
+            return false;
+        }
+    }, []);
+
+    const fetchYaValoro = useCallback(async (productoId) => {
+        try {
+            const yaValoro = await verificarYaValoro(productoId);
+            return yaValoro;
+        } catch (err) {
+            console.error("Error al verificar si ya valoró:", err);
+            return false;
+        }
+    }, []);
+
+    const addValoracion = async (
+        productoId,
+        puntuacion,
+        comentario
+    ) => {
+        try {
+            const data = await crearValoracion(
+                productoId,
+                puntuacion,
+                comentario
+            );
+
+            return data;
+        } catch (err) {
+            console.error("Error al crear valoración:", err);
+            throw err;
+        }
+    };
+
     return {
         productos,
         categorias,
@@ -448,7 +504,12 @@ const useProductoAPI = () => {
 
         fetchFavoritos,
         addFavorito,
-        removeFavorito
+        removeFavorito,
+
+        fetchValoraciones,
+        addValoracion,
+        fetchPuedeValorar,
+        fetchYaValoro
     };
 };
 

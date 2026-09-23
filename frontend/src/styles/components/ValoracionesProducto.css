@@ -1,0 +1,397 @@
+/* =========================================
+   SECCIÓN DE VALORACIONES
+   ========================================= */
+
+.valoraciones-producto {
+    width: 100%;
+    margin-top: 2rem;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================
+   ENCABEZADO
+   ========================================= */
+
+.valoraciones-producto__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.valoraciones-producto__header h2 {
+    margin: 0 0 0.4rem;
+    color: #1f2937;
+    font-size: 1.6rem;
+}
+
+.valoraciones-producto__header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+
+/* =========================================
+   RESUMEN DE VALORACIONES
+   ========================================= */
+
+.valoraciones-producto__resumen {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.valoraciones-producto__promedio {
+    display: flex;
+    align-items: baseline;
+    gap: 0.15rem;
+    color: #1f2937;
+}
+
+.valoraciones-producto__promedio strong {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.valoraciones-producto__promedio span {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.valoraciones-producto__estrellas {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+}
+
+.estrella {
+    color: #d1d5db;
+    font-size: 1.15rem;
+}
+
+.estrella--activa {
+    color: #f5b301;
+}
+
+.valoraciones-producto__cantidad {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+
+/* =========================================
+   FORMULARIO
+   ========================================= */
+
+.valoraciones-producto__formulario {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #f8faf9;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+}
+
+.valoraciones-producto__formulario h3 {
+    margin: 0 0 1.25rem;
+    color: #1f2937;
+    font-size: 1.15rem;
+}
+
+
+/* =========================================
+   SELECTOR DE ESTRELLAS
+   ========================================= */
+
+.valoraciones-producto__seleccion {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.valoraciones-producto__seleccion > span {
+    color: #374151;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.selector-estrellas {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+}
+
+.estrella-selector {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #d1d5db;
+    font-size: 1.7rem;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.estrella-selector:hover {
+    color: #f5b301;
+    transform: scale(1.1);
+}
+
+.estrella-selector--activa {
+    color: #f5b301;
+}
+
+
+/* =========================================
+   CAMPO DE COMENTARIO
+   ========================================= */
+
+.valoraciones-producto__campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.valoraciones-producto__campo label {
+    color: #374151;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.valoraciones-producto__campo textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #1f2937;
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+    box-sizing: border-box;
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.valoraciones-producto__campo textarea::placeholder {
+    color: #9ca3af;
+}
+
+.valoraciones-producto__campo textarea:focus {
+    border-color: #16734f;
+    box-shadow: 0 0 0 3px rgba(22, 115, 79, 0.12);
+}
+
+
+/* =========================================
+   BOTÓN PUBLICAR
+   ========================================= */
+
+.valoraciones-producto__boton {
+    margin-top: 1rem;
+    padding: 0.7rem 1.2rem;
+    border: none;
+    border-radius: 7px;
+    background: #16734f;
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.valoraciones-producto__boton:hover:not(:disabled) {
+    background: #125c40;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(22, 115, 79, 0.18);
+}
+
+.valoraciones-producto__boton:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   MENSAJES
+   ========================================= */
+
+.valoraciones-producto__mensaje {
+    margin: 1rem 0 0;
+    color: #16734f;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.valoraciones-producto__error {
+    color: #b91c1c;
+}
+
+
+/* =========================================
+   LISTA DE VALORACIONES
+   ========================================= */
+
+.valoraciones-producto__lista {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.valoraciones-producto__vacio {
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px dashed #d1d5db;
+    border-radius: 10px;
+    background: #fafafa;
+}
+
+.valoraciones-producto__vacio p {
+    margin: 0;
+    color: #6b7280;
+}
+
+
+/* =========================================
+   TARJETA DE VALORACIÓN
+   ========================================= */
+
+.valoracion-card {
+    padding: 1.25rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.valoracion-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.valoracion-card__header h4 {
+    margin: 0 0 0.2rem;
+    color: #1f2937;
+    font-size: 0.98rem;
+}
+
+.valoracion-card__header span {
+    color: #9ca3af;
+    font-size: 0.8rem;
+}
+
+.valoracion-card__comentario {
+    margin: 0.9rem 0 0;
+    color: #4b5563;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.valoraciones-producto__login {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #f8faf9;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.valoraciones-producto__login h3 {
+    margin: 0 0 .5rem;
+    color: #1f2937;
+    font-size: 1.1rem;
+}
+
+.valoraciones-producto__login p {
+    margin: 0;
+    color: #6b7280;
+    font-size: .95rem;
+}
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 768px) {
+
+    .valoraciones-producto {
+        padding: 1.5rem;
+    }
+
+    .valoraciones-producto__header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .valoraciones-producto__resumen {
+        justify-content: flex-start;
+    }
+
+    .valoraciones-producto__seleccion {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+}
+
+
+/* =========================================
+   MÓVIL
+   ========================================= */
+
+@media (max-width: 480px) {
+
+    .valoraciones-producto {
+        padding: 1.1rem;
+        border-radius: 10px;
+    }
+
+    .valoraciones-producto__header h2 {
+        font-size: 1.35rem;
+    }
+
+    .valoraciones-producto__resumen {
+        gap: 0.5rem;
+    }
+
+    .valoraciones-producto__promedio strong {
+        font-size: 1.7rem;
+    }
+
+    .valoraciones-producto__formulario {
+        padding: 1rem;
+    }
+
+    .estrella-selector {
+        font-size: 1.55rem;
+    }
+
+    .valoracion-card {
+        padding: 1rem;
+    }
+
+    .valoracion-card__header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

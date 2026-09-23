@@ -196,6 +196,68 @@
 }
 
 /* =========================================================
+   VALORACIONES
+   ========================================================= */
+
+.producto-valoracion {
+
+  display: flex;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  gap: 0.35rem;
+
+  margin-top: 0.35rem;
+
+}
+
+.producto-valoracion__estrellas {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.05rem;
+
+}
+
+.producto-valoracion__estrella {
+
+  color: #d1d5db;
+
+  font-size: 0.9rem;
+
+  line-height: 1;
+
+}
+
+.producto-valoracion__estrella--activa {
+
+  color: #f5b301;
+
+}
+
+.producto-valoracion__promedio {
+
+  color: #374151;
+
+  font-size: 0.78rem;
+
+  font-weight: 700;
+
+}
+
+.producto-valoracion__cantidad {
+
+  color: #9ca3af;
+
+  font-size: 0.72rem;
+
+}
+
+/* =========================================================
    PAGINADOR
    ========================================================= */
 

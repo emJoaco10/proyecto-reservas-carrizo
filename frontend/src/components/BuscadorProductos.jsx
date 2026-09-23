@@ -380,6 +380,38 @@ const BuscadorProductos = () => {
                   {producto.descripcion}
                 </p>
 
+                <div className="buscador-productos__valoracion">
+
+                  <div className="buscador-productos__estrellas">
+                    {[1, 2, 3, 4, 5].map((estrella) => (
+                      <span
+                        key={estrella}
+                        className={
+                          estrella <= Math.round(
+                            producto.puntuacionPromedio || 0
+                          )
+                            ? "buscador-productos__estrella buscador-productos__estrella--activa"
+                            : "buscador-productos__estrella"
+                        }
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+
+                  <span className="buscador-productos__promedio">
+                    {(producto.puntuacionPromedio || 0).toFixed(1)}
+                  </span>
+
+                  <span className="buscador-productos__cantidad">
+                    ({producto.cantidadValoraciones || 0}{' '}
+                    {producto.cantidadValoraciones === 1
+                      ? 'valoración'
+                      : 'valoraciones'})
+                  </span>
+
+                </div>
+
               </article>
 
             ))}
