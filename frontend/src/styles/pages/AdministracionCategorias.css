@@ -1,0 +1,162 @@
+/* =========================================================
+   ADMINISTRACIÓN DE CATEGORÍAS
+   ========================================================= */
+
+.administracion-categorias-listado {
+    margin-top: 2rem;
+}
+
+.administracion-categorias-listado h2 {
+    margin-bottom: 1.25rem;
+    color: #1f2937;
+}
+
+
+/* =========================================================
+   GRID DE CATEGORÍAS
+   ========================================================= */
+
+.administracion-categorias-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-top: 1rem;
+}
+
+
+/* =========================================================
+   TARJETA DE CATEGORÍA
+   ========================================================= */
+
+.administracion-categoria-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.25rem;
+
+    padding: 1.25rem;
+
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.administracion-categoria-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.09);
+}
+
+.administracion-categoria-card h3 {
+    margin: 0 0 0.5rem;
+    color: #1f2937;
+    font-size: 1.1rem;
+}
+
+.administracion-categoria-card p {
+    margin: 0;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   BOTÓN ELIMINAR
+   ========================================================= */
+
+.administracion-categoria-card .btn-danger {
+    align-self: flex-start;
+}
+
+
+/* =========================================================
+   MODAL DE CONFIRMACIÓN
+   ========================================================= */
+
+.modal-confirmacion-overlay {
+    position: fixed;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 1rem;
+
+    background-color: rgba(0, 0, 0, 0.55);
+
+    z-index: 1000;
+}
+
+.modal-confirmacion {
+    width: 100%;
+    max-width: 480px;
+
+    padding: 2rem;
+
+    background-color: #ffffff;
+    border-radius: 12px;
+
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+}
+
+.modal-confirmacion h2 {
+    margin: 0 0 1rem;
+
+    color: #1f2937;
+    font-size: 1.35rem;
+}
+
+.modal-confirmacion p {
+    margin: 0 0 1rem;
+
+    color: #4b5563;
+    line-height: 1.6;
+}
+
+.modal-confirmacion strong {
+    color: #1f2937;
+}
+
+
+/* =========================================================
+   ACCIONES DEL MODAL
+   ========================================================= */
+
+.modal-confirmacion__acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+
+    margin-top: 1.5rem;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .administracion-categorias-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-confirmacion {
+        padding: 1.5rem;
+    }
+
+    .modal-confirmacion__acciones {
+        flex-direction: column;
+    }
+
+    .modal-confirmacion__acciones .btn {
+        width: 100%;
+    }
+
+}
