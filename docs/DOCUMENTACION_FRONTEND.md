@@ -2,25 +2,37 @@
 
 ## 📌 Resumen
 
-El frontend de **Reservas Carrizo** es una aplicación web desarrollada con **React**, responsable de la interfaz de usuario y de la comunicación con el backend mediante una API REST.
+El frontend de **Reservas Carrizo** es una aplicación web desarrollada con **React**, responsable de la interfaz de usuario, la navegación y la comunicación con el backend mediante una API REST.
 
-Durante el Sprint 1 se desarrolló principalmente la estructura visual y se utilizó `localStorage` para la persistencia inicial.
+Durante el **Sprint 1** se desarrolló principalmente la estructura visual y las funcionalidades iniciales de productos y usuarios, utilizando `localStorage` para la persistencia inicial.
 
-En el Sprint 2 se incorporó la integración con el backend desarrollado en **Spring Boot**, pasando a utilizar la API REST como fuente principal de datos para productos y categorías.
+En el **Sprint 2** se incorporó la integración con el backend desarrollado en **Spring Boot**, pasando a utilizar la API REST como fuente principal de datos para productos, categorías y usuarios. También se incorporaron funcionalidades administrativas, gestión de roles, características y validaciones.
+
+Durante el **Sprint 3** se ampliaron las funcionalidades orientadas a la búsqueda, disponibilidad, interacción de los usuarios con los productos y administración de categorías.
 
 Actualmente el frontend permite:
 
 - Visualizar, registrar, editar y eliminar productos.
 - Gestionar y filtrar productos por categoría.
-- Crear categorías desde el panel de administración.
+- Buscar productos mediante texto.
+- Mostrar sugerencias y autocompletado en el buscador.
+- Visualizar la disponibilidad de los alojamientos.
+- Seleccionar rangos de fechas y reconocer fechas ocupadas.
 - Registrar e iniciar sesión con usuarios.
 - Diferenciar funcionalidades según el rol.
 - Acceder a funcionalidades administrativas.
+- Marcar productos como favoritos.
+- Consultar y gestionar el listado de productos favoritos.
+- Visualizar las políticas de los alojamientos.
+- Compartir productos.
+- Visualizar y registrar valoraciones.
+- Mostrar el promedio y la cantidad de valoraciones.
+- Eliminar categorías desde el panel administrativo sin eliminar los productos asociados.
 - Validar formularios e imágenes.
-- Mostrar estados de carga y errores.
+- Mostrar estados de carga, errores y mensajes de interacción.
 - Utilizar una interfaz responsive.
 
-La aplicación mantiene una separación entre páginas, componentes, hooks, helpers y estilos.
+La aplicación mantiene una separación entre páginas, componentes, hooks, servicios, helpers y estilos.
 
 ---
 
@@ -95,233 +107,98 @@ Backend  → http://localhost:8080
 
 El hook useProductoAPI centraliza las principales operaciones relacionadas con productos y categorías.
 
-🔄 Evolución Sprint 1 → Sprint 2
-Sprint 1
+## 🔄 Evolución Sprint 1 → Sprint 2 → Sprint 3
+
+### Sprint 1
 
 Durante el primer sprint se desarrolló la estructura inicial del frontend y las principales funcionalidades de productos y usuarios.
 
-La persistencia inicial utilizaba principalmente:
+La persistencia inicial utilizaba principalmente `localStorage`.
 
-localStorage
-Sprint 2
+Entre las funcionalidades desarrolladas se encontraron:
 
-Durante el segundo sprint se incorporó:
+- Visualización de productos.
+- Registro de productos.
+- Edición de productos.
+- Eliminación de productos.
+- Navegación entre páginas.
+- Primeras funcionalidades relacionadas con usuarios.
+- Persistencia inicial mediante `localStorage`.
 
-Integración con la API REST.
-Gestión de categorías.
-Asociación de categorías a productos.
-Filtrado por categoría.
-Administración de categorías.
-Gestión de usuarios y roles.
-Mejoras en formularios y validaciones.
-Mejoras visuales y responsive.
+### Sprint 2
 
-También se eliminó el atributo tipo del producto.
+Durante el segundo sprint se realizó la integración del frontend con el backend y se incorporaron nuevas funcionalidades.
 
-La clasificación pasó a realizarse mediante Categoria, evitando mantener dos mecanismos diferentes para clasificar los productos.
+Los principales cambios fueron:
 
-El modelo actual se representa conceptualmente como:
+- Integración con la API REST.
+- Gestión de categorías.
+- Asociación de categorías a productos.
+- Filtrado de productos por categoría.
+- Administración de categorías.
+- Gestión de usuarios y roles.
+- Funcionalidades específicas para administradores.
+- Mejoras en formularios y validaciones.
+- Mejoras visuales y responsive.
 
+También se eliminó el atributo `tipo` del producto.
+
+La clasificación pasó a realizarse mediante `Categoria`, evitando mantener dos mecanismos diferentes para clasificar los productos.
+
+El modelo conceptual del producto quedó:
+
+```text
 Producto
 ├── id
 ├── nombre
 ├── descripcion
 ├── imagenes
 └── categoria
+```
 
-Las tarjetas muestran la categoría asociada y, cuando no existe, muestran:
+Los productos sin categoría muestran `Sin categoría`.
 
-Sin categoría
-📊 Estado actual
+### Sprint 3
 
-Al finalizar el Sprint 2, el frontend se encuentra integrado con el backend y las funcionalidades previstas fueron verificadas mediante los casos de prueba documentados en:
+Durante el tercer sprint se incorporaron funcionalidades orientadas principalmente a la búsqueda, disponibilidad, interacción de los usuarios con los productos y administración de categorías.
 
-tests.md
+Las principales funcionalidades incorporadas fueron:
 
-La HU19, al ser opcional, fue postergada para una etapa posterior del proyecto.
+- Búsqueda de productos mediante texto.
+- Sugerencias y autocompletado en el buscador.
+- Visualización de disponibilidad de los alojamientos.
+- Selección de rangos de fechas.
+- Identificación visual de fechas ocupadas.
+- Marcado de productos como favoritos.
+- Visualización del listado de productos favoritos.
+- Eliminación de productos de favoritos.
+- Visualización de políticas de los alojamientos.
+- Compartir productos mediante diferentes opciones.
+- Sistema de valoraciones mediante estrellas.
+- Registro de comentarios y puntuaciones.
+- Visualización del promedio de valoración.
+- Visualización de la cantidad de valoraciones.
+- Integración de valoraciones en el detalle y listado de productos.
+- Eliminación de categorías desde el panel administrativo.
+- Conservación de los productos asociados al eliminar una categoría.
 
-## 🗂️ Estructura del Proyecto
+El Sprint 3 también incorporó nuevos componentes, páginas, hooks y servicios para mantener separadas las responsabilidades del frontend.
 
-El frontend se organiza separando las páginas de la aplicación, los componentes reutilizables, la lógica compartida y los estilos.
+La comunicación con el backend continúa realizándose mediante la API REST.
+
+### 📊 Estado actual
+
+Al finalizar el Sprint 3, el frontend se encuentra integrado con el backend y cuenta con las funcionalidades desarrolladas durante los tres primeros sprints.
+
+Las pruebas funcionales se mantienen organizadas por sprint en:
 
 ```text
-frontend/
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── helpers/
-│   ├── hooks/
-│   ├── pages/
-│   ├── styles/
-│   ├── App.jsx
-│   └── main.jsx
-├── package.json
-├── vite.config.js
-└── eslint.config.js
-src/pages/
+testsS1.md
+testsS2.md
+testsS3.md
+```
 
-Contiene las páginas principales de la aplicación.
-
-Entre las principales se encuentran:
-
-Página	Función
-Main.jsx	Página principal, productos y filtros
-AgregarProducto.jsx	Registro de productos
-EditarProducto.jsx	Edición de productos
-DetalleProducto.jsx	Detalle de un producto
-Administracion.jsx	Panel administrativo
-AdministracionCategorias.jsx	Administración de categorías
-AgregarCategorias.jsx	Acceso al formulario de categorías
-
-Las páginas organizan los componentes necesarios para cada vista y gestionan los flujos principales de navegación.
-
-src/components/
-
-Contiene componentes reutilizables de la interfaz.
-
-Entre los principales:
-
-Componente	Función
-CategoryFilter.jsx	Selección de categorías para filtrar productos
-ListadoProductos.jsx	Listado general de productos
-ListadoProductosFiltrados.jsx	Listado después de aplicar filtros
-FormularioCategoria.jsx	Creación de nuevas categorías
-
-Los componentes reciben información mediante props y se comunican con sus páginas mediante callbacks cuando es necesario.
-
-src/hooks/
-
-Contiene hooks personalizados utilizados para centralizar lógica reutilizable.
-
-El principal hook incorporado durante el Sprint 2 es:
-
-useProductoAPI.js
-
-Este hook centraliza las operaciones de comunicación con el backend relacionadas principalmente con:
-
-Productos.
-Categorías.
-Consultas.
-Creación.
-Actualización.
-Eliminación.
-
-De esta manera, los componentes no necesitan implementar directamente toda la lógica de las peticiones HTTP.
-
-src/helpers/
-
-Contiene funciones auxiliares reutilizables.
-
-Entre los principales archivos se encuentran:
-
-productoUtils.js
-storageUtils.js
-validaciones.js
-
-Sus responsabilidades incluyen:
-
-Tratamiento y normalización de productos.
-Operaciones auxiliares de almacenamiento.
-Validaciones.
-Funciones compartidas por diferentes componentes.
-
-Con la integración del backend, localStorage dejó de ser la fuente principal de productos, aunque algunas utilidades de almacenamiento pueden continuar utilizándose para información propia del frontend.
-
-src/styles/
-
-Contiene los estilos CSS de la aplicación.
-
-Se organiza principalmente en:
-
-styles/
-├── components/
-└── pages/
-
-Esto permite mantener separados los estilos correspondientes a componentes reutilizables de los estilos específicos de cada página.
-
-Durante el Sprint 2 se realizaron mejoras visuales principalmente en:
-
-Formularios.
-Tarjetas de productos.
-Filtros.
-Formularios de categorías.
-Botones.
-Diseño responsive.
-src/assets/
-
-Contiene recursos utilizados directamente por la aplicación, como imágenes y otros archivos estáticos importados desde los componentes.
-
-public/
-
-Contiene recursos públicos que pueden ser utilizados directamente por la aplicación sin formar parte del proceso de importación de componentes.
-
-App.jsx
-
-Es uno de los archivos principales del frontend.
-
-Se encarga de definir la estructura de navegación mediante React Router y asociar las rutas con las páginas correspondientes.
-
-Conceptualmente:
-
-App.jsx
-   │
-   ├── /
-   ├── /producto/:id
-   ├── /agregar-producto
-   ├── /editar-producto/:id
-   ├── /administración
-   ├── /categorias-admin
-   └── /agregar-categoria
-main.jsx
-
-Es el punto de entrada de la aplicación React.
-
-Se encarga de iniciar el árbol principal de componentes y renderizar la aplicación.
-
-package.json
-
-Define las dependencias y scripts utilizados por el proyecto.
-
-Entre las tecnologías principales utilizadas se encuentran React, React Router y Vite.
-
-vite.config.js
-
-Contiene la configuración utilizada por Vite para el desarrollo y compilación del frontend.
-
-eslint.config.js
-
-Contiene la configuración de ESLint utilizada para detectar problemas y mantener determinadas reglas de calidad en el código JavaScript/React.
-
-📐 Principios de organización
-
-La estructura actual busca mantener una separación clara de responsabilidades:
-
-Pages
-  ↓
-Components
-  ↓
-Hooks / Helpers
-  ↓
-API REST
-
-Esto permite que:
-
-Las páginas gestionen las vistas.
-Los componentes sean reutilizables.
-Los hooks centralicen lógica operativa.
-Los helpers agrupen funciones auxiliares.
-Los estilos permanezcan separados de la lógica.
-
-Esta organización facilita el mantenimiento y permite incorporar nuevas funcionalidades sin concentrar toda la lógica en un único archivo.
-
-## 🔄 Gestión de Datos y Comunicación con la API
-
-Durante el Sprint 1, parte de la información se gestionaba mediante `localStorage`.
-
-Con la integración del backend en el Sprint 2, los productos y categorías utilizan principalmente la API REST como fuente de datos.
-
-El frontend se comunica con el backend mediante el hook `useProductoAPI`.
+La documentación técnica describe cómo está construido el frontend, mientras que los archivos de testing registran cómo fueron verificadas las funcionalidades.
 
 ---
 
@@ -1014,6 +891,186 @@ El archivo contiene los casos de prueba, pasos, resultados esperados y estado de
 
 La HU19, al ser opcional, fue postergada y no forma parte del cierre del Sprint 2.
 
+## 🚀 Funcionalidades del Sprint 3
+
+Durante el Sprint 3 se incorporaron nuevas funcionalidades orientadas principalmente a mejorar la búsqueda y consulta de alojamientos, la interacción de los usuarios con los productos y la administración del sistema.
+
+### 🔎 HU22 — Realizar búsqueda
+
+El frontend incorpora un buscador de productos mediante `BuscadorProductos.jsx`.
+
+La funcionalidad permite:
+
+- Ingresar texto para buscar productos.
+- Mostrar sugerencias mientras el usuario escribe.
+- Seleccionar una sugerencia del listado.
+- Ejecutar la búsqueda mediante el botón correspondiente.
+- Ordenar los resultados según la coincidencia con el texto buscado.
+- Normalizar caracteres para mejorar las coincidencias.
+
+El buscador mantiene las categorías y recomendaciones de la página principal.
+
+Flujo principal:
+
+```text
+BuscadorProductos
+       ↓
+useProductoAPI
+       ↓
+API REST
+       ↓
+Backend
+       ↓
+Productos encontrados
+       ↓
+ListadoProductos
+```
+
+### 📅 HU23 — Visualizar disponibilidad
+
+El componente `CalendarioDisponibilidad.jsx` permite consultar y visualizar la disponibilidad de un alojamiento.
+
+La funcionalidad permite:
+
+- Consultar las reservas existentes para un producto.
+- Identificar fechas ocupadas.
+- Seleccionar una fecha de inicio.
+- Seleccionar una fecha de finalización.
+- Seleccionar rangos de fechas.
+- Mostrar visualmente las fechas no disponibles.
+- Evitar rangos que contengan fechas ocupadas.
+- Mostrar mensajes relacionados con la selección.
+
+El calendario utiliza la información proporcionada por el backend y evita problemas de zona horaria mediante el tratamiento de fechas locales.
+
+### ❤️ HU24 — Marcar como favorito
+
+Los usuarios autenticados pueden marcar productos como favoritos desde el listado de productos.
+
+`ListadoProductos.jsx` integra la funcionalidad de favoritos y utiliza las operaciones correspondientes del hook de productos.
+
+La funcionalidad permite:
+
+- Consultar los favoritos del usuario.
+- Marcar un producto como favorito.
+- Quitar un producto de favoritos.
+- Actualizar visualmente el estado del producto.
+- Solicitar inicio de sesión cuando el usuario no está autenticado.
+
+La comunicación con el backend se realiza mediante `favoritoService.js`.
+
+### ❤️ HU25 — Listar productos favoritos
+
+La página `MisFavoritos.jsx` permite consultar los productos guardados por el usuario autenticado.
+
+Desde esta vista es posible:
+
+- Visualizar los productos favoritos.
+- Acceder al detalle de un producto.
+- Eliminar productos de favoritos.
+- Mostrar un estado vacío cuando no existen favoritos.
+
+El acceso se encuentra disponible desde el menú del usuario autenticado.
+
+### 📋 HU26 — Políticas de producto
+
+El componente `PoliticasProducto.jsx` incorpora una sección específica dentro del detalle del alojamiento.
+
+Las políticas mostradas incluyen información relacionada con:
+
+- Check-in y check-out.
+- Capacidad del alojamiento.
+- Cuidado del alojamiento.
+- Ruidos y convivencia.
+- Mascotas.
+- Prohibición de fumar.
+
+La sección utiliza un diseño responsive para adaptarse a diferentes tamaños de pantalla.
+
+### 🔗 HU27 — Compartir productos
+
+El componente `CompartirProducto.jsx` permite compartir un producto desde su detalle.
+
+La ventana de compartir muestra información del alojamiento y proporciona diferentes opciones para compartir su enlace.
+
+Entre las funcionalidades implementadas se encuentran:
+
+- Visualización de la imagen del producto.
+- Visualización del nombre y descripción.
+- Generación del enlace actual del producto.
+- Compartir mediante opciones de redes sociales.
+- Copiado del enlace cuando corresponde.
+- Uso de la API de compartir del navegador cuando está disponible.
+
+La funcionalidad se integra dentro de `InfoProducto.jsx`, junto al título del alojamiento.
+
+### ⭐ HU28 — Valorar productos
+
+El componente `ValoracionesProducto.jsx` permite visualizar y registrar valoraciones de productos.
+
+La interfaz permite trabajar con puntuaciones de una a cinco estrellas y comentarios.
+
+Las valoraciones muestran:
+
+- Puntuación.
+- Usuario.
+- Fecha.
+- Comentario.
+
+También se muestra:
+
+- Promedio de valoración.
+- Cantidad total de valoraciones.
+
+La información de valoración se presenta tanto en el detalle del producto como en las tarjetas del listado.
+
+La comunicación con el backend se realiza mediante `valoracionService.js` y las operaciones correspondientes del hook.
+
+### 🗑️ HU29 — Eliminar categoría
+
+`AdministracionCategorias.jsx` incorpora la posibilidad de eliminar una categoría desde el panel administrativo.
+
+Antes de eliminarla se muestra una ventana de confirmación que identifica la categoría y explica que los productos asociados no serán eliminados.
+
+Cuando la operación se confirma:
+
+- La categoría se elimina.
+- Los productos asociados permanecen registrados.
+- Los productos quedan sin categoría.
+- El listado de categorías se actualiza en el frontend.
+
+El frontend utiliza las operaciones de categorías existentes para ejecutar la eliminación y actualizar el estado de la interfaz.
+
+### 🧩 Nuevos elementos del Sprint 3
+
+Entre los principales archivos incorporados o ampliados durante el Sprint 3 se encuentran:
+
+```text
+src/components/
+├── BuscadorProductos.jsx
+├── CalendarioDisponibilidad.jsx
+├── CompartirProducto.jsx
+├── PoliticasProducto.jsx
+├── ValoracionesProducto.jsx
+└── ...
+
+src/pages/
+├── MisFavoritos.jsx
+├── AdministracionCategorias.jsx
+├── DetalleProductos.jsx
+└── ...
+
+src/services/
+├── favoritoService.js
+├── reservaService.js
+├── valoracionService.js
+└── ...
+```
+
+Estos elementos mantienen la separación de responsabilidades utilizada durante los sprints anteriores.
+
+---
+
 ## ⚙️ Decisiones Técnicas y Mejoras — Sprint 2
 
 Durante el Sprint 2 se realizaron cambios destinados a mejorar la integración con el backend, simplificar el modelo de productos y mejorar la experiencia de usuario.
@@ -1122,73 +1179,113 @@ Mejorar la interfaz y su adaptación a dispositivos móviles.
 
 ## 🧪 QA y Testing
 
-Las pruebas funcionales del frontend se encuentran documentadas en:
+Las pruebas funcionales del frontend se encuentran documentadas en archivos separados por sprint:
 
 ```text
-tests.md
+testsS1.md
+testsS2.md
+testsS3.md
+```
 
-Este archivo contiene los casos de prueba correspondientes a las Historias de Usuario y registra los pasos, resultados esperados y estado de cada prueba.
+Cada archivo contiene los casos de prueba correspondientes a las Historias de Usuario del sprint, junto con los pasos, resultados esperados y estado de cada verificación.
 
-✅ Cobertura del Sprint 2
+### ✅ Cobertura del Sprint 1
+
+Las funcionalidades del primer sprint se encuentran documentadas y verificadas en `testsS1.md`.
+
+### ✅ Cobertura del Sprint 2
 
 Las funcionalidades verificadas durante el Sprint 2 corresponden principalmente a:
 
-HU	Funcionalidad	Estado
-HU12	Categorías de productos	✅ OK
-HU13	Registro de usuarios	✅ OK
-HU14	Inicio de sesión	✅ OK
-HU15	Gestión de sesión	✅ OK
-HU16	Administración y roles	✅ OK
-HU17	Gestión de características	✅ OK
-HU18	Visualización de características	✅ OK
-HU20	Filtrado por categoría	✅ OK
-HU21	Administración de categorías	✅ OK
+| HU | Funcionalidad | Estado |
+|---|---|---|
+| HU12 | Categorías de productos | ✅ OK |
+| HU13 | Registro de usuarios | ✅ OK |
+| HU14 | Inicio de sesión | ✅ OK |
+| HU15 | Gestión de sesión | ✅ OK |
+| HU16 | Administración y roles | ✅ OK |
+| HU17 | Gestión de características | ✅ OK |
+| HU18 | Visualización de características | ✅ OK |
+| HU20 | Filtrado por categoría | ✅ OK |
+| HU21 | Administración de categorías | ✅ OK |
 
-La HU19 es opcional y fue postergada para una etapa posterior.
+La HU19 fue considerada opcional y se mantuvo postergada.
 
-🔍 Verificaciones principales
+### ✅ Cobertura del Sprint 3
+
+Las funcionalidades desarrolladas durante el Sprint 3 se verifican mediante los casos de prueba correspondientes a:
+
+| HU | Funcionalidad | Estado |
+|---|---|---|
+| HU22 | Realizar búsqueda | ✅ OK |
+| HU23 | Visualizar disponibilidad | ✅ OK |
+| HU24 | Marcar como favorito | ✅ OK |
+| HU25 | Listar productos favoritos | ✅ OK |
+| HU26 | Políticas de producto | ✅ OK |
+| HU27 | Compartir productos | ✅ OK |
+| HU28 | Valorar productos | ✅ OK |
+| HU29 | Eliminar categoría | ✅ OK |
+
+### 🔍 Verificaciones principales del Sprint 3
 
 Durante las pruebas se verificó el funcionamiento de:
 
-Comunicación entre frontend y backend.
-Registro y edición de productos.
-Eliminación de productos.
-Registro e inicio de sesión de usuarios.
-Acceso a funcionalidades administrativas.
-Creación y gestión de categorías.
-Asociación de categorías a productos.
-Filtrado por categoría.
-Visualización de categorías en las tarjetas.
-Mensajes y estados de las operaciones.
-Validación de imágenes.
-Vista previa de imágenes.
-Adaptación responsive.
-🐞 Correcciones realizadas
+- Búsqueda de productos.
+- Sugerencias y autocompletado.
+- Coincidencia y ordenamiento de resultados.
+- Visualización de disponibilidad.
+- Selección de rangos de fechas.
+- Identificación de fechas ocupadas.
+- Marcado y eliminación de favoritos.
+- Listado de productos favoritos.
+- Estados vacíos.
+- Visualización de políticas.
+- Compartir productos.
+- Visualización de valoraciones.
+- Registro de puntuaciones y comentarios.
+- Actualización del promedio y cantidad de valoraciones.
+- Visualización de valoraciones en listados y detalle.
+- Confirmación antes de eliminar categorías.
+- Eliminación de categorías sin eliminar productos asociados.
+- Adaptación responsive de las nuevas funcionalidades.
 
-Durante el desarrollo se realizaron correcciones y ajustes derivados de las pruebas funcionales.
+### 🐞 Correcciones y ajustes del Sprint 3
 
-Entre los cambios más importantes se encuentran:
+Durante el desarrollo y las pruebas del Sprint 3 se realizaron diferentes ajustes para garantizar el correcto funcionamiento de las nuevas funcionalidades.
 
-Corrección de la visualización de categorías.
-Eliminación de referencias al antiguo atributo tipo.
-Ajustes en formularios.
-Correcciones en la comunicación con la API.
-Ajustes en filtros y listados.
-Mejoras en mensajes y estados de la interfaz.
-Correcciones visuales y responsive.
+Entre ellos se encuentran:
 
-Después de estos ajustes, las funcionalidades previstas para el Sprint 2 fueron verificadas nuevamente.
+- Ajustes en el autocompletado del buscador.
+- Corrección de coincidencias de texto y normalización de caracteres.
+- Corrección del manejo de fechas para evitar problemas de zona horaria.
+- Prevención de rangos que contienen fechas ocupadas.
+- Ajustes en la carga y eliminación de favoritos.
+- Corrección de estados de carga y errores relacionados con favoritos.
+- Incorporación de políticas al detalle del producto.
+- Integración del botón de compartir dentro de la información principal del producto.
+- Incorporación de valoraciones en el detalle y en las tarjetas de productos.
+- Ajustes en la eliminación de categorías y actualización del listado.
+- Adaptación responsive de los nuevos componentes y modales.
 
-📋 Relación con tests.md
+### 📋 Relación entre documentación y testing
 
-La documentación técnica explica cómo está construido el frontend, mientras que tests.md concentra el detalle de las pruebas.
+La documentación técnica explica cómo está construido el frontend y qué funcionalidades fueron incorporadas durante cada sprint.
 
+Los archivos de testing documentan cómo se verificó el funcionamiento de esas funcionalidades.
+
+```text
 DOCUMENTACION_FRONTEND.md
         │
-        └── Cómo funciona el sistema
+        └── Cómo está construido y cómo evolucionó el frontend
 
-tests.md
         │
-        └── Cómo se verificó su funcionamiento
+        ├── testsS1.md
+        ├── testsS2.md
+        └── testsS3.md
 
-Esta separación permite mantener la documentación técnica y la documentación de QA organizadas de forma independiente.
+                │
+                └── Cómo se verificaron las funcionalidades
+```
+
+Esta separación permite mantener organizada la documentación técnica y la documentación de QA del proyecto.
+
