@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useCategoriaAPI from "../hooks/useCategoriaAPI";
 import "../styles/pages/AdministracionCategorias.css";
+import BreadcrumAdministracion from "../components/BreadcrumAdministracion";
 
 const AdministracionCategorias = () => {
 
@@ -51,6 +52,18 @@ const AdministracionCategorias = () => {
   return (
 
     <section className="bloque">
+
+      <BreadcrumAdministracion
+        items={[
+          {
+            label: "Administración",
+            path: "/administracion"
+          },
+          {
+            label: "Administración de categorías"
+          }
+        ]}
+      />
 
       <h1>Administración de categorías</h1>
 
@@ -103,13 +116,24 @@ const AdministracionCategorias = () => {
                   </p>
                 </div>
 
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  onClick={() => setCategoriaAEliminar(categoria)}
-                >
-                  Eliminar
-                </button>
+                <div className="administracion-categoria-card__acciones">
+
+                  <Link
+                    to={`/editar-categoria/${categoria.id}`}
+                    className="btn btn-filled"
+                  >
+                    Editar
+                  </Link>
+
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => setCategoriaAEliminar(categoria)}
+                  >
+                    Eliminar
+                  </button>
+
+                </div>
 
               </article>
 

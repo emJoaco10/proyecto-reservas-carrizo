@@ -4,6 +4,7 @@ import { filesToObjectURLs, revokeObjectURLs } from '../helpers/imageUtils';
 import { validarNombre, validarDescripcion } from '../helpers/validaciones';
 import useCategoriaAPI from '../hooks/useCategoriaAPI';
 import '../styles/pages/AgregarProducto.css';
+import BreadcrumAdministracion from "../components/BreadcrumAdministracion";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -349,6 +350,22 @@ const AgregarProducto = () => {
 
   return (
     <div className="agregar-producto">
+
+      <BreadcrumAdministracion
+        items={[
+          {
+            label: "Administración",
+            path: "/administracion"
+          },
+          {
+            label: "Administración de productos",
+            path: "/productos-admin"
+          },
+          {
+            label: "Agregar producto"
+          }
+        ]}
+      />
 
       <h2>Registrar producto</h2>
 

@@ -24,6 +24,7 @@ import AgregarCategorias from './pages/AgregarCategorias';
 import AdministracionCategorias from './pages/AdministracionCategorias';
 import AdminRoute from "./components/AdminRoute";
 import MisFavoritos from './pages/MisFavoritos';
+import EditarCategorias from './pages/EditarCategorias';
 
 /**
  * Componente principal de la aplicación React.
@@ -175,6 +176,11 @@ const App = () => {
             <Route
               path="/agregar-categoria"
               element={<AgregarCategorias />}
+            />
+
+            <Route
+              path="/editar-categoria/:id"
+              element={<EditarCategorias />}
             />
 
           </Route>

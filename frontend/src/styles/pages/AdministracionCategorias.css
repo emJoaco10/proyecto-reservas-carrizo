@@ -136,6 +136,16 @@
     margin-top: 1.5rem;
 }
 
+.administracion-categoria-card__acciones {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.administracion-categoria-card__acciones .btn {
+    text-decoration: none;
+}
 
 /* =========================================================
    RESPONSIVE
@@ -157,6 +167,16 @@
 
     .modal-confirmacion__acciones .btn {
         width: 100%;
+    }
+
+    .administracion-categoria-card__acciones {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .administracion-categoria-card__acciones .btn {
+        width: 100%;
+        text-align: center;
     }
 
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import FormularioCaracteristicas from "../components/FormularioCaracteristicas";
 import useCaracteristicaAPI from "../hooks/useCaracteristicaAPI";
+import BreadcrumAdministracion from "../components/BreadcrumAdministracion";
 
 const EditarCaracteristica = () => {
 
@@ -44,10 +45,32 @@ const EditarCaracteristica = () => {
 
     return (
 
-        <FormularioCaracteristicas
-            modo="editar"
-            caracteristica={caracteristica}
-        />
+        <><BreadcrumAdministracion
+            items={[
+                {
+                    label: "Administración",
+                    path: "/administracion"
+                },
+                {
+                    label: "Administración de características",
+                    path: "/caracteristicas-admin"
+                },
+                {
+                    label: "Listado de características",
+                    path: "/lista-caracteristicas"
+                },
+                {
+                    label: "Editar característica"
+                }
+            ]} 
+            
+            />
+            
+            <FormularioCaracteristicas
+                modo="editar"
+                caracteristica={caracteristica} />
+                
+        </>
 
     );
 

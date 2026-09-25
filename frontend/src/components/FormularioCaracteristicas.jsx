@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useCaracteristicaAPI from "../hooks/useCaracteristicaAPI";
 import IconSelector from "./IconSelector";
+import {
+  validarNombreCaracteristica,
+  validarIconoCaracteristica
+} from "../helpers/validaciones";
 import "../styles/components/Formulario.css";
 
 const FormularioCaracteristicas = ({
@@ -21,13 +25,21 @@ const FormularioCaracteristicas = ({
     icono: ""
   });
 
+  const [errores, setErrores] = useState({
+    nombre: "",
+    icono: ""
+  });
+
+  const [mensaje, setMensaje] = useState("");
+  const [tipoMensaje, setTipoMensaje] = useState("");
+
   useEffect(() => {
 
     if (modo === "editar" && caracteristica) {
 
       setFormData({
-        nombre: caracteristica.nombre,
-        icono: caracteristica.icono
+        nombre: caracteristica.nombre || "",
+        icono: caracteristica.icono || ""
       });
 
     }
@@ -36,23 +48,48 @@ const FormularioCaracteristicas = ({
 
   const handleChange = (e) => {
 
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
 
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+
+    setErrores((prev) => ({
+      ...prev,
+      [name]: ""
+    }));
+
+    setMensaje("");
+    setTipoMensaje("");
+  };
+
+  const validarFormulario = () => {
+
+    const nuevosErrores = {
+      nombre: validarNombreCaracteristica(formData.nombre),
+      icono: validarIconoCaracteristica(formData.icono)
+    };
+
+    setErrores(nuevosErrores);
+
+    return (
+      !nuevosErrores.nombre &&
+      !nuevosErrores.icono
+    );
   };
 
   const handleSubmit = async (e) => {
 
     e.preventDefault();
 
-    if (!formData.icono) {
+    setMensaje("");
+    setTipoMensaje("");
 
-      alert("Debe seleccionar un ícono.");
+    const formularioValido = validarFormulario();
 
+    if (!formularioValido) {
       return;
-
     }
 
     try {
@@ -61,7 +98,11 @@ const FormularioCaracteristicas = ({
 
         await registrarCaracteristica(formData);
 
-        alert("Característica creada correctamente.");
+        setMensaje(
+          "Característica creada correctamente."
+        );
+
+        setTipoMensaje("exito");
 
         setFormData({
           nombre: "",
@@ -75,7 +116,11 @@ const FormularioCaracteristicas = ({
           formData
         );
 
-        alert("Característica actualizada correctamente.");
+        setMensaje(
+          "Característica actualizada correctamente."
+        );
+
+        setTipoMensaje("exito");
 
         navigate("/lista-caracteristicas");
 
@@ -83,12 +128,19 @@ const FormularioCaracteristicas = ({
 
     } catch (error) {
 
-      console.error(error);
+      console.error(
+        "Error al guardar característica:",
+        error
+      );
 
-      alert(error.message || "Ocurrió un error.");
+      setMensaje(
+        error.response?.data?.message ||
+        error.message ||
+        "Ocurrió un error al guardar la característica."
+      );
 
+      setTipoMensaje("error");
     }
-
   };
 
   return (
@@ -98,42 +150,69 @@ const FormularioCaracteristicas = ({
       <form
         className="formulario"
         onSubmit={handleSubmit}
+        noValidate
       >
 
         <h2>
-
           {modo === "crear"
             ? "Agregar característica"
             : "Editar característica"}
-
         </h2>
 
-        <label htmlFor="nombre">
+        <div className="campo-formulario">
 
-          Nombre
+          <label htmlFor="nombre">
+            Nombre
+          </label>
 
-        </label>
+          <input
+            id="nombre"
+            type="text"
+            name="nombre"
+            value={formData.nombre}
+            onChange={handleChange}
+            placeholder="Ingrese el nombre"
+            className={
+              errores.nombre
+                ? "input-error"
+                : ""
+            }
+          />
 
-        <input
-          id="nombre"
-          type="text"
-          name="nombre"
-          value={formData.nombre}
-          onChange={handleChange}
-          placeholder="Ingrese el nombre"
-          required
-        />
+          {errores.nombre && (
+            <p className="mensaje-error">
+              {errores.nombre}
+            </p>
+          )}
 
-        <label>
+        </div>
 
-          Ícono
+        <div className="campo-formulario">
 
-        </label>
+          <label>
+            Ícono
+          </label>
 
-        <IconSelector
-          value={formData.icono}
-          onChange={handleChange}
-        />
+          <IconSelector
+            value={formData.icono}
+            onChange={handleChange}
+          />
+
+          {errores.icono && (
+            <p className="mensaje-error">
+              {errores.icono}
+            </p>
+          )}
+
+        </div>
+
+        {mensaje && (
+          <div
+            className={`mensaje-formulario ${tipoMensaje}`}
+          >
+            {mensaje}
+          </div>
+        )}
 
         <button
           type="submit"
@@ -149,9 +228,7 @@ const FormularioCaracteristicas = ({
       </form>
 
     </section>
-
   );
-
 };
 
 export default FormularioCaracteristicas;

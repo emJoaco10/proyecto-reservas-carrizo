@@ -5,6 +5,7 @@ import useCaracteristicaAPI from "../hooks/useCaracteristicaAPI";
 import useProductoAPI from "../hooks/useProductoAPI";
 import ListadoProductosAsociacion from "../components/ListadoProductosAsociacion";
 import "../styles/pages/AsociarProductoCaracteristica.css";
+import BreadcrumAdministracion from "../components/BreadcrumAdministracion";
 
 const AsociarProductoCaracteristica = () => {
 
@@ -208,6 +209,27 @@ const AsociarProductoCaracteristica = () => {
     return (
 
         <section className="bloque">
+
+            <BreadcrumAdministracion
+                        items={[
+                            {
+                                label: "Administración",
+                                path: "/administracion"
+                            },
+                            {
+                                label: "Administración de características",
+                                path: "/caracteristicas-admin"
+                            },
+                            {
+                                label: "Listado de características",
+                                path: "/lista-caracteristicas"
+                            },
+                            {
+                                label: "Asociar característica a productos"
+                            }
+                        ]} 
+                        
+                        />
 
             <h1>
 

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import useProductoAPI from '../hooks/useProductoAPI';
 import { Link } from 'react-router-dom';
 import '../styles/pages/ListaProductosAdmin.css';
+import BreadcrumAdministracion from "../components/BreadcrumAdministracion";
 
 const ListaProductosAdmin = () => {
   const { productos, fetchProductos, removeProductoById, loading, error } = useProductoAPI();
@@ -17,7 +18,25 @@ const ListaProductosAdmin = () => {
   };
 
   return (
+
     <div className="lista-admin-container">
+
+      <BreadcrumAdministracion
+        items={[
+          {
+            label: "Administración",
+            path: "/administracion"
+          },
+          {
+            label: "Administración de productos",
+            path: "/productos-admin"
+          },
+          {
+            label: "Lista de productos"
+          }
+        ]}
+      />
+
       <h1>Lista de productos</h1>
 
       {loading && <div className="estado">Cargando productos...</div>}

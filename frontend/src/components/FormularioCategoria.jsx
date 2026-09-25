@@ -1,36 +1,65 @@
-import { useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import useCategoriaAPI from "../hooks/useCategoriaAPI";
+import {
+  validarNombreCategoria,
+  validarDescripcionCategoria,
+  validarImagenCategoria,
+  validarArchivoImagen
+} from "../helpers/validaciones";
 import "../styles/components/FormularioCategoria.css";
 
-/**
- * Formulario utilizado para crear nuevas categorías.
- *
- * Gestiona los datos del formulario, validaciones, selección de imagen,
- * vista previa y envío de la categoría mediante useCategoriaAPI.
- */
-const FormularioCategoria = () => {
+const FormularioCategoria = ({
+  categoriaInicial = null,
+  modoEdicion = false,
+  onExito
+}) => {
 
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
-    imagen: "",
+    imagen: ""
   });
 
-  const { registerCategoria, loading } = useCategoriaAPI();
+  const {
+    registerCategoria,
+    editCategoria,
+    loading
+  } = useCategoriaAPI();
 
   const [imagenPreview, setImagenPreview] = useState("");
 
-  const [mensaje, setMensaje] = useState("");
+  const [errores, setErrores] = useState({
+    nombre: "",
+    descripcion: "",
+    imagen: ""
+  });
 
+  const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("");
 
   const inputImagenRef = useRef(null);
 
+  /*
+   * Cargar los datos de la categoría cuando estamos editando.
+   */
+  useEffect(() => {
+
+    if (!modoEdicion || !categoriaInicial) {
+      return;
+    }
+
+    setFormData({
+      nombre: categoriaInicial.nombre || "",
+      descripcion: categoriaInicial.descripcion || "",
+      imagen: categoriaInicial.imagen || ""
+    });
+
+    setImagenPreview(categoriaInicial.imagen || "");
+
+  }, [modoEdicion, categoriaInicial]);
+
   /**
-   * Actualiza el campo del formulario que fue modificado.
-   *
-   * Utiliza el atributo "name" del elemento para identificar
-   * qué propiedad debe actualizarse dentro de formData.
+   * Actualiza el campo modificado.
    */
   const handleChange = (event) => {
 
@@ -40,17 +69,41 @@ const FormularioCategoria = () => {
       ...prev,
       [name]: value
     }));
+
+    // Limpiamos el error del campo que el usuario está corrigiendo.
+    setErrores((prev) => ({
+      ...prev,
+      [name]: ""
+    }));
+
+    setMensaje("");
+    setTipoMensaje("");
   };
 
   /**
-   * Valida y envía el formulario para crear una nueva categoría.
-   *
-   * Antes de realizar la petición verifica que nombre, descripción
-   * e imagen estén completos. Si la creación es exitosa, limpia
-   * el formulario y la vista previa.
-   *
-   * También gestiona los errores relacionados con categorías
-   * duplicadas y otros errores provenientes de la API.
+   * Valida todos los campos del formulario.
+   */
+  const validarFormulario = () => {
+
+    const nuevosErrores = {
+      nombre: validarNombreCategoria(formData.nombre),
+      descripcion: validarDescripcionCategoria(
+        formData.descripcion
+      ),
+      imagen: validarImagenCategoria(formData.imagen)
+    };
+
+    setErrores(nuevosErrores);
+
+    return (
+      !nuevosErrores.nombre &&
+      !nuevosErrores.descripcion &&
+      !nuevosErrores.imagen
+    );
+  };
+
+  /**
+   * Envía la categoría para crear o actualizar.
    */
   const handleSubmit = async (event) => {
 
@@ -59,66 +112,63 @@ const FormularioCategoria = () => {
     setMensaje("");
     setTipoMensaje("");
 
-    // Validar los campos obligatorios.
-    if (!formData.nombre.trim()) {
-      setMensaje(
-        "El nombre de la categoría es obligatorio."
-      );
-      setTipoMensaje("error");
-      return;
-    }
+    const formularioValido = validarFormulario();
 
-    if (!formData.descripcion.trim()) {
-      setMensaje(
-        "La descripción de la categoría es obligatoria."
-      );
-      setTipoMensaje("error");
-      return;
-    }
-
-    if (!formData.imagen) {
-      setMensaje(
-        "Debés seleccionar una imagen para la categoría."
-      );
-      setTipoMensaje("error");
+    if (!formularioValido) {
       return;
     }
 
     try {
 
-      // Enviar los datos al backend mediante el hook de categorías.
-      await registerCategoria(formData);
+      let resultado;
 
-      setMensaje(
-        "Categoría creada correctamente."
-      );
+      if (modoEdicion) {
+
+        resultado = await editCategoria(
+          categoriaInicial.id,
+          formData
+        );
+
+        setMensaje(
+          "Categoría actualizada correctamente."
+        );
+
+      } else {
+
+        resultado = await registerCategoria(formData);
+
+        setMensaje(
+          "Categoría creada correctamente."
+        );
+
+        setFormData({
+          nombre: "",
+          descripcion: "",
+          imagen: ""
+        });
+
+        setImagenPreview("");
+
+        if (inputImagenRef.current) {
+          inputImagenRef.current.value = "";
+        }
+      }
+
       setTipoMensaje("exito");
 
-      // Limpiar los datos del formulario después de crear la categoría.
-      setFormData({
-        nombre: "",
-        descripcion: "",
-        imagen: ""
-      });
-
-      setImagenPreview("");
-
-      // Limpiar manualmente el input de archivo.
-      if (inputImagenRef.current) {
-        inputImagenRef.current.value = "";
+      if (onExito) {
+        onExito(resultado);
       }
 
     } catch (error) {
 
       console.error(
-        "Error al crear la categoría:",
+        modoEdicion
+          ? "Error al actualizar la categoría:"
+          : "Error al crear la categoría:",
         error
       );
 
-      /*
-       * Si el backend informa que el nombre ya existe,
-       * se muestra un mensaje específico al usuario.
-       */
       if (error.response?.status === 409) {
 
         setMensaje(
@@ -128,7 +178,9 @@ const FormularioCategoria = () => {
       } else {
 
         setMensaje(
-          "No se pudo crear la categoría. Intentá nuevamente."
+          modoEdicion
+            ? "No se pudo actualizar la categoría. Intentá nuevamente."
+            : "No se pudo crear la categoría. Intentá nuevamente."
         );
       }
 
@@ -137,11 +189,7 @@ const FormularioCategoria = () => {
   };
 
   /**
-   * Procesa la imagen seleccionada por el usuario.
-   *
-   * Valida el formato y tamaño del archivo, genera una vista previa
-   * mediante una Object URL y convierte la imagen a Base64 para
-   * almacenarla dentro de formData y enviarla al backend.
+   * Procesa la imagen seleccionada.
    */
   const handleImagenChange = (event) => {
 
@@ -151,56 +199,41 @@ const FormularioCategoria = () => {
       return;
     }
 
-    const formatosPermitidos = [
-      "image/jpeg",
-      "image/png",
-      "image/webp"
-    ];
+    const errorImagen = validarArchivoImagen(archivo);
 
-    // Validar el formato de la imagen.
-    if (!formatosPermitidos.includes(archivo.type)) {
+    if (errorImagen) {
 
-      alert(
-        "Formato no válido. Utilizá JPG, PNG o WEBP."
-      );
+      setErrores((prev) => ({
+        ...prev,
+        imagen: errorImagen
+      }));
 
       event.target.value = "";
 
       return;
     }
 
-    const MAX_SIZE = 5 * 1024 * 1024;
+    // Si la imagen es válida, eliminamos el error.
+    setErrores((prev) => ({
+      ...prev,
+      imagen: ""
+    }));
 
-    // Validar que la imagen no supere los 5 MB.
-    if (archivo.size > MAX_SIZE) {
+    setMensaje("");
+    setTipoMensaje("");
 
-      alert(
-        "La imagen no puede superar los 5 MB."
-      );
-
-      event.target.value = "";
-
-      return;
-    }
-
-    /*
-     * Crear una Object URL para mostrar inmediatamente
-     * una vista previa de la imagen seleccionada.
-     */
     const previewUrl =
       URL.createObjectURL(archivo);
 
-    // Liberar la URL anterior antes de crear una nueva.
-    if (imagenPreview) {
+    if (
+      imagenPreview &&
+      imagenPreview.startsWith("blob:")
+    ) {
       URL.revokeObjectURL(imagenPreview);
     }
 
     setImagenPreview(previewUrl);
 
-    /*
-     * Convertir la imagen a Base64 para almacenarla en formData
-     * y enviarla posteriormente al backend.
-     */
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -218,6 +251,7 @@ const FormularioCategoria = () => {
     <form
       className="formulario-categoria"
       onSubmit={handleSubmit}
+      noValidate
     >
 
       <div className="campo-formulario">
@@ -233,7 +267,14 @@ const FormularioCategoria = () => {
           value={formData.nombre}
           onChange={handleChange}
           placeholder="Ingrese el nombre de la categoría"
+          className={errores.nombre ? "input-error" : ""}
         />
+
+        {errores.nombre && (
+          <p className="mensaje-error">
+            {errores.nombre}
+          </p>
+        )}
 
       </div>
 
@@ -250,7 +291,14 @@ const FormularioCategoria = () => {
           onChange={handleChange}
           placeholder="Ingrese una descripción de la categoría"
           rows="4"
+          className={errores.descripcion ? "input-error" : ""}
         />
+
+        {errores.descripcion && (
+          <p className="mensaje-error">
+            {errores.descripcion}
+          </p>
+        )}
 
       </div>
 
@@ -264,10 +312,17 @@ const FormularioCategoria = () => {
           type="file"
           id="imagen"
           name="imagen"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp"
           onChange={handleImagenChange}
           ref={inputImagenRef}
+          className={errores.imagen ? "input-error" : ""}
         />
+
+        {errores.imagen && (
+          <p className="mensaje-error">
+            {errores.imagen}
+          </p>
+        )}
 
         {imagenPreview && (
 
@@ -280,6 +335,12 @@ const FormularioCategoria = () => {
 
           </div>
 
+        )}
+
+        {modoEdicion && (
+          <small>
+            Si no seleccionás una nueva imagen, se conservará la actual.
+          </small>
         )}
 
       </div>
@@ -300,8 +361,12 @@ const FormularioCategoria = () => {
           disabled={loading}
         >
           {loading
-            ? "Creando..."
-            : "Crear categoría"}
+            ? modoEdicion
+              ? "Guardando..."
+              : "Creando..."
+            : modoEdicion
+              ? "Guardar cambios"
+              : "Crear categoría"}
         </button>
 
       </div>

@@ -1,0 +1,53 @@
+.breadcrumb-administracion {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+
+    margin-bottom: 1.5rem;
+
+    font-size: 0.9rem;
+}
+
+.breadcrumb-administracion__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.breadcrumb-administracion__enlace {
+    color: #16734f;
+    text-decoration: none;
+    font-weight: 600;
+
+    transition:
+        color 0.2s ease,
+        text-decoration 0.2s ease;
+}
+
+.breadcrumb-administracion__enlace:hover {
+    color: #125c40;
+    text-decoration: underline;
+}
+
+.breadcrumb-administracion__actual {
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.breadcrumb-administracion__separador {
+    color: #9ca3af;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+@media (max-width: 600px) {
+    .breadcrumb-administracion {
+        font-size: 0.8rem;
+        gap: 0.25rem;
+    }
+
+    .breadcrumb-administracion__item {
+        gap: 0.25rem;
+    }
+}

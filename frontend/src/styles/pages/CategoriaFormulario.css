@@ -1,0 +1,65 @@
+.categoria-formulario-pagina {
+    width: 100%;
+    padding: 1rem 0 3rem;
+}
+
+.categoria-formulario-pagina__encabezado {
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto 1.5rem;
+}
+
+.categoria-formulario-pagina__titulo {
+    margin: 0 0 0.5rem;
+
+    color: #003b00;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.categoria-formulario-pagina__descripcion {
+    margin: 0;
+
+    color: #374151;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/*
+ * El formulario ya tiene su propio diseño.
+ * Este bloque solamente controla su posición
+ * dentro de la página.
+ */
+.categoria-formulario-pagina .formulario-categoria {
+    margin-top: 0;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+
+    .categoria-formulario-pagina {
+        padding: 0.75rem 0 2rem;
+    }
+
+    .categoria-formulario-pagina__encabezado {
+        margin-bottom: 1.25rem;
+    }
+
+    .categoria-formulario-pagina__titulo {
+        font-size: 1.7rem;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .categoria-formulario-pagina__titulo {
+        font-size: 1.5rem;
+    }
+
+    .categoria-formulario-pagina__descripcion {
+        font-size: 0.95rem;
+    }
+
+}

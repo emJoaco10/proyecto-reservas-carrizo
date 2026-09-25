@@ -1,4 +1,6 @@
 import FormularioCategoria from "../components/FormularioCategoria";
+import BreadcrumAdministracion from "../components/BreadcrumAdministracion";
+import "../styles/pages/CategoriaFormulario.css";
 
 const AgregarCategorias = () => {
 
@@ -7,6 +9,22 @@ const AgregarCategorias = () => {
   return (
 
     <section className="bloque">
+
+      <BreadcrumAdministracion
+        items={[
+          {
+            label: "Administración",
+            path: "/administracion"
+          },
+          {
+            label: "Administración de categorías",
+            path: "/categorias-admin"
+          },
+          {
+            label: "Agregar categoría"
+          }
+        ]}
+      />
 
       <h1>Agregar categoría</h1>
 

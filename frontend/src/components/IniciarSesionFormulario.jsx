@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { loginUsuario, obtenerUsuarios } from "../services/usuarioService";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUsuario } from "../services/usuarioService";
 import { escribirLocal } from "../helpers/storageUtils";
-import { useNavigate } from "react-router-dom";
-import '../styles/components/Formulario.css';
+import {
+    validarEmail,
+    validarPassword
+} from "../helpers/validaciones";
+import "../styles/components/Formulario.css";
 
 const IniciarSesionFormulario = () => {
     const navigate = useNavigate();
@@ -13,89 +16,137 @@ const IniciarSesionFormulario = () => {
         password: ""
     });
 
-    const [error, setError] = useState("");
+    const [errores, setErrores] = useState({
+        email: "",
+        password: ""
+    });
+
+    const [errorLogin, setErrorLogin] = useState("");
 
     const handleChange = ({ target }) => {
         setFormData((prev) => ({
             ...prev,
             [target.name]: target.value
         }));
+
+        // Limpiamos el error del campo que el usuario está corrigiendo
+        setErrores((prev) => ({
+            ...prev,
+            [target.name]: ""
+        }));
+
+        setErrorLogin("");
+    };
+
+    const validarFormulario = () => {
+        const nuevosErrores = {
+            email: validarEmail(formData.email),
+            password: validarPassword(formData.password)
+        };
+
+        setErrores(nuevosErrores);
+
+        return !nuevosErrores.email && !nuevosErrores.password;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // ETAPA 3
-            setError("");
+        setErrorLogin("");
 
+        // Validamos antes de intentar iniciar sesión
+        const formularioValido = validarFormulario();
+
+        if (!formularioValido) {
+            return;
+        }
 
         try {
-
             const usuario = await loginUsuario(formData);
 
             // Persistimos la sesión
             escribirLocal("usuario", usuario.usuario);
 
-            //Persistimos el token
+            // Persistimos el token
             escribirLocal("token", usuario.token);
 
             // Redirigimos al Home
             navigate("/");
 
         } catch (err) {
-
-            setError(err.message);
-
+            setErrorLogin(err.message);
         }
-        /*
-        formData = {
-            email: "...",
-            password: "..."
-        }
-        */
     };
 
     return (
-        <form className="formulario" onSubmit={handleSubmit}>
+        <form
+            className="formulario"
+            onSubmit={handleSubmit}
+            noValidate
+        >
+            <h2>Iniciar sesión</h2>
 
-    <h2>Iniciar sesión</h2>
+            <div className="campo-formulario">
+                <label htmlFor="email">
+                    Correo electrónico
+                </label>
 
-    <input
-        type="email"
-        name="email"
-        placeholder="Correo electrónico"
-        value={formData.email}
-        onChange={handleChange}
-        required
-    />
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Correo electrónico"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={errores.email ? "input-error" : ""}
+                />
 
-    <input
-        type="password"
-        name="password"
-        placeholder="Contraseña"
-        value={formData.password}
-        onChange={handleChange}
-        required
-    />
+                {errores.email && (
+                    <p className="mensaje-error">
+                        {errores.email}
+                    </p>
+                )}
+            </div>
 
-    <button type="submit">
-        Iniciar sesión
-    </button>
+            <div className="campo-formulario">
+                <label htmlFor="password">
+                    Contraseña
+                </label>
 
-    {error && (
-        <p className="error">
-            {error}
-        </p>
-    )}
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Contraseña"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className={errores.password ? "input-error" : ""}
+                />
 
-    <p className="login-footer">
-        ¿Aún no tienes una cuenta?{" "}
-        <Link to="/registro-usuario">
-            Crear cuenta
-        </Link>
-    </p>
+                {errores.password && (
+                    <p className="mensaje-error">
+                        {errores.password}
+                    </p>
+                )}
+            </div>
 
-</form>
+            <button type="submit">
+                Iniciar sesión
+            </button>
+
+            {errorLogin && (
+                <p className="mensaje-error">
+                    {errorLogin}
+                </p>
+            )}
+
+            <p className="login-footer">
+                ¿Aún no tienes una cuenta?{" "}
+                <Link to="/registro-usuario">
+                    Crear cuenta
+                </Link>
+            </p>
+        </form>
     );
 };
 

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import BreadcrumAdministracion from "../components/BreadcrumAdministracion";
 import useProductoAPI from '../hooks/useProductoAPI'
 import { CategorySelector } from '../components/CategorySelector'
 import {
@@ -402,6 +403,22 @@ export const EditarProducto = () => {
   return (
     <div className="editar-producto">
 
+      <BreadcrumAdministracion
+        items={[
+          {
+            label: "Administración",
+            path: "/administracion"
+          },
+          {
+            label: "Administración de productos",
+            path: "/productos-admin"
+          },
+          {
+            label: "Editar producto"
+          }
+        ]}
+      />
+
       {/* ====================================== */}
       {/* ENCABEZADO */}
       {/* ====================================== */}
@@ -719,10 +736,9 @@ export const EditarProducto = () => {
                 accept="image/jpeg,image/png,image/webp"
                 onChange={handleImagenes}
                 className={
-                  `imagenes-input ${
-                    errores.imagenes
-                      ? 'input-error'
-                      : ''
+                  `imagenes-input ${errores.imagenes
+                    ? 'input-error'
+                    : ''
                   }`
                 }
               />
