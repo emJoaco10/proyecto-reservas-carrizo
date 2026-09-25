@@ -1,7 +1,9 @@
 package com.example.demo.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,21 +21,24 @@ public class ProductoDTO {
      */
     private Long id;
 
-    /**
-     * Nombre único del producto.
-     */
     @NotBlank(message = "El nombre del producto es obligatorio")
+    @Size(
+            min = 3,
+            message = "El nombre del producto debe tener al menos 3 caracteres"
+    )
     private String nombre;
 
-    /**
-     * Descripción del producto.
-     */
     @NotBlank(message = "La descripción del producto es obligatoria")
+    @Size(
+            min = 5,
+            message = "La descripción del producto debe tener al menos 5 caracteres"
+    )
     private String descripcion;
 
     /**
      * Lista de URLs o base64 de imágenes.
      */
+    @NotEmpty(message = "El producto debe tener al menos una imagen")
     private List<String> imagenes;
 
     @NotNull(message = "La categoría es obligatoria")

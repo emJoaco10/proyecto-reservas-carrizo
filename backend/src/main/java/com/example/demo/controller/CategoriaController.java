@@ -89,7 +89,7 @@ public class CategoriaController {
     @PutMapping("/{id}")
     public ResponseEntity<CategoriaDTO> actualizar(
             @PathVariable Long id,
-            @Valid @RequestBody CategoriaDTO dto
+            @Valid @RequestBody CategoriaDTO dto    
     ) {
 
         CategoriaDTO categoriaActualizada =

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.LoginDTO;
 import com.example.demo.dto.LoginResponseDTO;
 import com.example.demo.dto.RolDTO;
 import com.example.demo.dto.UsuarioDTO;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.demo.service.JwtService;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.LoginContext;
 import java.util.List;
 
 /**
@@ -103,7 +105,7 @@ public class UsuarioService {
      * @return UsuarioDTO con los datos del usuario autenticado
      * @throws IllegalArgumentException si las credenciales son incorrectas
      */
-    public LoginResponseDTO iniciarSesion(UsuarioDTO dto) {
+    public LoginResponseDTO iniciarSesio(LoginDTO dto) {
 
         // Buscar el usuario mediante su email.
         Usuario usuario = usuarioRepository.findByEmail(dto.getEmail())

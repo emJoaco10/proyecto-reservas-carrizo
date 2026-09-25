@@ -1,6 +1,7 @@
 package com.example.demo.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 /**
  * Data Transfer Object (DTO) para la entidad Categoria.
@@ -15,9 +16,19 @@ public class CategoriaDTO {
     private Long id;
 
     @NotBlank(message = "El nombre de la categoría es obligatorio")
+    @Size(
+            min = 3,
+            max = 100,
+            message = "El nombre de la categoría debe tener entre 3 y 100 caracteres"
+    )
     private String nombre;
 
     @NotBlank(message = "La descripción de la categoría es obligatoria")
+    @Size(
+            min = 5,
+            max = 500,
+            message = "La descripción de la categoría debe tener entre 5 y 500 caracteres"
+    )
     private String descripcion;
 
     @NotBlank(message = "La imagen de la categoría es obligatoria")

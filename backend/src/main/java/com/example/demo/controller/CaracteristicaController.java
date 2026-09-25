@@ -4,6 +4,7 @@ import com.example.demo.dto.CaracteristicaDTO;
 import com.example.demo.service.CaracteristicaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class CaracteristicaController {
      */
     @PostMapping
     public ResponseEntity<CaracteristicaDTO> guardar(
-            @RequestBody CaracteristicaDTO caracteristicaDTO) {
+            @Valid @RequestBody CaracteristicaDTO caracteristicaDTO) {
 
         CaracteristicaDTO nuevaCaracteristica =
                 caracteristicaService.guardar(caracteristicaDTO);
@@ -80,7 +81,7 @@ public class CaracteristicaController {
     @PutMapping("/{id}")
     public ResponseEntity<CaracteristicaDTO> actualizar(
             @PathVariable Long id,
-            @RequestBody CaracteristicaDTO caracteristicaDTO) {
+            @Valid @RequestBody CaracteristicaDTO caracteristicaDTO) {
 
         CaracteristicaDTO actualizada =
                 caracteristicaService.actualizar(

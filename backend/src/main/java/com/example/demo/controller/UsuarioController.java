@@ -6,6 +6,7 @@ import com.example.demo.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.dto.LoginResponseDTO;
+import com.example.demo.dto.LoginDTO;
 
 import java.util.List;
 import jakarta.validation.Valid;
@@ -80,7 +81,7 @@ public class UsuarioController {
      */
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> iniciarSesion(
-            @RequestBody UsuarioDTO dto) {
+            @Valid @RequestBody LoginDTO dto) {
 
         LoginResponseDTO respuesta =
                 usuarioService.iniciarSesion(dto);
