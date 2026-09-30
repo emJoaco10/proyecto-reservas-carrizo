@@ -7,8 +7,6 @@ import com.example.demo.service.ProductoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import com.example.demo.model.Producto;
-import com.example.demo.service.FavoritoService;
 
 import java.util.List;
 

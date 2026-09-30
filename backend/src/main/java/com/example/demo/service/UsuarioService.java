@@ -105,7 +105,7 @@ public class UsuarioService {
      * @return UsuarioDTO con los datos del usuario autenticado
      * @throws IllegalArgumentException si las credenciales son incorrectas
      */
-    public LoginResponseDTO iniciarSesio(LoginDTO dto) {
+    public LoginResponseDTO iniciarSesion(LoginDTO dto) {
 
         // Buscar el usuario mediante su email.
         Usuario usuario = usuarioRepository.findByEmail(dto.getEmail())
