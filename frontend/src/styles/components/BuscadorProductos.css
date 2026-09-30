@@ -246,3 +246,26 @@
   font-size: 13px;
   color: #777777;
 }
+
+.buscador-productos__resultado-rango {
+  margin: 0 0 20px;
+  text-align: center;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.btn-ver-producto {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 18px;
+    border-radius: 6px;
+    background-color: #198754;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.btn-ver-producto:hover {
+    background-color: #146c43;
+}

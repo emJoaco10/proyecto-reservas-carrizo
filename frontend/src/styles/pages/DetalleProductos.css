@@ -143,6 +143,47 @@
   outline-offset: 2px;
 }
 
+.btn-reservar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 18px;
+  margin-left: 10px;
+  padding: 11px 22px;
+
+  border: none;
+  border-radius: 9px;
+
+  background-color: #173b5f;
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.btn-reservar:hover {
+  background-color: #0f2d48;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 12px rgba(23, 59, 95, 0.2);
+}
+
+.btn-reservar:active {
+  transform: translateY(0);
+}
+
+.btn-reservar:focus-visible {
+  outline: 3px solid rgba(23, 59, 95, 0.25);
+  outline-offset: 2px;
+}
+
 /* =========================================================
    CALENDARIO
    ========================================================= */
@@ -268,6 +309,12 @@
   .btn-ver-mas {
     width: 100%;
     margin-top: 16px;
+  }
+
+  .btn-reservar {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 10px;
   }
 
   .detalle-producto__caracteristicas {

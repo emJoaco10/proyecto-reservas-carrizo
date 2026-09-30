@@ -3,6 +3,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/components/BuscadorProductos.css';
 import useProductoAPI from '../hooks/useProductoAPI';
+import useReservaAPI from '../hooks/useReservaAPI';
+import { Link } from 'react-router-dom';
 
 /**
  * Bloque principal de búsqueda de productos.
@@ -16,6 +18,8 @@ const BuscadorProductos = () => {
     productos,
     fetchProductosPorBusqueda
   } = useProductoAPI();
+
+  const { fetchProductosDisponibles } = useReservaAPI();
 
   const [textoBusqueda, setTextoBusqueda] = useState('');
   const [fechaInicio, setFechaInicio] = useState(null);
@@ -162,56 +166,112 @@ const BuscadorProductos = () => {
 
   /**
    * Ejecuta la búsqueda de productos utilizando
-   * la palabra clave ingresada por el usuario.
+   * la palabra clave ingresada por el usuario y 
+   * el rango de fechas seleccionado.
    */
   const handleBuscar = async () => {
-
     const texto = textoBusqueda.trim();
 
     setMostrarSugerencias(false);
+    setMensaje('');
 
-    if (!texto) {
+    if (!texto && (!fechaInicio || !fechaFin)) {
       setResultados([]);
       setMensaje(
-        'Ingresá una palabra clave para realizar la búsqueda.'
+        'Ingresá una palabra clave o seleccioná un rango de fechas para realizar la búsqueda.'
+      );
+      return;
+    }
+
+    if ((fechaInicio && !fechaFin) || (!fechaInicio && fechaFin)) {
+      setResultados([]);
+      setMensaje(
+        'Seleccioná una fecha de inicio y una fecha de finalización.'
       );
       return;
     }
 
     setBuscando(true);
-    setMensaje('');
 
     try {
+      let productosEncontrados = [];
 
-      const productosEncontrados =
-        await fetchProductosPorBusqueda(texto);
+      /*
+       * Búsqueda por disponibilidad
+       */
+      if (fechaInicio && fechaFin) {
+        const fechaInicioFormateada =
+          fechaInicio.toISOString().split('T')[0];
 
-      const resultadosOrdenados =
-        ordenarResultadosPorRelevancia(
-          productosEncontrados,
-          texto
+        const fechaFinFormateada =
+          fechaFin.toISOString().split('T')[0];
+
+        productosEncontrados =
+          await fetchProductosDisponibles(
+            fechaInicioFormateada,
+            fechaFinFormateada
+          );
+
+        /*
+         * Si además se ingresó texto,
+         * filtramos los productos disponibles
+         * por nombre.
+         */
+        if (texto) {
+          const textoNormalizado = normalizarTexto(texto);
+
+          productosEncontrados =
+            productosEncontrados.filter((producto) =>
+              normalizarTexto(producto.nombre)
+                .includes(textoNormalizado)
+            );
+
+          productosEncontrados =
+            ordenarResultadosPorRelevancia(
+              productosEncontrados,
+              texto
+            );
+        }
+      }
+
+      /*
+       * Búsqueda solamente por texto
+       */
+      else {
+        productosEncontrados =
+          await fetchProductosPorBusqueda(texto);
+
+        productosEncontrados =
+          ordenarResultadosPorRelevancia(
+            productosEncontrados,
+            texto
+          );
+      }
+
+      setResultados(productosEncontrados);
+
+      if (productosEncontrados.length === 0) {
+        setMensaje(
+          fechaInicio && fechaFin
+            ? 'No se encontraron productos disponibles para las fechas seleccionadas.'
+            : 'No se encontraron productos.'
         );
-
-      setResultados(resultadosOrdenados);
-
-      if (resultadosOrdenados.length === 0) {
-        setMensaje('No se encontraron productos.');
       }
 
     } catch (error) {
-
       console.error(
         '[BuscadorProductos] Error al realizar búsqueda:',
         error
       );
 
       setResultados([]);
-      setMensaje('No se pudo realizar la búsqueda.');
+
+      setMensaje(
+        'No se pudo realizar la búsqueda.'
+      );
 
     } finally {
-
       setBuscando(false);
-
     }
   };
 
@@ -360,8 +420,19 @@ const BuscadorProductos = () => {
         <div className="buscador-productos__resultados">
 
           <h3>
-            Resultados de búsqueda
+            {fechaInicio && fechaFin
+              ? 'Productos disponibles'
+              : 'Resultados de búsqueda'}
           </h3>
+
+          {fechaInicio && fechaFin && (
+            <p className="buscador-productos__resultado-rango">
+              Disponibilidad para{' '}
+              <strong>{formatearFecha(fechaInicio)}</strong>
+              {' → '}
+              <strong>{formatearFecha(fechaFin)}</strong>
+            </p>
+          )}
 
           <div className="buscador-productos__lista-resultados">
 
@@ -411,6 +482,13 @@ const BuscadorProductos = () => {
                   </span>
 
                 </div>
+
+                <Link
+                  to={`/producto/${producto.id}`}
+                  className="btn-ver-producto"
+                >
+                  Ver producto
+                </Link>
 
               </article>
 

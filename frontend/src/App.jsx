@@ -25,6 +25,7 @@ import AdministracionCategorias from './pages/AdministracionCategorias';
 import AdminRoute from "./components/AdminRoute";
 import MisFavoritos from './pages/MisFavoritos';
 import EditarCategorias from './pages/EditarCategorias';
+import Reserva from './pages/Reserva';
 
 /**
  * Componente principal de la aplicación React.
@@ -80,6 +81,12 @@ const App = () => {
           <Route
             path="/iniciar-sesion"
             element={<IniciarSesion />}
+          />
+
+          {/* Reserva */}
+          <Route
+            path="/reserva/:id"
+            element={<Reserva />}
           />
 
           {/* Perfil del usuario */}

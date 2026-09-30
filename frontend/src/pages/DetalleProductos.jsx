@@ -7,6 +7,7 @@ import useProductoAPI from '../hooks/useProductoAPI';
 import '../styles/pages/DetalleProductos.css';
 import PoliticasProducto from '../components/PoliticasProducto';
 import ValoracionesProducto from '../components/ValoracionesProducto';
+import { leerLocal } from '../helpers/storageUtils';
 
 const DetalleProductos = () => {
   const { id } = useParams();
@@ -32,6 +33,21 @@ const DetalleProductos = () => {
       });
     }
   }, [navigate, id, producto]);
+
+  const onReservar = useCallback(() => {
+    const usuario = leerLocal("usuario");
+
+    if (!usuario) {
+      navigate("/iniciar-sesion", {
+        state: {
+          desdeReserva: true
+        }
+      });
+      return;
+    }
+
+    navigate(`/reserva/${id}`);
+  }, [navigate, id]);
 
   return (
     <main className="detalle-producto-page">
@@ -62,6 +78,7 @@ const DetalleProductos = () => {
               <InfoProducto
                 producto={producto}
                 onVerMas={onVerMas}
+                onReservar={onReservar}
               />
 
               <CalendarioDisponibilidad

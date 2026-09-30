@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/components/CalendarioDisponibilidad.css';
 import useReservaAPI from '../hooks/useReservaAPI';
 
-const CalendarioDisponibilidad = ({ productoId }) => {
+const CalendarioDisponibilidad = ({ productoId, onFechasSeleccionadas }) => {
     const { fetchDisponibilidad } = useReservaAPI();
 
     const [fechaInicio, setFechaInicio] = useState(null);
@@ -192,6 +192,13 @@ const CalendarioDisponibilidad = ({ productoId }) => {
 
         setFechaInicio(inicio);
         setFechaFin(fin);
+
+        if (inicio && fin && onFechasSeleccionadas) {
+            onFechasSeleccionadas({
+                fechaInicio: inicio,
+                fechaFin: fin
+            });
+        }
     };
 
     /**

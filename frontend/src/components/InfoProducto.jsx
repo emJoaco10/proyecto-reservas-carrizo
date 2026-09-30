@@ -2,7 +2,7 @@ import React from 'react';
 import '../styles/components/InfoProducto.css';
 import CompartirProducto from './CompartirProducto';
 
-const InfoProducto = ({ producto, onVerMas }) => {
+const InfoProducto = ({ producto, onVerMas, onReservar }) => {
   if (!producto) {
     return <div>No hay producto disponible</div>;
   }
@@ -22,7 +22,7 @@ const InfoProducto = ({ producto, onVerMas }) => {
   return (
     <div className="info-producto">
       <div className="info-producto__contenido">
-        
+
         <div className="info-producto__titulo">
           <h2>{nombre}</h2>
 
@@ -50,6 +50,15 @@ const InfoProducto = ({ producto, onVerMas }) => {
         >
           Ver galería
         </button>
+
+        <button
+          type="button"
+          className="btn-reservar"
+          onClick={() => onReservar && onReservar(id)}
+        >
+          Reservar
+        </button>
+
       </div>
     </div>
   );
