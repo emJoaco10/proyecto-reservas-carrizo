@@ -1,35 +1,154 @@
+/* =========================================
+   PÁGINA DE RESERVA
+========================================= */
+
 .reserva-page {
   width: 100%;
   min-height: 100vh;
-  padding: 40px 20px 60px;
+  padding: 32px 20px 45px;
   box-sizing: border-box;
   background-color: #f4f8ef;
 }
 
 .reserva-container {
   width: 100%;
-  max-width: 1100px;
+  max-width: 1250px;
   margin: 0 auto;
 }
 
+
+/* =========================================
+   ENCABEZADO
+========================================= */
+
 .reserva-header {
-  margin-bottom: 28px;
+  margin-bottom: 22px;
 }
 
 .reserva-header h1 {
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   color: #173b5f;
   font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .reserva-header p {
   margin: 0;
   color: #64748b;
   font-size: 16px;
+  line-height: 1.6;
 }
 
-.reserva-producto,
-.reserva-fechas {
+
+/* =========================================
+   BLOQUE GENERAL DEL PRODUCTO
+========================================= */
+
+.reserva-producto {
+  margin-bottom: 18px;
+  padding: 24px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.reserva-producto__contenido {
+  width: 100%;
+}
+
+.reserva-producto h2 {
+  margin: 0 0 16px;
+  color: #173b5f;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+
+/* =========================================
+   IMAGEN DEL PRODUCTO
+========================================= */
+
+.reserva-producto__imagen {
+  display: block;
+  width: 100%;
+  max-width: 620px;
+  height: 280px;
+  margin: 0 0 20px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+
+/* =========================================
+   INFORMACIÓN DEL PRODUCTO
+========================================= */
+
+.reserva-producto__informacion {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reserva-producto__bloque {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.reserva-producto__bloque:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.reserva-producto__bloque h3 {
+  margin: 0 0 8px;
+  color: #173b5f;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.reserva-producto__bloque p {
+  margin: 0;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   CARACTERÍSTICAS / INFORMACIÓN DESTACADA
+========================================= */
+
+.reserva-producto__caracteristicas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.reserva-producto__caracteristica {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 45px;
+  padding: 12px 14px;
+  background-color: #f4f8ef;
+  border-radius: 10px;
+  color: #173b5f;
+  font-size: 15px;
+}
+
+.reserva-producto__caracteristica span:first-child {
+  font-size: 18px;
+}
+
+
+/* =========================================
+   USUARIO
+========================================= */
+
+.reserva-usuario {
   margin-bottom: 24px;
   padding: 28px;
   background-color: #ffffff;
@@ -38,27 +157,190 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
 }
 
-.reserva-producto h2,
-.reserva-fechas h2 {
-  margin: 0 0 12px;
+.reserva-usuario h2 {
+  margin: 0 0 20px;
   color: #173b5f;
+  font-size: 24px;
+  font-weight: 700;
 }
 
-.reserva-producto p,
-.reserva-fechas p {
+.reserva-usuario__informacion {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.reserva-usuario__dato {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 14px 16px;
+  background-color: #f4f8ef;
+  border: 1px solid #dfe8d8;
+  border-radius: 10px;
+  color: #64748b;
+  font-size: 15px;
+}
+
+.reserva-usuario__dato strong {
+  color: #173b5f;
+  font-weight: 600;
+}
+
+
+/* =========================================
+   INFORMACIÓN DE RESERVA / FECHAS
+========================================= */
+
+.reserva-fechas {
+  margin-bottom: 18px;
+  padding: 24px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+}
+
+.reserva-fechas h2 {
+  margin: 0 0 8px;
+  color: #173b5f;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.reserva-fechas > p {
+  margin: 0 0 20px;
   color: #64748b;
   line-height: 1.6;
 }
 
-.reserva-producto img {
-  display: block;
-  width: 100%;
-  max-width: 600px;
-  height: 300px;
-  margin-top: 20px;
-  object-fit: cover;
+
+/* =========================================
+   DATOS DE LAS FECHAS
+========================================= */
+
+.reserva-fechas__datos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.reserva-fechas__dato {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 15px 16px;
+  background-color: #f4f8ef;
+  border: 1px solid #dfe8d8;
   border-radius: 12px;
 }
+
+.reserva-fechas__dato strong {
+  color: #173b5f;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.reserva-fechas__dato span {
+  color: #64748b;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+
+/* =========================================
+   CONFIRMACIÓN
+========================================= */
+
+.reserva-confirmacion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+/* =========================================
+   BOTÓN CONFIRMAR RESERVA
+========================================= */
+
+.btn-confirmar-reserva {
+  width: 100%;
+  max-width: 380px;
+  padding: 13px 24px;
+  border: none;
+  border-radius: 10px;
+  background-color: #173b5f;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.btn-confirmar-reserva:hover:not(:disabled) {
+  background-color: #0f2d49;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(23, 59, 95, 0.2);
+}
+
+.btn-confirmar-reserva:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-confirmar-reserva:disabled {
+  background-color: #aeb8c2;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+
+/* =========================================
+   MENSAJE DE ÉXITO
+========================================= */
+
+.reserva-confirmacion__exito {
+  width: 100%;
+  max-width: 600px;
+  margin: 0;
+  padding: 14px 18px;
+  box-sizing: border-box;
+  border: 1px solid #b8d8bd;
+  border-radius: 10px;
+  background-color: #edf8ef;
+  color: #286b35;
+  text-align: center;
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   MENSAJE DE ERROR
+========================================= */
+
+.reserva-confirmacion__error {
+  width: 100%;
+  max-width: 600px;
+  margin: 0;
+  padding: 14px 18px;
+  box-sizing: border-box;
+  border: 1px solid #f3c2c2;
+  border-radius: 10px;
+  background-color: #fff7f7;
+  color: #9f2d2d;
+  text-align: center;
+  line-height: 1.5;
+}
+
+
+/* =========================================
+   ERROR AL CARGAR EL PRODUCTO
+========================================= */
 
 .reserva-container--error {
   padding: 30px;
@@ -68,21 +350,124 @@
   color: #9f2d2d;
 }
 
-@media (max-width: 600px) {
-  .reserva-page {
-    padding: 25px 12px 40px;
-  }
+.reserva-container--error p {
+  margin: 0;
+  line-height: 1.6;
+}
 
-  .reserva-producto,
-  .reserva-fechas {
-    padding: 20px;
+
+/* =========================================
+   RESPONSIVE - TABLET
+========================================= */
+
+@media (max-width: 768px) {
+
+  .reserva-page {
+    padding: 30px 16px 50px;
   }
 
   .reserva-header h1 {
-    font-size: 27px;
+    font-size: 29px;
   }
 
-  .reserva-producto img {
-    height: 230px;
+  .reserva-producto,
+  .reserva-usuario,
+  .reserva-fechas {
+    padding: 24px;
+  }
+
+  .reserva-producto__imagen {
+    max-width: 100%;
+    height: 280px;
+  }
+
+  .reserva-producto__caracteristicas {
+    grid-template-columns: 1fr;
+  }
+
+  .reserva-fechas__datos {
+    grid-template-columns: 1fr;
+  }
+
+  .reserva-usuario__informacion {
+  grid-template-columns: 1fr;
+}
+}
+
+
+/* =========================================
+   RESPONSIVE - CELULAR
+========================================= */
+
+@media (max-width: 600px) {
+
+  .reserva-page {
+    padding: 24px 12px 40px;
+  }
+
+  .reserva-header {
+    margin-bottom: 22px;
+  }
+
+  .reserva-header h1 {
+    font-size: 26px;
+  }
+
+  .reserva-header p {
+    font-size: 15px;
+  }
+
+  .reserva-producto,
+  .reserva-usuario,
+  .reserva-fechas {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .reserva-producto h2,
+  .reserva-usuario h2,
+  .reserva-fechas h2 {
+    font-size: 21px;
+  }
+
+  .reserva-producto__imagen {
+    height: 220px;
+    margin-bottom: 22px;
+    border-radius: 10px;
+  }
+
+  .reserva-producto__bloque h3 {
+    font-size: 17px;
+  }
+
+  .reserva-producto__bloque p {
+    font-size: 15px;
+  }
+
+  .reserva-producto__caracteristicas {
+    grid-template-columns: 1fr;
+  }
+
+  .reserva-producto__caracteristica {
+    font-size: 14px;
+  }
+
+  .reserva-usuario__dato {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 15px;
+  }
+
+  .reserva-fechas__dato {
+    padding: 16px;
+  }
+
+  .reserva-fechas__dato span {
+    font-size: 16px;
+  }
+
+  .btn-confirmar-reserva {
+    max-width: 100%;
   }
 }

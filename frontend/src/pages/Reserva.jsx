@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import useProductoAPI from "../hooks/useProductoAPI";
+import { leerLocal } from "../helpers/storageUtils";
 import "../styles/pages/Reserva.css";
-import CalendarioDisponibilidad from "../components/CalendarioDisponibilidad";
 import useReservaAPI from "../hooks/useReservaAPI";
 
 const Reserva = () => {
@@ -13,15 +13,29 @@ const Reserva = () => {
 
     const [producto, setProducto] = useState(null);
 
-    const [fechaInicio, setFechaInicio] = useState(null);
-    const [fechaFin, setFechaFin] = useState(null);
+    const location = useLocation();
+
+    const [fechaInicio, setFechaInicio] = useState(
+        location.state?.fechaInicio || null
+    );
+
+    const [fechaFin, setFechaFin] = useState(
+        location.state?.fechaFin || null
+    );
+
+    const [usuario] = useState(() => leerLocal("usuario"));
     const [reservando, setReservando] = useState(false);
     const [mensajeReserva, setMensajeReserva] = useState("");
     const [errorReserva, setErrorReserva] = useState("");
 
-    const handleFechasSeleccionadas = ({ fechaInicio, fechaFin }) => {
-        setFechaInicio(fechaInicio);
-        setFechaFin(fechaFin);
+    const formatearFecha = (fecha) => {
+        if (!fecha) return "";
+
+        if (fecha instanceof Date) {
+            return fecha.toLocaleDateString("es-AR");
+        }
+
+        return new Date(fecha).toLocaleDateString("es-AR");
     };
 
     const handleConfirmarReserva = async () => {
@@ -110,28 +124,133 @@ const Reserva = () => {
                 </div>
 
                 <section className="reserva-producto">
-                    <h2>{producto.nombre}</h2>
 
-                    <p>{producto.descripcion}</p>
+                    <div className="reserva-producto__contenido">
 
-                    {producto.imagenes?.length > 0 && (
-                        <img
-                            src={producto.imagenes[0]}
-                            alt={`Imagen de ${producto.nombre}`}
-                        />
-                    )}
+                        <h2>Producto</h2>
+
+                        <h3 className="reserva-producto__nombre">
+                            {producto.nombre}
+                        </h3>
+
+                        {producto.imagenes?.length > 0 && (
+                            <div className="reserva-producto__imagenes">
+                                {producto.imagenes.map((imagen, index) => (
+                                    <img
+                                        key={index}
+                                        className="reserva-producto__imagen"
+                                        src={imagen}
+                                        alt={`Imagen ${index + 1} de ${producto.nombre}`}
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        <div className="reserva-producto__informacion">
+
+                            <div className="reserva-producto__bloque">
+                                <h3>Descripción</h3>
+
+                                <p>
+                                    {producto.descripcion}
+                                </p>
+                            </div>
+
+                            <div className="reserva-producto__bloque">
+                                <h3>Ubicación</h3>
+
+                                <p>
+                                    {producto.ubicacion}
+                                </p>
+                            </div>
+
+                            <div className="reserva-producto__bloque">
+                                <h3>Información</h3>
+
+                                {producto.caracteristicas?.length > 0 ? (
+                                    <div className="reserva-producto__caracteristicas">
+
+                                        {producto.caracteristicas.map((caracteristica) => (
+                                            <div
+                                                key={caracteristica.id}
+                                                className="reserva-producto__caracteristica"
+                                            >
+                                                {caracteristica.icono && (
+                                                    <span>
+                                                        {caracteristica.icono}
+                                                    </span>
+                                                )}
+
+                                                <span>
+                                                    {caracteristica.nombre}
+                                                </span>
+                                            </div>
+                                        ))}
+
+                                    </div>
+                                ) : (
+                                    <p>
+                                        No hay información adicional disponible.
+                                    </p>
+                                )}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section className="reserva-usuario">
+
+                    <h2>Usuario</h2>
+
+                    <div className="reserva-usuario__informacion">
+
+                        <div className="reserva-usuario__dato">
+                            <strong>Nombre:</strong>
+                            <span>{usuario?.nombre || "No disponible"}</span>
+                        </div>
+
+                        <div className="reserva-usuario__dato">
+                            <strong>Apellido:</strong>
+                            <span>{usuario?.apellido || "No disponible"}</span>
+                        </div>
+
+                        <div className="reserva-usuario__dato">
+                            <strong>Correo electrónico:</strong>
+                            <span>{usuario?.email || "No disponible"}</span>
+                        </div>
+
+                    </div>
+
                 </section>
 
                 <section className="reserva-fechas">
-                    <h2>Seleccionar fechas</h2>
 
-                    <p>
-                        Seleccioná la fecha de inicio y la fecha de finalización de tu reserva.
-                    </p>
+                    <h2>Información de reserva</h2>
 
-                    <CalendarioDisponibilidad
-                        productoId={producto.id}
-                        onFechasSeleccionadas={handleFechasSeleccionadas} />
+                    <div className="reserva-fechas__datos">
+
+                        <div className="reserva-fechas__dato">
+                            <strong>Fecha de ingreso:</strong>
+
+                            <span>
+                                {formatearFecha(fechaInicio)}
+                            </span>
+                        </div>
+
+                        <div className="reserva-fechas__dato">
+                            <strong>Fecha de salida:</strong>
+
+                            <span>
+                                {formatearFecha(fechaFin)}
+                            </span>
+                        </div>
+
+                    </div>
+
                 </section>
 
                 <div className="reserva-confirmacion">

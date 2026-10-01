@@ -23,7 +23,15 @@ export const crearProducto = (
     id: p.id,
     nombre: typeof p.nombre === 'string' ? p.nombre.trim() : (p.nombre ?? ''),
     descripcion: typeof p.descripcion === 'string' ? p.descripcion.trim() : (p.descripcion ?? ''),
-    categoria: p.categoria ? {id: p.categoria.id, nombre: p.categoria.nombre} : null,
+    ubicacion: typeof p.ubicacion === 'string'
+      ? p.ubicacion.trim()
+      : (p.ubicacion ?? ''),
+    categoria: p.categoria
+      ? {
+        id: p.categoria.id,
+        nombre: p.categoria.nombre
+      }
+      : null,
     imagenes: Array.isArray(p.imagenes) ? p.imagenes : []
   };
 };

@@ -14,6 +14,10 @@ const DetalleProductos = () => {
   const navigate = useNavigate();
   const { fetchProductoById, loading, error } = useProductoAPI();
   const [producto, setProducto] = useState(null);
+  const [fechasSeleccionadas, setFechasSeleccionadas] = useState({
+    fechaInicio: null,
+    fechaFin: null
+  });
 
   useEffect(() => {
     if (!id) return;
@@ -34,20 +38,45 @@ const DetalleProductos = () => {
     }
   }, [navigate, id, producto]);
 
+  const handleFechasSeleccionadas = useCallback(({ fechaInicio, fechaFin }) => {
+    setFechasSeleccionadas({
+      fechaInicio,
+      fechaFin
+    });
+  }, []);
+
   const onReservar = useCallback(() => {
     const usuario = leerLocal("usuario");
+
+    const { fechaInicio, fechaFin } = fechasSeleccionadas;
+
+    // No permite reservar si no se seleccionaron ambas fechas
+    if (!fechaInicio || !fechaFin) {
+      return;
+    }
 
     if (!usuario) {
       navigate("/iniciar-sesion", {
         state: {
-          desdeReserva: true
+          desdeReserva: true,
+          reserva: {
+            productoId: id,
+            fechaInicio,
+            fechaFin
+          }
         }
       });
+
       return;
     }
 
-    navigate(`/reserva/${id}`);
-  }, [navigate, id]);
+    navigate(`/reserva/${id}`, {
+      state: {
+        fechaInicio,
+        fechaFin
+      }
+    });
+  }, [navigate, id, fechasSeleccionadas]);
 
   return (
     <main className="detalle-producto-page">
@@ -78,12 +107,66 @@ const DetalleProductos = () => {
               <InfoProducto
                 producto={producto}
                 onVerMas={onVerMas}
-                onReservar={onReservar}
               />
 
-              <CalendarioDisponibilidad
-                productoId={id}
-              />
+              <div className="detalle-producto__disponibilidad">
+
+                <CalendarioDisponibilidad
+                  productoId={id}
+                  onFechasSeleccionadas={handleFechasSeleccionadas}
+                />
+
+                <section className="detalle-producto__reserva">
+
+                  <h2>Reservar</h2>
+
+                  <p>
+                    Seleccioná las fechas disponibles para realizar tu reserva.
+                  </p>
+
+                  <div className="detalle-producto__fechas">
+
+                    <div className="detalle-producto__fecha">
+                      <span>Fecha de ingreso</span>
+
+                      <strong>
+                        {fechasSeleccionadas.fechaInicio
+                          ? new Date(
+                            fechasSeleccionadas.fechaInicio
+                          ).toLocaleDateString("es-AR")
+                          : "No seleccionada"}
+                      </strong>
+                    </div>
+
+                    <div className="detalle-producto__fecha">
+                      <span>Fecha de salida</span>
+
+                      <strong>
+                        {fechasSeleccionadas.fechaFin
+                          ? new Date(
+                            fechasSeleccionadas.fechaFin
+                          ).toLocaleDateString("es-AR")
+                          : "No seleccionada"}
+                      </strong>
+                    </div>
+
+                  </div>
+
+                  <button
+                    type="button"
+                    className="detalle-producto__btn-reservar"
+                    onClick={onReservar}
+                    disabled={
+                      !fechasSeleccionadas.fechaInicio ||
+                      !fechasSeleccionadas.fechaFin
+                    }
+                  >
+                    Reservar
+                  </button>
+
+                </section>
+
+              </div>
 
             </div>
 

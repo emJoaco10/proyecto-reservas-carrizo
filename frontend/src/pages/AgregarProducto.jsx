@@ -22,6 +22,7 @@ const AgregarProducto = () => {
 
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
+  const [ubicacion, setUbicacion] = useState('');
   const [categoriaId, setCategoriaId] = useState('');
   const [imagenesFiles, setImagenesFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
@@ -29,6 +30,7 @@ const AgregarProducto = () => {
   const [errores, setErrores] = useState({
     nombre: '',
     descripcion: '',
+    ubicacion: '',
     categoria: '',
     imagenes: ''
   });
@@ -98,6 +100,7 @@ const AgregarProducto = () => {
     const nuevosErrores = {
       nombre: '',
       descripcion: '',
+      ubicacion: '',
       categoria: '',
       imagenes: ''
     };
@@ -116,6 +119,17 @@ const AgregarProducto = () => {
 
     if (errDescripcion) {
       nuevosErrores.descripcion = errDescripcion;
+    }
+
+    // --------------------------------
+    // Validar ubicación
+    // --------------------------------
+
+    if (!ubicacion.trim()) {
+      nuevosErrores.ubicacion = 'La ubicación es obligatoria.';
+    } else if (ubicacion.trim().length < 3) {
+      nuevosErrores.ubicacion =
+        'La ubicación debe tener al menos 3 caracteres.';
     }
 
     // --------------------------------
@@ -188,6 +202,7 @@ const AgregarProducto = () => {
       const nuevo = await addProducto({
         nombre,
         descripcion,
+        ubicacion: ubicacion.trim(),
         imagenes: imagenesBase64,
         categoria: {
           id: Number(categoriaId)
@@ -213,11 +228,13 @@ const AgregarProducto = () => {
       setImagenesFiles([]);
       setNombre('');
       setDescripcion('');
+      setUbicacion('');
       setCategoriaId('');
 
       setErrores({
         nombre: '',
         descripcion: '',
+        ubicacion: '',
         categoria: '',
         imagenes: ''
       });
@@ -238,6 +255,7 @@ const AgregarProducto = () => {
       setErrores({
         nombre: '',
         descripcion: '',
+        ubicacion: '',
         categoria: '',
         imagenes: 'Error inesperado al guardar el producto.'
       });
@@ -330,6 +348,7 @@ const AgregarProducto = () => {
       setErrores({
         nombre: '',
         descripcion: '',
+        ubicacion: '',
         categoria: '',
         imagenes: ''
       });
@@ -446,6 +465,42 @@ const AgregarProducto = () => {
           {errores.descripcion && (
             <p className="mensaje-error-campo">
               {errores.descripcion}
+            </p>
+          )}
+
+          {/* UBICACIÓN */}
+
+          <label htmlFor="ubicacion">
+            Ubicación:
+          </label>
+
+          <input
+            id="ubicacion"
+            name="ubicacion"
+            type="text"
+            value={ubicacion}
+            onChange={(e) => {
+              setUbicacion(e.target.value);
+
+              if (errores.ubicacion) {
+                setErrores((prev) => ({
+                  ...prev,
+                  ubicacion: ''
+                }));
+              }
+            }}
+            placeholder="Ej: La Rioja, Argentina"
+            required
+            className={
+              errores.ubicacion
+                ? 'input-error'
+                : ''
+            }
+          />
+
+          {errores.ubicacion && (
+            <p className="mensaje-error-campo">
+              {errores.ubicacion}
             </p>
           )}
 

@@ -16,6 +16,7 @@ const IniciarSesionFormulario = () => {
     const location = useLocation();
 
     const desdeReserva = location.state?.desdeReserva;
+    const reservaPendiente = location.state?.reserva;
 
     const [formData, setFormData] = useState({
         email: "",
@@ -76,7 +77,18 @@ const IniciarSesionFormulario = () => {
             // Persistimos el token
             escribirLocal("token", usuario.token);
 
-            // Redirigimos al Home
+            if (desdeReserva && reservaPendiente) {
+                navigate(`/reserva/${reservaPendiente.productoId}`, {
+                    state: {
+                        fechaInicio: reservaPendiente.fechaInicio,
+                        fechaFin: reservaPendiente.fechaFin
+                    }
+                });
+
+                return;
+            }
+
+            // Si no viene desde una reserva, continúa normalmente al Home
             navigate("/");
 
         } catch (err) {
