@@ -39,6 +39,13 @@ public class Producto {
     private String descripcion;
 
     /**
+     * Ubicación física del alojamiento.
+     * Se asigna al crear el producto y no se modifica durante la edición.
+     */
+    @Column(nullable = false)
+    private String ubicacion;
+
+    /**
      * Lista de URLs o base64 de imágenes del producto.
      * Almacenada como tabla separada en BD (ElementCollection).
      * Puede ser vacía si no hay imágenes disponibles.
@@ -92,6 +99,9 @@ public class Producto {
 
     public String getDescripcion() {return descripcion;}
     public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
+
+    public String getUbicacion() {return ubicacion;}
+    public void setUbicacion(String ubicacion) {this.ubicacion = ubicacion;}
 
     public List<String> getImagenes() {return imagenes;}
     public void setImagenes(List<String> imagenes) {this.imagenes = imagenes;}

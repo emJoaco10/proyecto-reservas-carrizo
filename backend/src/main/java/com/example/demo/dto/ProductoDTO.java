@@ -36,6 +36,12 @@ public class ProductoDTO {
     private String descripcion;
 
     /**
+     * Ubicación del alojamiento.
+     * Se asigna al crear el producto y no se modifica al actualizarlo.
+     */
+    private String ubicacion;
+
+    /**
      * Lista de URLs o base64 de imágenes.
      */
     @NotEmpty(message = "El producto debe tener al menos una imagen")
@@ -62,6 +68,7 @@ public class ProductoDTO {
             Long id,
             String nombre,
             String descripcion,
+            String ubicacion,
             List<String> imagenes,
             CategoriaDTO categoriaDTO,
             List<CaracteristicaDTO> caracteristicas,
@@ -71,6 +78,7 @@ public class ProductoDTO {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.ubicacion = ubicacion;
         this.imagenes = imagenes;
         this.categoriaDTO = categoriaDTO;
         this.caracteristicas = caracteristicas;
@@ -88,6 +96,9 @@ public class ProductoDTO {
 
     public String getDescripcion() {return descripcion;}
     public void setDescripcion(String descripcion) {this.descripcion = descripcion;}
+
+    public String getUbicacion() {return ubicacion;}
+    public void setUbicacion(String ubicacion) {this.ubicacion = ubicacion;}
 
     public List<String> getImagenes() {return imagenes;}
     public void setImagenes(List<String> imagenes) {this.imagenes = imagenes;}

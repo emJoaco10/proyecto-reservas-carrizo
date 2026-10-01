@@ -66,6 +66,7 @@ public class ProductoController {
 
             producto.setNombre(productoDTO.getNombre());
             producto.setDescripcion(productoDTO.getDescripcion());
+            producto.setUbicacion(productoDTO.getUbicacion());
             producto.setImagenes(productoDTO.getImagenes());
 
             // 2. Asociar categoría seleccionada
@@ -99,6 +100,7 @@ public class ProductoController {
                     .orElseGet(() ->
                             ResponseEntity.status(500)
                                     .body(new ProductoDTO(
+                                            null,
                                             null,
                                             null,
                                             null,

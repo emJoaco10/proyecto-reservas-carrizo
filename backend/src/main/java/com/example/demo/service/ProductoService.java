@@ -261,6 +261,7 @@ public class ProductoService {
                 producto.getId(),
                 producto.getNombre(),
                 producto.getDescripcion(),
+                producto.getUbicacion(),
                 producto.getImagenes(),
                 categoriaDTO,
                 caracteristicasDTO,
