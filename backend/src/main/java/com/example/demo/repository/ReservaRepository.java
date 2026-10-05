@@ -10,9 +10,13 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     List<Reserva> findByProductoId(Long productoId);
 
+    List<Reserva> findByUsuarioEmailOrderByFechaInicioDesc(String email);
+
     boolean existsByUsuarioEmailAndProductoIdAndFechaFinBefore(
             String email,
             Long productoId,
             LocalDate fecha
     );
+
+
 }

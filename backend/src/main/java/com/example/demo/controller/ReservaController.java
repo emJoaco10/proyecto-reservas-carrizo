@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.DisponibilidadDTO;
 import com.example.demo.dto.ProductoDTO;
 import com.example.demo.dto.ReservaDTO;
+import com.example.demo.dto.ReservaHistorialDTO;
 import com.example.demo.service.ReservaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,18 @@ public class ReservaController {
                 reservaService.crearReserva(reservaDTO, email);
 
         return ResponseEntity.ok(reservaCreada);
+    }
+
+    @GetMapping("/mis-reservas")
+    public ResponseEntity<List<ReservaHistorialDTO>> obtenerMisReservas(
+            Authentication authentication
+    ) {
+        String email = authentication.getName();
+
+        List<ReservaHistorialDTO> reservas =
+                reservaService.obtenerReservasDelUsuario(email);
+
+        return ResponseEntity.ok(reservas);
     }
 
     @GetMapping("/puede-valorar/{productoId}")

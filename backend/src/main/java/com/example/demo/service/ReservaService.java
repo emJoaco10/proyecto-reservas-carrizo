@@ -10,6 +10,7 @@ import com.example.demo.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 import com.example.demo.dto.ProductoDTO;
 import com.example.demo.model.Producto;
+import com.example.demo.dto.ReservaHistorialDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -127,6 +128,39 @@ public class ReservaService {
                 guardada.getEdadesHuespedes(),
                 guardada.getObservaciones()
         );
+    }
+
+    public List<ReservaHistorialDTO> obtenerReservasDelUsuario(String email) {
+
+        LocalDate hoy = LocalDate.now();
+
+        List<Reserva> reservas =
+                reservaRepository.findByUsuarioEmailOrderByFechaInicioDesc(email);
+
+        return reservas.stream()
+                .map(reserva -> {
+
+                    String estado;
+
+                    if (reserva.getFechaFin().isBefore(hoy)) {
+                        estado = "FINALIZADA";
+                    } else if (reserva.getFechaInicio().isAfter(hoy)) {
+                        estado = "PRÓXIMA";
+                    } else {
+                        estado = "EN CURSO";
+                    }
+
+                    return new ReservaHistorialDTO(
+                            reserva.getId(),
+                            reserva.getProducto().getId(),
+                            reserva.getProducto().getNombre(),
+                            reserva.getFechaInicio(),
+                            reserva.getFechaFin(),
+                            reserva.getCantidadHuespedes(),
+                            estado
+                    );
+                })
+                .toList();
     }
 
     /**
