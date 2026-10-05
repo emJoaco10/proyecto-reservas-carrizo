@@ -50,6 +50,34 @@ public class Reserva {
     private LocalDate fechaFin;
 
     /**
+     * Cantidad de huéspedes de la reserva.
+     * Dato obligatorio.
+     */
+    @Column(nullable = false)
+    private Integer cantidadHuespedes;
+
+    /**
+     * DNI del huésped que realiza la reserva.
+     * Dato obligatorio.
+     */
+    @Column(nullable = false)
+    private String dni;
+
+    /**
+     * Edades de los huéspedes.
+     * Dato obligatorio.
+     */
+    @Column(nullable = false)
+    private String edadesHuespedes;
+
+    /**
+     * Observaciones adicionales realizadas por el usuario.
+     * Dato obligatorio.
+     */
+    @Column(nullable = false, length = 500)
+    private String observaciones;
+
+    /**
      * Constructor vacío requerido por JPA.
      */
     public Reserva() {}
@@ -90,4 +118,16 @@ public class Reserva {
 
     public LocalDate getFechaFin() {return fechaFin;}
     public void setFechaFin(LocalDate fechaFin) {this.fechaFin = fechaFin;}
+
+    public Integer getCantidadHuespedes() {return cantidadHuespedes;}
+    public void setCantidadHuespedes(Integer cantidadHuespedes) {this.cantidadHuespedes = cantidadHuespedes;}
+
+    public String getDni() {return dni;}
+    public void setDni(String dni) {this.dni = dni;}
+
+    public String getEdadesHuespedes() {return edadesHuespedes;}
+    public void setEdadesHuespedes(String edadesHuespedes) {this.edadesHuespedes = edadesHuespedes;}
+
+    public String getObservaciones() {return observaciones;}
+    public void setObservaciones(String observaciones) {this.observaciones = observaciones;}
 }

@@ -41,6 +41,47 @@ public class ReservaService {
                     "La fecha de fin no puede ser anterior a la fecha de inicio");
         }
 
+        if (dto.getCantidadHuespedes() == null || dto.getCantidadHuespedes() <= 0) {
+            throw new IllegalArgumentException(
+                    "La cantidad de huéspedes es obligatoria y debe ser mayor a 0");
+        }
+
+        if (dto.getDni() == null || dto.getDni().trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "El DNI es obligatorio");
+        }
+
+        if (dto.getEdadesHuespedes() == null || dto.getEdadesHuespedes().trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "La edad de los huéspedes es obligatoria");
+        }
+
+        String[] edades = dto.getEdadesHuespedes()
+                .split(",");
+
+        int cantidadEdades = 0;
+
+        for (String edad : edades) {
+            if (!edad.trim().isEmpty()) {
+                cantidadEdades++;
+            }
+        }
+
+        if (cantidadEdades != dto.getCantidadHuespedes()) {
+            throw new IllegalArgumentException(
+                    "La cantidad de edades debe coincidir con la cantidad de huéspedes");
+        }
+
+        if (dto.getObservaciones() == null || dto.getObservaciones().trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Las observaciones son obligatorias");
+        }
+
+        if (dto.getFechaFin().isBefore(dto.getFechaInicio())) {
+            throw new IllegalArgumentException(
+                    "La fecha de fin no puede ser anterior a la fecha de inicio");
+        }
+
         Producto producto = productoRepository.findById(dto.getProductoId())
                 .orElseThrow(() ->
                         new IllegalArgumentException("El producto no existe"));
@@ -69,6 +110,10 @@ public class ReservaService {
         reserva.setProducto(producto);
         reserva.setFechaInicio(dto.getFechaInicio());
         reserva.setFechaFin(dto.getFechaFin());
+        reserva.setCantidadHuespedes(dto.getCantidadHuespedes());
+        reserva.setDni(dto.getDni());
+        reserva.setEdadesHuespedes(dto.getEdadesHuespedes());
+        reserva.setObservaciones(dto.getObservaciones());
 
         Reserva guardada = reservaRepository.save(reserva);
 
@@ -76,7 +121,11 @@ public class ReservaService {
                 guardada.getId(),
                 guardada.getProducto().getId(),
                 guardada.getFechaInicio(),
-                guardada.getFechaFin()
+                guardada.getFechaFin(),
+                guardada.getCantidadHuespedes(),
+                guardada.getDni(),
+                guardada.getEdadesHuespedes(),
+                guardada.getObservaciones()
         );
     }
 
