@@ -1,0 +1,78 @@
+.informacion-pago {
+    margin-top: 24px;
+    padding: 28px;
+    background-color: #ffffff;
+    border: 1px solid #dfe6d8;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.informacion-pago h2 {
+    margin: 0 0 24px;
+    font-size: 1.35rem;
+    color: #263326;
+}
+
+.informacion-pago__contenido {
+    display: flex;
+    width: 100%;
+}
+
+.informacion-pago__mensaje {
+    width: 100%;
+    padding: 22px;
+    background-color: #f4f8ef;
+    border: 1px solid #dfe6d8;
+    border-radius: 12px;
+}
+
+.informacion-pago__mensaje h3 {
+    margin: 0 0 10px;
+    font-size: 1.05rem;
+    color: #354235;
+}
+
+.informacion-pago__mensaje p {
+    margin: 0 0 8px;
+    font-size: 0.95rem;
+    color: #263326;
+}
+
+.informacion-pago__mensaje span {
+    display: block;
+    font-size: 0.85rem;
+    color: #70786d;
+    line-height: 1.5;
+}
+
+/* Tablet */
+
+@media (max-width: 768px) {
+
+    .informacion-pago {
+        padding: 22px;
+    }
+
+    .informacion-pago__mensaje {
+        padding: 18px;
+    }
+}
+
+/* Celular */
+
+@media (max-width: 480px) {
+
+    .informacion-pago {
+        padding: 18px;
+        border-radius: 12px;
+    }
+
+    .informacion-pago h2 {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+
+    .informacion-pago__mensaje {
+        padding: 16px;
+    }
+}

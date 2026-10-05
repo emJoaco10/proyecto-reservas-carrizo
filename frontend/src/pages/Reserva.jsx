@@ -4,6 +4,9 @@ import useProductoAPI from "../hooks/useProductoAPI";
 import { leerLocal } from "../helpers/storageUtils";
 import "../styles/pages/Reserva.css";
 import useReservaAPI from "../hooks/useReservaAPI";
+import InfoReserva from "../components/InfoReserva";
+import InformacionPago from "../components/InformacionPago";
+import ConfirmacionReserva from "../components/ConfirmacionReserva";
 
 const Reserva = () => {
     const { id } = useParams();
@@ -22,6 +25,15 @@ const Reserva = () => {
     const [fechaFin, setFechaFin] = useState(
         location.state?.fechaFin || null
     );
+
+    const [datosReserva, setDatosReserva] = useState({
+        cantidadHuespedes: "",
+        dni: "",
+        edadesHuespedes: "",
+        observaciones: ""
+    });
+
+    const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false);
 
     const [usuario] = useState(() => leerLocal("usuario"));
     const [reservando, setReservando] = useState(false);
@@ -44,6 +56,43 @@ const Reserva = () => {
             return;
         }
 
+        if (
+            !datosReserva.cantidadHuespedes ||
+            Number(datosReserva.cantidadHuespedes) <= 0
+        ) {
+            setErrorReserva(
+                "La cantidad de huéspedes es obligatoria y debe ser mayor a 0."
+            );
+            return;
+        }
+
+        if (!datosReserva.dni.trim()) {
+            setErrorReserva("El DNI es obligatorio.");
+            return;
+        }
+
+        if (!datosReserva.edadesHuespedes.trim()) {
+            setErrorReserva("La edad de los huéspedes es obligatoria.");
+            return;
+        }
+
+        const edades = datosReserva.edadesHuespedes
+            .split(",")
+            .map((edad) => edad.trim())
+            .filter((edad) => edad !== "");
+
+        if (edades.length !== Number(datosReserva.cantidadHuespedes)) {
+            setErrorReserva(
+                `Debés ingresar la edad de los ${datosReserva.cantidadHuespedes} huéspedes.`
+            );
+            return;
+        }
+
+        if (!datosReserva.observaciones.trim()) {
+            setErrorReserva("Las observaciones son obligatorias.");
+            return;
+        }
+
         setReservando(true);
         setMensajeReserva("");
         setErrorReserva("");
@@ -52,11 +101,16 @@ const Reserva = () => {
             const reserva = await registrarReserva({
                 productoId: producto.id,
                 fechaInicio: fechaInicio.toISOString().split("T")[0],
-                fechaFin: fechaFin.toISOString().split("T")[0]
+                fechaFin: fechaFin.toISOString().split("T")[0],
+                cantidadHuespedes: Number(datosReserva.cantidadHuespedes),
+                dni: datosReserva.dni,
+                edadesHuespedes: datosReserva.edadesHuespedes,
+                observaciones: datosReserva.observaciones
             });
 
             if (reserva) {
-                setMensajeReserva("Reserva realizada correctamente.");
+                setMensajeReserva("");
+                setMostrarConfirmacion(true);
             }
         } catch (error) {
             console.error("Error al realizar la reserva:", error);
@@ -253,6 +307,13 @@ const Reserva = () => {
 
                 </section>
 
+                <InfoReserva
+                    datosReserva={datosReserva}
+                    onChange={setDatosReserva}
+                />
+
+                <InformacionPago />
+
                 <div className="reserva-confirmacion">
 
                     {mensajeReserva && (
@@ -277,6 +338,12 @@ const Reserva = () => {
                     </button>
 
                 </div>
+
+                {mostrarConfirmacion && (
+                    <ConfirmacionReserva
+                        onCerrar={() => setMostrarConfirmacion(false)}
+                    />
+                )}
             </div>
         </main>
     );

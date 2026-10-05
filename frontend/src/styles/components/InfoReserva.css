@@ -1,0 +1,120 @@
+.info-reserva {
+    margin-top: 24px;
+    padding: 28px;
+    background-color: #ffffff;
+    border: 1px solid #dfe6d8;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.info-reserva h2 {
+    margin: 0 0 24px;
+    font-size: 1.35rem;
+    color: #263326;
+}
+
+.info-reserva__formulario {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.info-reserva__campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.info-reserva__campo--completo {
+    grid-column: 1 / -1;
+}
+
+.info-reserva__campo label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #354235;
+}
+
+.info-reserva__campo input,
+.info-reserva__campo textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #cfd8ca;
+    border-radius: 10px;
+    background-color: #ffffff;
+    color: #263326;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.info-reserva__campo input {
+    height: 46px;
+}
+
+.info-reserva__campo textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+.info-reserva__campo input:focus,
+.info-reserva__campo textarea:focus {
+    border-color: #5f7f52;
+    box-shadow: 0 0 0 3px rgba(95, 127, 82, 0.12);
+}
+
+.info-reserva__campo input::placeholder,
+.info-reserva__campo textarea::placeholder {
+    color: #929a90;
+}
+
+.info-reserva__campo small {
+    font-size: 0.82rem;
+    color: #70786d;
+    line-height: 1.4;
+}
+
+/* Tablet */
+
+@media (max-width: 768px) {
+
+    .info-reserva {
+        padding: 22px;
+    }
+
+    .info-reserva__formulario {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .info-reserva__campo--completo {
+        grid-column: auto;
+    }
+}
+
+/* Celular */
+
+@media (max-width: 480px) {
+
+    .info-reserva {
+        padding: 18px;
+        border-radius: 12px;
+    }
+
+    .info-reserva h2 {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+
+    .info-reserva__campo input {
+        height: 44px;
+    }
+
+    .info-reserva__campo textarea {
+        min-height: 100px;
+    }
+}

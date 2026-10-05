@@ -1,0 +1,129 @@
+.confirmacion-reserva-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.45);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+    box-sizing: border-box;
+
+    z-index: 9999;
+}
+
+.confirmacion-reserva {
+    width: 100%;
+    max-width: 460px;
+
+    padding: 36px 32px;
+
+    background-color: #ffffff;
+    border-radius: 18px;
+
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+
+    text-align: center;
+
+    animation: aparecerConfirmacion 0.25s ease;
+}
+
+.confirmacion-reserva__icono {
+    width: 64px;
+    height: 64px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background-color: #e8f2e2;
+
+    color: #5f7f52;
+
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.confirmacion-reserva h2 {
+    margin: 0 0 12px;
+
+    color: #263326;
+
+    font-size: 1.45rem;
+}
+
+.confirmacion-reserva p {
+    margin: 0 0 28px;
+
+    color: #667064;
+
+    font-size: 0.98rem;
+    line-height: 1.5;
+}
+
+.confirmacion-reserva__boton {
+    width: 100%;
+
+    padding: 13px 20px;
+
+    border: none;
+    border-radius: 10px;
+
+    background-color: #5f7f52;
+    color: #ffffff;
+
+    font-size: 0.95rem;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.confirmacion-reserva__boton:hover {
+    background-color: #4f6d44;
+    transform: translateY(-1px);
+}
+
+.confirmacion-reserva__boton:active {
+    transform: translateY(0);
+}
+
+@keyframes aparecerConfirmacion {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 480px) {
+
+    .confirmacion-reserva {
+        padding: 30px 22px;
+    }
+
+    .confirmacion-reserva h2 {
+        font-size: 1.25rem;
+    }
+
+    .confirmacion-reserva__icono {
+        width: 56px;
+        height: 56px;
+        font-size: 1.7rem;
+    }
+}
