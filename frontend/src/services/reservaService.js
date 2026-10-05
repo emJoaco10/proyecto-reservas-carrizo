@@ -59,3 +59,9 @@ export const createReserva = async (reserva) => {
 
   return response.data;
 };
+
+export const obtenerMisReservas = async () => {
+    const response = await apiService.get("/reserva/mis-reservas");
+
+    return response.data;
+};

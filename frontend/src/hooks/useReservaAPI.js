@@ -3,7 +3,8 @@ import { useCallback } from 'react';
 import {
   getDisponibilidad,
   getProductosDisponibles,
-  createReserva
+  createReserva,
+  obtenerMisReservas
 } from '../services/reservaService';
 
 /**
@@ -49,10 +50,20 @@ const useReservaAPI = () => {
     return await createReserva(reserva);
   }, []);
 
+  /**
+ * Obtiene las reservas del usuario autenticado.
+ *
+ * @returns {Promise<Array>} reservas del usuario.
+ */
+  const fetchMisReservas = useCallback(async () => {
+    return await obtenerMisReservas();
+  }, []);
+
   return {
     fetchDisponibilidad,
     fetchProductosDisponibles,
-    registrarReserva
+    registrarReserva,
+    fetchMisReservas
   };
 };
 

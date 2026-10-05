@@ -177,6 +177,17 @@ const Header = () => {
 
                   <button
                     type="button"
+                    className="menu-item"
+                    onClick={() => {
+                      setMostrarMenu(false);
+                      navigate("/mis-reservas");
+                    }}
+                  >
+                    Mis reservas
+                  </button>
+
+                  <button
+                    type="button"
                     className="menu-item cerrar-sesion"
                     onClick={handleCerrarSesion}
                   >

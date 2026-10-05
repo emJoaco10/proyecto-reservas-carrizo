@@ -26,6 +26,7 @@ import AdminRoute from "./components/AdminRoute";
 import MisFavoritos from './pages/MisFavoritos';
 import EditarCategorias from './pages/EditarCategorias';
 import Reserva from './pages/Reserva';
+import ListaReservas from './pages/ListaReservas';
 
 /**
  * Componente principal de la aplicación React.
@@ -99,6 +100,11 @@ const App = () => {
           <Route
             path="/mis-favoritos"
             element={<MisFavoritos />}
+          />
+
+          <Route
+            path="/mis-reservas"
+            element={<ListaReservas />}
           />
 
           {/* =========================
