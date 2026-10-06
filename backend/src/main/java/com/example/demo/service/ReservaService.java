@@ -22,12 +22,14 @@ public class ReservaService {
     private final ProductoRepository productoRepository;
     private final UsuarioRepository  usuarioRepository;
     private final ProductoService productoService;
+    private final EmailService emailService;
 
-    public ReservaService(ReservaRepository reservaRepository, ProductoRepository productoRepository, ProductoService productoService, UsuarioRepository usuarioRepository) {
+    public ReservaService(ReservaRepository reservaRepository, ProductoRepository productoRepository, ProductoService productoService, UsuarioRepository usuarioRepository, EmailService emailService) {
         this.reservaRepository = reservaRepository;
         this.productoRepository = productoRepository;
         this.productoService = productoService;
         this.usuarioRepository = usuarioRepository;
+        this.emailService = emailService;
     }
 
     public ReservaDTO crearReserva(ReservaDTO dto, String email) {
@@ -117,6 +119,8 @@ public class ReservaService {
         reserva.setObservaciones(dto.getObservaciones());
 
         Reserva guardada = reservaRepository.save(reserva);
+
+        emailService.enviarConfirmacionReserva(guardada);
 
         return new ReservaDTO(
                 guardada.getId(),
