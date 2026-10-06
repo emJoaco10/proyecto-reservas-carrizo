@@ -339,6 +339,200 @@
   transform: none;
 }
 
+.contenedor-whatsapp {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+
+  z-index: 1000;
+}
+
+.whatsapp-flotante {
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background-color: #25D366;
+  color: white;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.whatsapp-flotante:hover {
+  transform: scale(1.08);
+
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.whatsapp-flotante:active {
+  transform: scale(0.95);
+}
+
+/* Aviso que aparece al pasar el mouse */
+.aviso-whatsapp {
+  position: absolute;
+
+  right: 0;
+  bottom: 70px;
+
+  width: 260px;
+
+  padding: 12px 15px;
+
+  background-color: #ffffff;
+  color: #555;
+
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+
+  font-size: 12px;
+  line-height: 1.45;
+
+  text-align: center;
+
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform: translateY(8px);
+
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease,
+    transform 0.2s ease;
+
+  pointer-events: none;
+}
+
+/* Mostrar aviso al pasar por el botón */
+.contenedor-whatsapp:hover .aviso-whatsapp {
+  opacity: 1;
+  visibility: visible;
+
+  transform: translateY(0);
+}
+
+.modal-whatsapp-overlay {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: rgba(0, 0, 0, 0.35);
+
+  z-index: 2000;
+
+  padding: 20px;
+}
+
+.modal-whatsapp {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 30px;
+
+  background-color: #ffffff;
+
+  border-radius: 16px;
+
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+
+  text-align: center;
+
+  animation: aparecerModalWhatsApp 0.2s ease;
+}
+
+.modal-whatsapp-icon {
+  width: 55px;
+  height: 55px;
+
+  margin: 0 auto 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.modal-whatsapp.exito .modal-whatsapp-icon {
+  background-color: #e8f8ee;
+  color: #25D366;
+}
+
+.modal-whatsapp.error .modal-whatsapp-icon {
+  background-color: #fff0f0;
+  color: #d93025;
+}
+
+.modal-whatsapp h3 {
+  margin: 0 0 10px;
+
+  font-size: 22px;
+  color: #173f67;
+}
+
+.modal-whatsapp p {
+  margin: 0 0 25px;
+
+  font-size: 15px;
+  line-height: 1.5;
+
+  color: #666;
+}
+
+.modal-whatsapp-boton {
+  min-width: 120px;
+
+  padding: 11px 24px;
+
+  border: none;
+  border-radius: 8px;
+
+  background-color: #20c76a;
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.modal-whatsapp-boton:hover {
+  background-color: #1eaf5e;
+  transform: translateY(-1px);
+}
+
+@keyframes aparecerModalWhatsApp {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* =========================================================
    RESPONSIVE — TABLET
    ========================================================= */
@@ -406,12 +600,96 @@
   .detalle-producto__seccion-header h2 {
     font-size: 23px;
   }
-  
+
   .detalle-producto__fechas {
     grid-template-columns: 1fr;
   }
 
   .detalle-producto__reserva {
     padding: 20px;
+  }
+}
+
+.whatsapp-flotante {
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+
+  width: 58px;
+  height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background-color: #25D366;
+  color: white;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+
+  z-index: 1000;
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.whatsapp-flotante:hover {
+  transform: scale(1.08);
+
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.whatsapp-flotante:active {
+  transform: scale(0.95);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contenedor-whatsapp {
+    right: 20px;
+    bottom: 20px;
+  }
+
+  .whatsapp-flotante {
+    width: 54px;
+    height: 54px;
+  }
+
+  .aviso-whatsapp {
+    width: 230px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contenedor-whatsapp {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .whatsapp-flotante {
+    width: 52px;
+    height: 52px;
+  }
+
+  .aviso-whatsapp {
+    width: 210px;
+    font-size: 11px;
+  }
+
+  .modal-whatsapp {
+    max-width: 330px;
+    padding: 25px 20px;
+  }
+
+  .modal-whatsapp h3 {
+    font-size: 20px;
+  }
+
+  .modal-whatsapp p {
+    font-size: 14px;
   }
 }

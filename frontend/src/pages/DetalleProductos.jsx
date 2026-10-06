@@ -8,16 +8,56 @@ import '../styles/pages/DetalleProductos.css';
 import PoliticasProducto from '../components/PoliticasProducto';
 import ValoracionesProducto from '../components/ValoracionesProducto';
 import { leerLocal } from '../helpers/storageUtils';
+import { MessageCircle } from 'lucide-react';
 
 const DetalleProductos = () => {
+
   const { id } = useParams();
   const navigate = useNavigate();
   const { fetchProductoById, loading, error } = useProductoAPI();
   const [producto, setProducto] = useState(null);
+  const [mensajeWhatsApp, setMensajeWhatsApp] = useState(null);
   const [fechasSeleccionadas, setFechasSeleccionadas] = useState({
     fechaInicio: null,
     fechaFin: null
   });
+
+  const handleWhatsApp = useCallback(() => {
+    const numeroWhatsApp = '543804778013';
+
+    try {
+      if (!numeroWhatsApp || !/^\d+$/.test(numeroWhatsApp)) {
+        setMensajeWhatsApp({
+          tipo: 'error',
+          texto: 'No se pudo iniciar el contacto por WhatsApp.'
+        });
+
+        return;
+      }
+
+      const mensaje = encodeURIComponent(
+        'Hola, tengo una consulta sobre este alojamiento.'
+      );
+
+      const urlWhatsApp =
+        `https://wa.me/${numeroWhatsApp}?text=${mensaje}`;
+
+      window.open(urlWhatsApp, '_blank');
+
+      setMensajeWhatsApp({
+        tipo: 'exito',
+        texto: 'WhatsApp se abrió correctamente. Podés enviar tu consulta desde allí.'
+      });
+
+    } catch (error) {
+      console.error('Error al abrir WhatsApp:', error);
+
+      setMensajeWhatsApp({
+        tipo: 'error',
+        texto: 'Ocurrió un error al intentar abrir WhatsApp. Intentá nuevamente.'
+      });
+    }
+  }, []);
 
   useEffect(() => {
     if (!id) return;
@@ -192,6 +232,58 @@ const DetalleProductos = () => {
               productoId={id}
               producto={producto}
             />
+
+            <div className="contenedor-whatsapp">
+
+              <div className="aviso-whatsapp">
+                Al continuar, serás redirigido a WhatsApp para comunicarte con
+                Reservas Carrizo. No compartimos datos personales desde esta aplicación.
+              </div>
+
+              <button
+                type="button"
+                className="whatsapp-flotante"
+                onClick={handleWhatsApp}
+                aria-label="Contactar por WhatsApp"
+                title="Contactar por WhatsApp"
+              >
+                <MessageCircle size={28} strokeWidth={2.5} />
+              </button>
+
+            </div>
+
+            {mensajeWhatsApp && (
+              <div className="modal-whatsapp-overlay">
+                <div
+                  className={`modal-whatsapp ${mensajeWhatsApp.tipo}`}
+                  role="alert"
+                >
+
+                  <div className="modal-whatsapp-icon">
+                    {mensajeWhatsApp.tipo === 'exito' ? '✓' : '⚠'}
+                  </div>
+
+                  <h3>
+                    {mensajeWhatsApp.tipo === 'exito'
+                      ? 'WhatsApp'
+                      : 'No se pudo abrir WhatsApp'}
+                  </h3>
+
+                  <p>
+                    {mensajeWhatsApp.texto}
+                  </p>
+
+                  <button
+                    type="button"
+                    className="modal-whatsapp-boton"
+                    onClick={() => setMensajeWhatsApp(null)}
+                  >
+                    Entendido
+                  </button>
+
+                </div>
+              </div>
+            )}
           </>
         )}
 
