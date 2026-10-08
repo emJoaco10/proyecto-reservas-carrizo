@@ -1,25 +1,31 @@
 /**
- * Utilities para convertir FileList/Array<File> en Object URLs (previews)
- * y para liberar esas Object URLs cuando ya no se necesiten.
+ * Utilidades para crear URLs temporales de archivos, liberarlas y obtener URLs
+ * de imágenes representativas según el tipo de propiedad.
  *
- * - filesToObjectURLs: devuelve un array de string (blob:...) para usar como src en <img>.
- * - revokeObjectURLs: intenta revocar cada URL pasada (silencioso ante errores).
- *
- * Nota: las Object URLs creadas con URL.createObjectURL deben revocarse con URL.revokeObjectURL
- * cuando ya no se usan (por ejemplo al desmontar componentes o al eliminar un producto)
- * para evitar fugas de memoria.
+ * Las URLs creadas con `URL.createObjectURL` deben revocarse cuando dejan de
+ * utilizarse. Estas utilidades no validan que los archivos sean imágenes válidas
+ * ni comprueban la disponibilidad de las URLs remotas.
  */
 
 /**
- * Convierte una lista de File en objectURLs seguros.
- * Opcionalmente valida tamaño y tipos antes de crear las URLs.
+ * Crea URLs temporales mediante `URL.createObjectURL` para los archivos que
+ * superan las restricciones configuradas.
  *
- * @param {File[]|FileList} fileList
- * @param {Object} [options]
- * @param {number} [options.maxSize] - bytes máximos por archivo
- * @param {string[]} [options.allowedTypes] - tipos MIME permitidos
- * @param {(err:Error)=>void} [onError]
- * @returns {string[]} - array de objectURLs (solo archivos válidos)
+ * Acepta un array de archivos o un objeto iterable compatible con `Array.from`,
+ * como un `FileList`. Omite los archivos que no superan las restricciones o cuyo
+ * procesamiento falla. Maneja errores por archivo y errores del procesamiento
+ * general; ante un error general devuelve un array vacío. Si se proporciona,
+ * `onError` recibe los errores de procesamiento y los generados por las
+ * restricciones. Esta función crea URLs temporales, pero no las revoca.
+ *
+ * @param {File[]|FileList} fileList Lista de archivos que se procesará.
+ * @param {Object} [options={}] Opciones de filtrado.
+ * @param {number} [options.maxSize] Tamaño máximo por archivo, en bytes. Si el
+ *   valor es verdadero, se descartan los archivos que superen este límite.
+ * @param {string[]} [options.allowedTypes] Tipos MIME permitidos. Si se
+ *   proporciona un array no vacío, se descartan los tipos que no estén incluidos.
+ * @param {(err: Error) => void} [onError] Callback opcional que recibe errores.
+ * @returns {string[]} URLs temporales creadas correctamente.
  */
 export const filesToObjectURLs = (fileList, options = {}, onError) => {
   try {
@@ -57,9 +63,13 @@ export const filesToObjectURLs = (fileList, options = {}, onError) => {
 };
 
 /**
- * Revoca un array de objectURLs (libera memoria).
+ * Intenta liberar las URLs recibidas mediante `URL.revokeObjectURL`.
+ * Solo intenta revocar los valores que sean strings y comiencen con `blob:`.
+ * Si el argumento no es un array, termina sin realizar la iteración. Los errores
+ * individuales se registran con `console.warn` y los errores generales con
+ * `console.error`. No devuelve un resultado explícito.
  *
- * @param {string[]} urls
+ * @param {string[]} [urls=[]] Array de URLs que se intentará revocar.
  */
 export const revokeObjectURLs = (urls = []) => {
   try {
@@ -78,19 +88,35 @@ export const revokeObjectURLs = (urls = []) => {
 
 
 /**
- * Heurística simple para detectar si una URL es probablemente una object URL (blob:)
+ * Comprueba si el valor recibido es un string que comienza con `blob:`.
+ * Es una comprobación superficial del prefijo, no una validación completa de URL.
  *
- * @param {string} url
- * @returns {boolean}
+ * @param {*} url Valor que se comprobará.
+ * @returns {boolean} `true` si es un string con el prefijo `blob:`; de lo
+ *   contrario, `false`.
  */
 export const isObjectURL = (url) => {
   return typeof url === 'string' && url.startsWith('blob:');
 };
 
 /**
- * Devuelve un array de URLs representativas según el tipo de propiedad.
- * @param {string} tipo
- * @returns {Array<string>}
+ * Devuelve URLs de imágenes predefinidas para un tipo de propiedad o genera
+ * URLs de Picsum cuando el tipo no está reconocido. Normaliza `tipo`
+ * convirtiéndolo a string, eliminando los espacios iniciales y finales y pasando
+ * el texto a minúsculas. Busca en el mapa de `Casa`, `Departamento` y `Hotel`
+ * sin distinguir mayúsculas y minúsculas. Para tipos reconocidos, repite las
+ * URLs disponibles de forma cíclica si `count` supera su cantidad; para los
+ * demás, genera una URL de Picsum por cada índice utilizado. No descarga las
+ * imágenes ni comprueba la disponibilidad de las URLs.
+ *
+ * @param {string} [tipo=''] Tipo de propiedad que se buscará en el mapa.
+ * @param {number} [count=5] Cantidad de URLs que se incorporarán al resultado.
+ * @param {number} [width=1200] Ancho usado en las URLs generadas de Picsum.
+ * @param {number} [height=800] Alto usado en las URLs generadas de Picsum.
+ * @param {*} [seedBase=Date.now()] Valor predeterminado al resultado de
+ *   `Date.now()` en el momento de la llamada, usado para construir URLs de
+ *   Picsum; no modifica las URLs predefinidas.
+ * @returns {string[]} Array de URLs seleccionadas o generadas.
  */
 export const obtenerImagenesPorTipo = (tipo = '', count = 5, width = 1200, height = 800, seedBase = Date.now()) => {
 

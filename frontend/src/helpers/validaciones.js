@@ -2,16 +2,20 @@
 
 /**
  * ============================================================
- * VALIDACIONES GENERALES
+ * VALIDACIONES DEL FRONTEND
  * ============================================================
  *
- * Las funciones de este archivo son puras:
+ * Este módulo centraliza funciones reutilizables para validar productos,
+ * usuarios, credenciales de inicio de sesión, categorías, características
+ * e imágenes.
  *
- * - Reciben un valor.
- * - Devuelven un mensaje de error si existe un problema.
- * - Devuelven "" cuando la validación es correcta.
+ * Las validaciones devuelven una cadena vacía cuando los datos son válidos
+ * o un mensaje de error cuando detectan un problema. Implementan las reglas
+ * definidas en este código y no reemplazan las validaciones que correspondan
+ * al backend.
  *
- * Esto permite reutilizarlas desde distintos formularios.
+ * Algunas validaciones agrupadas ejecutan validaciones individuales en orden
+ * y devuelven el primer mensaje de error encontrado.
  */
 
 
@@ -22,12 +26,14 @@
  */
 
 /**
- * Valida los campos mínimos de un producto.
+ * Valida secuencialmente el nombre y la descripción de un producto. Devuelve
+ * el primer mensaje de error encontrado o una cadena vacía si ambos campos
+ * son válidos.
  *
- * @param {Object} params
- * @param {string} params.nombre
- * @param {string} params.descripcion
- * @returns {string}
+ * @param {Object} [params={}] Datos del producto.
+ * @param {string} [params.nombre=""] Nombre que se valida con {@link validarNombre}.
+ * @param {string} [params.descripcion=""] Descripción que se valida con {@link validarDescripcion}.
+ * @returns {string} Primer mensaje de error o `""` si las validaciones son correctas.
  */
 export const validarProducto = ({
   nombre = "",
@@ -51,11 +57,13 @@ export const validarProducto = ({
 
 
 /**
- * Valida el nombre de un producto.
+ * Valida el nombre de un producto después de convertirlo a texto y quitar
+ * los espacios de los extremos.
  *
- * Reglas actuales del proyecto:
- * - Obligatorio.
- * - Mínimo 3 caracteres.
+ * Reglas: es obligatorio y debe tener al menos 3 caracteres.
+ *
+ * @param {*} [nombre=""] Nombre que se valida.
+ * @returns {string} Mensaje de error o `""` si es válido.
  */
 export const validarNombre = (nombre = "") => {
 
@@ -74,11 +82,13 @@ export const validarNombre = (nombre = "") => {
 
 
 /**
- * Valida la descripción de un producto.
+ * Valida la descripción de un producto después de convertirla a texto y quitar
+ * los espacios de los extremos.
  *
- * Reglas actuales del proyecto:
- * - Obligatoria.
- * - Mínimo 5 caracteres.
+ * Reglas: es obligatoria y debe tener al menos 5 caracteres.
+ *
+ * @param {*} [descripcion=""] Descripción que se valida.
+ * @returns {string} Mensaje de error o `""` si es válida.
  */
 export const validarDescripcion = (descripcion = "") => {
 
@@ -103,11 +113,11 @@ export const validarDescripcion = (descripcion = "") => {
  */
 
 /**
- * Valida un email.
+ * Valida que el email no esté vacío y que coincida con la expresión regular
+ * de formato definida en esta función. No comprueba la existencia de la cuenta.
  *
- * Reglas:
- * - Obligatorio cuando se utiliza en un formulario requerido.
- * - Debe tener un formato válido.
+ * @param {*} [email=""] Dirección de email que se valida.
+ * @returns {string} Mensaje de error o `""` si cumple las reglas.
  */
 export const validarEmail = (email = "") => {
 
@@ -135,11 +145,13 @@ export const validarEmail = (email = "") => {
  */
 
 /**
- * Valida una contraseña.
+ * Valida que la contraseña no esté vacía y tenga la longitud mínima requerida.
  *
- * Regla actual del proyecto:
- * - Obligatoria.
- * - Mínimo 8 caracteres.
+ * Regla: debe tener al menos 8 caracteres. No se aplican requisitos de
+ * mayúsculas, números ni caracteres especiales.
+ *
+ * @param {*} [password=""] Contraseña que se valida.
+ * @returns {string} Mensaje de error o `""` si es válida.
  */
 export const validarPassword = (password = "") => {
 
@@ -164,9 +176,16 @@ export const validarPassword = (password = "") => {
  */
 
 /**
- * Valida los datos del registro de usuario.
+ * Valida secuencialmente el nombre, el apellido, el email y la contraseña,
+ * delegando en sus validaciones individuales. Devuelve el primer mensaje de
+ * error encontrado o una cadena vacía si todos los campos son válidos.
  *
- * @returns {string}
+ * @param {Object} [params={}] Datos del usuario.
+ * @param {string} [params.nombre=""] Nombre validado por {@link validarNombreUsuario}.
+ * @param {string} [params.apellido=""] Apellido validado por {@link validarApellido}.
+ * @param {string} [params.email=""] Email validado por {@link validarEmail}.
+ * @param {string} [params.password=""] Contraseña validada por {@link validarPassword}.
+ * @returns {string} Primer mensaje de error o `""` si las validaciones son correctas.
  */
 export const validarUsuario = ({
   nombre = "",
@@ -204,10 +223,11 @@ export const validarUsuario = ({
 
 
 /**
- * Valida el nombre de un usuario.
+ * Valida que el nombre del usuario no esté vacío después de quitar los
+ * espacios de los extremos.
  *
- * Reglas:
- * - Obligatorio.
+ * @param {*} [nombre=""] Nombre que se valida.
+ * @returns {string} Mensaje de error o `""` si es válido.
  */
 export const validarNombreUsuario = (nombre = "") => {
 
@@ -222,10 +242,11 @@ export const validarNombreUsuario = (nombre = "") => {
 
 
 /**
- * Valida el apellido de un usuario.
+ * Valida que el apellido del usuario no esté vacío después de quitar los
+ * espacios de los extremos.
  *
- * Regla:
- * - Obligatorio.
+ * @param {*} [apellido=""] Apellido que se valida.
+ * @returns {string} Mensaje de error o `""` si es válido.
  */
 export const validarApellido = (apellido = "") => {
 
@@ -246,10 +267,17 @@ export const validarApellido = (apellido = "") => {
  */
 
 /**
- * Valida las credenciales mínimas para iniciar sesión.
+ * Valida secuencialmente el email y la contraseña mediante {@link validarEmail}
+ * y {@link validarPassword}. Devuelve el primer mensaje de error encontrado
+ * o una cadena vacía si ambas validaciones son correctas.
  *
- * No valida si las credenciales son correctas.
- * Eso corresponde al backend.
+ * Esta función comprueba el formato y los requisitos locales; no determina si
+ * las credenciales son correctas, lo cual corresponde al backend.
+ *
+ * @param {Object} [params={}] Credenciales ingresadas.
+ * @param {string} [params.email=""] Email que se valida.
+ * @param {string} [params.password=""] Contraseña que se valida.
+ * @returns {string} Primer mensaje de error o `""` si las validaciones son correctas.
  */
 export const validarLogin = ({
   email = "",
@@ -279,12 +307,13 @@ export const validarLogin = ({
  */
 
 /**
- * Valida el nombre de una categoría.
+ * Valida el nombre de una categoría después de convertirlo a texto y quitar
+ * los espacios de los extremos.
  *
- * Reglas:
- * - Obligatorio.
- * - Mínimo 3 caracteres.
- * - Máximo 100 caracteres.
+ * Reglas: es obligatorio y debe tener entre 3 y 100 caracteres, inclusive.
+ *
+ * @param {*} [nombre=""] Nombre de categoría que se valida.
+ * @returns {string} Mensaje de error o `""` si es válido.
  */
 export const validarNombreCategoria = (nombre = "") => {
 
@@ -307,12 +336,13 @@ export const validarNombreCategoria = (nombre = "") => {
 
 
 /**
- * Valida la descripción de una categoría.
+ * Valida la descripción de una categoría después de convertirla a texto y
+ * quitar los espacios de los extremos.
  *
- * Reglas:
- * - Obligatoria.
- * - Mínimo 5 caracteres.
- * - Máximo 500 caracteres.
+ * Reglas: es obligatoria y debe tener entre 5 y 500 caracteres, inclusive.
+ *
+ * @param {*} [descripcion=""] Descripción de categoría que se valida.
+ * @returns {string} Mensaje de error o `""` si es válida.
  */
 export const validarDescripcionCategoria = (
   descripcion = ""
@@ -337,10 +367,12 @@ export const validarDescripcionCategoria = (
 
 
 /**
- * Valida que una categoría tenga imagen.
+ * Comprueba que se haya proporcionado un valor de imagen no vacío. No valida
+ * el tipo ni el tamaño del archivo; para eso se utiliza
+ * {@link validarArchivoImagen}.
  *
- * La validación de formato y tamaño del archivo
- * se realiza mediante validarArchivoImagen().
+ * @param {*} [imagen=""] Valor de imagen de la categoría.
+ * @returns {string} Mensaje de error o `""` si hay un valor de imagen.
  */
 export const validarImagenCategoria = (imagen = "") => {
 
@@ -359,12 +391,13 @@ export const validarImagenCategoria = (imagen = "") => {
  */
 
 /**
- * Valida el nombre de una característica.
+ * Valida el nombre de una característica después de convertirlo a texto y
+ * quitar los espacios de los extremos.
  *
- * Reglas:
- * - Obligatorio.
- * - Mínimo 2 caracteres.
- * - Máximo 100 caracteres.
+ * Reglas: es obligatorio y debe tener entre 2 y 100 caracteres, inclusive.
+ *
+ * @param {*} [nombre=""] Nombre de característica que se valida.
+ * @returns {string} Mensaje de error o `""` si es válido.
  */
 export const validarNombreCaracteristica = (
   nombre = ""
@@ -389,7 +422,11 @@ export const validarNombreCaracteristica = (
 
 
 /**
- * Valida el ícono de una característica.
+ * Comprueba que el valor del ícono de una característica no esté vacío
+ * después de convertirlo a texto y quitar los espacios de los extremos.
+ *
+ * @param {*} [icono=""] Ícono que se valida.
+ * @returns {string} Mensaje de error o `""` si hay un valor de ícono.
  */
 export const validarIconoCaracteristica = (
   icono = ""
@@ -410,7 +447,9 @@ export const validarIconoCaracteristica = (
  */
 
 /**
- * Tipos de imagen permitidos actualmente por el proyecto.
+ * Tipos MIME permitidos para los archivos de imagen.
+ *
+ * @type {string[]}
  */
 export const FORMATOS_IMAGEN_PERMITIDOS = [
   "image/jpeg",
@@ -420,18 +459,23 @@ export const FORMATOS_IMAGEN_PERMITIDOS = [
 
 
 /**
- * Tamaño máximo permitido para una imagen.
+ * Tamaño máximo permitido para un archivo de imagen, expresado en bytes.
  *
- * 5 MB
+ * El valor equivale a 5 MiB (5 × 1024 × 1024 bytes).
+ *
+ * @type {number}
  */
 export const MAX_SIZE_IMAGEN = 5 * 1024 * 1024;
 
 
 /**
- * Valida un archivo de imagen.
+ * Comprueba que se haya seleccionado un archivo, que su tipo MIME esté
+ * incluido en {@link FORMATOS_IMAGEN_PERMITIDOS} y que su tamaño no supere
+ * {@link MAX_SIZE_IMAGEN}. Devuelve el primer mensaje de error encontrado
+ * o una cadena vacía si se cumplen todas las comprobaciones.
  *
- * @param {File|null} archivo
- * @returns {string}
+ * @param {File|null|undefined} archivo Archivo de imagen seleccionado.
+ * @returns {string} Primer mensaje de error o `""` si el archivo es válido.
  */
 export const validarArchivoImagen = (archivo) => {
 
