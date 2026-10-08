@@ -5,22 +5,97 @@
   --header-height-mobile: 110px;
 }
 
-/* contenedor centrado reutilizable */
-.container {
-  max-width: 1200px;   /* mismo ancho que el footer-inner que usamos antes */
-  margin: 0 auto;
-  padding: 0 1rem;     /* mismo padding horizontal que tu header actual */
+/* =====================================================
+   CONFIGURACIÓN GLOBAL
+   ===================================================== */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  width: 100%;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: var(--fuente-principal);
+  font-size: var(--tamano-texto-md);
+  font-weight: var(--peso-normal);
+  line-height: 1.5;
   color: var(--color-texto);
   background-color: var(--color-fondo);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+
+/* =====================================================
+   CONTENEDOR GLOBAL
+   ===================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--ancho-contenido);
+  margin: 0 auto;
+  padding: 0 var(--espacio-4);
+}
+
+
+/* =====================================================
+   ELEMENTOS GLOBALES
+   ===================================================== */
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+
+/* =====================================================
+   ENLACES
+   ===================================================== */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* =====================================================
+   IMÁGENES
+   ===================================================== */
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
 @media (max-width: 600px) {
-  :root { --header-height: var(--header-height-mobile); }
+
+  :root {
+    --header-height: var(--header-height-mobile);
+  }
+
+  .container {
+    padding: 0 var(--espacio-4);
+  }
 }

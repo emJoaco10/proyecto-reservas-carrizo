@@ -28,9 +28,19 @@
   outline: none;
 }
 
-.formulario button {
-  width: 100%;
-  
+.formulario button[type="submit"] {
+    width: 100%;
+
+    min-height: 46px;
+
+    margin-top: 8px;
+
+    border-radius: 9px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    letter-spacing: 0.1px;
 }
 
 .formulario p {

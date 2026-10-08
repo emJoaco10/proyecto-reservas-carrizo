@@ -1,58 +1,183 @@
 /**
- * Variables CSS globales - Sistema de colores y diseño.
+ * Variables CSS globales - Sistema visual de Reservas Carrizo.
  *
- * PALETA DE COLORES - IDENTIDAD VISUAL:
- * Verde como color principal representando naturaleza, tranquilidad y viajes.
- * Gradientes desde verde oscuro (confianza) hasta verde claro (frescura).
+ * La aplicación utiliza el verde como identidad principal,
+ * combinado con blancos y grises neutros para lograr una
+ * interfaz elegante, clara y consistente.
  *
- * USO CONSISTENTE:
- * - Todas las variables se usan en componentes con var(--nombre-variable)
- * - Mantiene consistencia visual en toda la aplicación
- * - Facilita cambios globales de tema
- *
- * NOMENCLATURA:
- * - --color-[contexto]: Colores principales
- * - --color-[estado]: Estados de interacción
- * - Nombres descriptivos en español para claridad
+ * Las variables se organizan en:
+ * - Colores
+ * - Tipografía
+ * - Bordes y radios
+ * - Sombras
+ * - Espaciado
+ * - Layout
  */
 
 :root {
-  /* ===== BASE VERDE - IDENTIDAD DE MARCA ===== */
-  --color-primario: #2ECC71;   /* Verde brillante - Botones principales, CTAs, acentos */
-  --color-secundario: #27AE60; /* Verde medio - Hover, enlaces, detalles secundarios */
 
-  /* ===== FONDOS - JERARQUÍA VISUAL ===== */
-  --color-header-bg: #1B5E20;  /* Verde muy oscuro - Header fijo, máxima prominencia */
-  --color-footer-bg: #3d9141;  /* Verde oscuro - Footer, información legal */
-  --color-fondo: #F1F8E9;      /* Verde muy claro - Contenido principal, sensación de frescura */
+  /* =====================================================
+     COLORES - IDENTIDAD VISUAL
+     ===================================================== */
 
-  /* ===== TEXTO - LEGIBILIDAD ===== */
-  --color-texto: #212121;      /* Gris casi negro - Texto principal, máxima legibilidad */
-  --color-texto-invertido: #FFFFFF; /* Blanco puro - Texto sobre fondos oscuros */
+  /* Verde principal de la marca */
+  --color-primario: #2F7D62;
 
-  /* ===== ESTADOS - INTERACCIÓN ===== */
-  --color-exito: #00C853;      /* Verde intenso - Confirmaciones, operaciones exitosas */
-  --color-error: #C62828;      /* Rojo controlado - Errores, validaciones fallidas */
-  --color-alerta: #F9A825;     /* Amarillo - Advertencias, atención del usuario */
+  /* Verde utilizado para hover e interacciones */
+  --color-primario-hover: #256A52;
+
+  /* Verde oscuro - Header y elementos de mayor jerarquía */
+  --color-header-bg: #173F35;
+
+  /* Verde oscuro - Footer */
+  --color-footer-bg: #1D4A3E;
+
+  /* Verde suave - fondos secundarios y detalles */
+  --color-secundario: #E8F3EE;
+
+
+  /* =====================================================
+     FONDOS Y SUPERFICIES
+     ===================================================== */
+
+  /* Fondo general de la aplicación */
+  --color-fondo: #F6F8F7;
+
+  /* Fondo de tarjetas, formularios y bloques de contenido */
+  --color-superficie: #FFFFFF;
+
+  /* Fondo para elementos destacados */
+  --color-superficie-secundaria: #F0F5F2;
+
+
+  /* =====================================================
+     TEXTO
+     ===================================================== */
+
+  /* Texto principal */
+  --color-texto: #1F2933;
+
+  /* Texto secundario */
+  --color-texto-secundario: #667085;
+
+  /* Texto sobre fondos oscuros */
+  --color-texto-invertido: #FFFFFF;
+
+  /* Texto deshabilitado */
+  --color-texto-deshabilitado: #98A2B3;
+
+
+  /* =====================================================
+     BORDES
+     ===================================================== */
+
+  --color-borde: #D9E2DE;
+
+  --color-borde-suave: #E8EEEB;
+
+
+  /* =====================================================
+     ESTADOS
+     ===================================================== */
+
+  /* Éxito */
+  --color-exito: #2E7D32;
+
+  /* Fondo suave para mensajes de éxito */
+  --color-exito-fondo: #EAF5EA;
+
+
+  /* Error */
+  --color-error: #C62828;
+
+  /* Fondo suave para mensajes de error */
+  --color-error-fondo: #FDECEC;
+
+
+  /* Advertencia */
+  --color-alerta: #B7791F;
+
+  /* Fondo suave para advertencias */
+  --color-alerta-fondo: #FFF7E6;
+
+
+  /* Información */
+  --color-info: #2563EB;
+
+  /* Fondo suave para información */
+  --color-info-fondo: #EFF6FF;
+
+
+  /* =====================================================
+     RADIOS
+     ===================================================== */
+
+  --radio-sm: 6px;
+  --radio-md: 10px;
+  --radio-lg: 16px;
+  --radio-xl: 20px;
+
+
+  /* =====================================================
+     SOMBRAS
+     ===================================================== */
+
+  --sombra-suave:
+    0 2px 8px rgba(31, 41, 51, 0.06);
+
+  --sombra-media:
+    0 6px 18px rgba(31, 41, 51, 0.10);
+
+  --sombra-fuerte:
+    0 12px 30px rgba(31, 41, 51, 0.14);
+
+
+  /* =====================================================
+     ESPACIADO
+     ===================================================== */
+
+  --espacio-1: 4px;
+  --espacio-2: 8px;
+  --espacio-3: 12px;
+  --espacio-4: 16px;
+  --espacio-5: 20px;
+  --espacio-6: 24px;
+  --espacio-7: 32px;
+  --espacio-8: 40px;
+  --espacio-9: 48px;
+  --espacio-10: 64px;
+
+
+  /* =====================================================
+     TIPOGRAFÍA
+     ===================================================== */
+
+  --fuente-principal:
+    "Inter",
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+
+  --tamano-texto-xs: 0.75rem;
+  --tamano-texto-sm: 0.875rem;
+  --tamano-texto-md: 1rem;
+  --tamano-texto-lg: 1.125rem;
+  --tamano-texto-xl: 1.5rem;
+  --tamano-titulo: 2rem;
+
+  --peso-normal: 400;
+  --peso-medio: 500;
+  --peso-semibold: 600;
+  --peso-bold: 700;
+
+
+  /* =====================================================
+     LAYOUT
+     ===================================================== */
+
+  --ancho-contenido: 1200px;
+
+  --ancho-contenido-amplio: 1400px;
+
 }
-
-/*
-EJEMPLOS DE USO:
-
-Botones principales:
-  background: var(--color-primario);
-  color: var(--color-texto-invertido);
-
-Header:
-  background: var(--color-header-bg);
-  color: var(--color-texto-invertido);
-
-Contenido principal:
-  background: var(--color-fondo);
-  color: var(--color-texto);
-
-Estados:
-  .success { color: var(--color-exito); }
-  .error { color: var(--color-error); }
-  .warning { color: var(--color-alerta); }
-*/

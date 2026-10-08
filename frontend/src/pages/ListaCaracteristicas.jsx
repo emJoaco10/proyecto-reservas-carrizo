@@ -1,4 +1,5 @@
 import ListadoCaracteristicas from "../components/ListadoCaracteristicas";
+import BreadcrumAdministracion from "../components/BreadcrumAdministracion";
 
 const ListaCaracteristicas = () => {
     return (

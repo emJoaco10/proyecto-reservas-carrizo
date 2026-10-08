@@ -155,7 +155,10 @@ const IniciarSesionFormulario = () => {
                     )}
                 </div>
 
-                <button type="submit">
+                <button
+                    type="submit"
+                    className="btn btn-filled"
+                >
                     Iniciar sesión
                 </button>
 

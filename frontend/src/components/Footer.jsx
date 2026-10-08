@@ -11,7 +11,7 @@ const year = new Date().getFullYear();
         <div className="footer-left">
           <img className="footer-logo" src="/src/assets/logo.png" alt="Empresa" width="120" height="40" loading="lazy" />
           <div className="footer-copy">
-            <span className="company-name">Rservas Carrizo</span>
+            <span className="company-name">Reservas Carrizo</span>
             <span className="copyright">© {year} Todos los derechos reservados</span>
           </div>
         </div>

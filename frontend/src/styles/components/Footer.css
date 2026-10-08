@@ -1,24 +1,213 @@
-/* src/styles/components/Footer.css */
-.app-footer {
-  width: 100%;
-  background-color: #1f5b52;
-  color: #e6eef8;
-  padding: 16px 20px;
-  box-sizing: border-box;
-}
-.footer-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-.footer-left { display: flex; align-items: center; gap: 12px; }
-.footer-logo { width: 60px; height: auto; object-fit: contain; opacity: 0.8;}
-.footer-copy { display: flex; flex-direction: column; font-size: 14px; }
+/* =====================================================
+   FOOTER
+===================================================== */
 
-@media (max-width: 640px) {
-  .footer-inner { flex-direction: column; text-align: center; }
-  .footer-right { margin-top: 8px; }
+.app-footer {
+    width: 100%;
+
+    background-color: var(--color-footer-bg);
+
+    color: var(--color-texto-invertido);
+
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+    box-shadow:
+        0 -4px 14px rgba(31, 41, 51, 0.06);
+
+    padding: var(--espacio-6) var(--espacio-4);
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   CONTENEDOR
+===================================================== */
+
+.footer-content {
+    min-height: 72px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: var(--espacio-5);
+}
+
+
+/* =====================================================
+   INFORMACIÓN PRINCIPAL
+===================================================== */
+
+.footer-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: var(--espacio-4);
+}
+
+
+/* =====================================================
+   LOGO
+===================================================== */
+
+.footer-logo {
+    width: 64px;
+    height: auto;
+
+    object-fit: contain;
+
+    opacity: 0.90;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+.footer-logo:hover {
+    opacity: 1;
+
+    transform: scale(1.03);
+}
+
+
+/* =====================================================
+   INFORMACIÓN DE LA EMPRESA
+===================================================== */
+
+.footer-copy {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.company-name {
+    color: var(--color-texto-invertido);
+
+    font-size: var(--tamano-texto-md);
+
+    font-weight: var(--peso-semibold);
+
+    letter-spacing: 0.2px;
+}
+
+
+.copyright {
+    color: rgba(255, 255, 255, 0.62);
+
+    font-size: var(--tamano-texto-xs);
+
+    font-weight: var(--peso-normal);
+}
+
+
+/* =====================================================
+   SECCIÓN DERECHA
+===================================================== */
+
+.footer-right {
+    display: flex;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    min-height: 24px;
+}
+
+
+/* =====================================================
+   DETALLE VISUAL
+===================================================== */
+
+.footer-left::after {
+    content: "";
+
+    display: block;
+
+    width: 3px;
+    height: 34px;
+
+    margin-left: var(--espacio-2);
+
+    background-color: #C89B3C;
+
+    border-radius: 2px;
+
+    opacity: 0.85;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 768px) {
+
+    .app-footer {
+        padding: var(--espacio-5) var(--espacio-4);
+    }
+
+    .footer-content {
+        min-height: 64px;
+    }
+
+    .footer-logo {
+        width: 58px;
+    }
+
+}
+
+
+/* =====================================================
+   CELULAR
+===================================================== */
+
+@media (max-width: 480px) {
+
+    .app-footer {
+        padding: var(--espacio-5) var(--espacio-4);
+    }
+
+    .footer-content {
+        flex-direction: column;
+
+        justify-content: center;
+
+        text-align: center;
+
+        gap: var(--espacio-4);
+    }
+
+    .footer-left {
+        justify-content: center;
+
+        flex-direction: column;
+
+        gap: var(--espacio-3);
+    }
+
+    .footer-left::after {
+        width: 40px;
+        height: 2px;
+
+        margin: var(--espacio-1) 0 0;
+    }
+
+    .footer-logo {
+        width: 60px;
+    }
+
+    .footer-copy {
+        align-items: center;
+    }
+
+    .footer-right {
+        justify-content: center;
+    }
+
 }
