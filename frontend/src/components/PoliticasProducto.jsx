@@ -1,7 +1,13 @@
 import React from 'react';
 import '../styles/components/PoliticasProducto.css';
 
+/**
+ * Muestra una sección informativa con las políticas generales de un alojamiento.
+ * Este componente no recibe props.
+ */
 const PoliticasProducto = () => {
+  // Títulos y descripciones de las políticas mostradas; cada elemento tiene titulo y descripcion.
+  // Incluye horarios, capacidad, cuidado, convivencia, mascotas y tabaquismo.
   const politicas = [
     {
       titulo: 'Check-in y check-out',
@@ -36,8 +42,10 @@ const PoliticasProducto = () => {
   ];
 
   return (
+    // Sección principal que agrupa la información de políticas.
     <section className="politicas-producto">
 
+      {/* Encabezado con el título de la sección y el texto introductorio. */}
       <div className="politicas-producto__header">
         <h2>Políticas</h2>
 
@@ -46,8 +54,10 @@ const PoliticasProducto = () => {
         </p>
       </div>
 
+      {/* Contenedor que organiza visualmente las políticas en una cuadrícula. */}
       <div className="politicas-producto__grid">
 
+        {/* Genera un artículo por política; cada tarjeta usa el índice como key y muestra título y descripción. */}
         {politicas.map((politica, index) => (
           <article
             key={index}

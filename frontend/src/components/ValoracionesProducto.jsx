@@ -3,10 +3,19 @@ import useProductoAPI from '../hooks/useProductoAPI';
 import '../styles/components/ValoracionesProducto.css';
 import { leerLocal } from '../helpers/storageUtils';
 
+/**
+ * Muestra las valoraciones de un producto y permite publicar una nueva
+ * cuando se cumplen las condiciones de acceso implementadas.
+ * @param {Object} props Propiedades del componente.
+ * @param {*} props.productoId Identificador consultado y asociado a la nueva valoración.
+ * @param {*} props.producto Objeto del producto recibido como propiedad.
+ */
 const ValoracionesProducto = ({ productoId, producto }) => {
 
+    // Usuario recuperado del almacenamiento local.
     const usuario = leerLocal("usuario");
 
+    // Operaciones de consulta y gestión de valoraciones y permisos de acceso.
     const {
         fetchValoraciones,
         addValoracion,
@@ -14,19 +23,27 @@ const ValoracionesProducto = ({ productoId, producto }) => {
         fetchYaValoro
     } = useProductoAPI();
 
+    // Valoraciones cargadas y estados de consulta.
     const [valoraciones, setValoraciones] = useState([]);
     const [cargando, setCargando] = useState(true);
     const [error, setError] = useState(null);
 
+    // Puntuación y comentario ingresados para una nueva valoración.
     const [puntuacion, setPuntuacion] = useState(0);
     const [comentario, setComentario] = useState('');
+
+    // Estado de envío y mensaje presentado al usuario.
     const [enviando, setEnviando] = useState(false);
     const [mensaje, setMensaje] = useState('');
 
+    // Estados usados para decidir si corresponde mostrar el formulario.
     const [puedeValorar, setPuedeValorar] = useState(false);
     const [cargandoPermiso, setCargandoPermiso] = useState(true);
     const [yaValoro, setYaValoro] = useState(false);
 
+    // Consulta las valoraciones del producto, actualiza la lista y gestiona la
+    // carga; si falla, registra el error y establece el mensaje correspondiente.
+    // Dependencias: productoId y fetchValoraciones.
     useEffect(() => {
         const cargarValoraciones = async () => {
             if (!productoId) {
@@ -57,6 +74,10 @@ const ValoracionesProducto = ({ productoId, producto }) => {
         cargarValoraciones();
     }, [productoId, fetchValoraciones]);
 
+    // Comprueba si hay un usuario y consulta si puede valorar y, cuando puede,
+    // si ya publicó una valoración. Gestiona la carga y, ante errores, registra
+    // el fallo y restablece los indicadores de permiso.
+    // Dependencias: productoId, usuario?.email, fetchPuedeValorar y fetchYaValoro.
     useEffect(() => {
         const verificarPermisos = async () => {
             if (!productoId) {
@@ -105,6 +126,8 @@ const ValoracionesProducto = ({ productoId, producto }) => {
 
     }, [productoId, usuario?.email, fetchPuedeValorar, fetchYaValoro]);
 
+    // Devuelve cero sin valoraciones; de lo contrario, calcula el promedio de
+    // sus puntuaciones.
     const calcularPromedio = () => {
         if (valoraciones.length === 0) {
             return 0;
@@ -121,11 +144,16 @@ const ValoracionesProducto = ({ productoId, producto }) => {
 
     const promedio = calcularPromedio();
 
+    // Actualiza la puntuación seleccionada y limpia el mensaje actual.
     const seleccionarEstrella = (numero) => {
         setPuntuacion(numero);
         setMensaje('');
     };
 
+    // Evita el envío tradicional, exige una puntuación distinta de cero y
+    // publica la valoración. Si tiene éxito, la antepone a la lista, actualiza
+    // el estado de valoración previa, limpia los campos y muestra confirmación;
+    // ante errores, muestra el mensaje disponible y siempre restablece el envío.
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -176,6 +204,7 @@ const ValoracionesProducto = ({ productoId, producto }) => {
         }
     };
 
+    // Genera cinco estrellas y aplica la clase activa según el valor recibido.
     const renderEstrellas = (valor) => {
         return (
             <div
@@ -201,6 +230,7 @@ const ValoracionesProducto = ({ productoId, producto }) => {
     return (
         <section className="valoraciones-producto">
 
+            {/* Encabezado con promedio, representación en estrellas y cantidad de valoraciones. */}
             <div className="valoraciones-producto__header">
 
                 <div>
@@ -236,6 +266,9 @@ const ValoracionesProducto = ({ productoId, producto }) => {
 
             </div>
 
+            {/* El acceso presenta el estado de comprobación, la falta de sesión,
+                la falta de permiso o una valoración ya publicada; si ninguna
+                condición lo impide, muestra el formulario. */}
             {cargandoPermiso ? (
                 <div className="valoraciones-producto__login">
                     <p>
@@ -288,6 +321,7 @@ const ValoracionesProducto = ({ productoId, producto }) => {
                                 Tu puntuación
                             </span>
 
+                            {/* Selector accesible: el grupo identifica su propósito y cada botón comunica su puntuación y selección. */}
                             <div
                                 className="selector-estrellas"
                                 role="radiogroup"
@@ -317,6 +351,7 @@ const ValoracionesProducto = ({ productoId, producto }) => {
 
                         </div>
 
+                        {/* Campo para ingresar el comentario de la valoración. */}
                         <div className="valoraciones-producto__campo">
 
                             <label htmlFor="comentario-valoracion">
@@ -335,6 +370,7 @@ const ValoracionesProducto = ({ productoId, producto }) => {
 
                         </div>
 
+                        {/* El botón de envío queda deshabilitado durante el envío. */}
                         <button
                             type="submit"
                             className="valoraciones-producto__boton"
@@ -347,6 +383,7 @@ const ValoracionesProducto = ({ productoId, producto }) => {
 
                     </form>
 
+                    {/* Mensaje condicional anunciado como alerta. */}
                     {mensaje && (
                         <p
                             className="valoraciones-producto__mensaje"
@@ -359,6 +396,7 @@ const ValoracionesProducto = ({ productoId, producto }) => {
                 </div>
             )}
 
+            {/* Lista de valoraciones con estados de carga, error y lista vacía; cada elemento muestra autor, fecha y puntuación. */}
             <div className="valoraciones-producto__lista">
 
                 {cargando && (
@@ -406,12 +444,14 @@ const ValoracionesProducto = ({ productoId, producto }) => {
                                     </span>
                                 </div>
 
+                                {/* Representa la puntuación de esta valoración con estrellas. */}
                                 {renderEstrellas(
                                     valoracion.puntuacion
                                 )}
 
                             </div>
 
+                            {/* El comentario solo se presenta cuando existe. */}
                             {valoracion.comentario && (
                                 <p className="valoracion-card__comentario">
                                     {valoracion.comentario}

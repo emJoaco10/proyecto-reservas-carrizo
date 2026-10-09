@@ -1,23 +1,46 @@
 import React, { useState } from 'react';
 import '../styles/components/CompartirProducto.css';
 
+/**
+ * Muestra la información de un producto y permite compartir su enlace en
+ * distintas redes sociales con un mensaje personalizable.
+ * @param {{ producto?: { nombre: string, descripcion: string, imagenes: string[] } }} props
+ *   `producto` contiene los datos que se muestran y comparten: nombre,
+ *   descripción e imágenes. Si no está definido, el componente no renderiza contenido.
+ */
 const CompartirProducto = ({ producto }) => {
+    // Controla si la ventana modal está visible.
     const [mostrarVentana, setMostrarVentana] = useState(false);
+    // Identifica la red elegida; Facebook es la opción inicial.
     const [redSeleccionada, setRedSeleccionada] = useState('facebook');
+    // Guarda el mensaje personalizado ingresado por el usuario.
     const [mensaje, setMensaje] = useState('');
 
     if (!producto) {
         return null;
     }
 
+    // URL actual de la página.
     const urlProducto = window.location.href;
 
+    // Mensaje inicial construido a partir del nombre del producto.
     const mensajePredeterminado =
         `Mirá este alojamiento: ${producto.nombre}`;
 
+    // Usa el mensaje personalizado si no queda vacío al quitar espacios externos;
+    // de lo contrario, recurre al mensaje predeterminado.
     const mensajeCompartir =
         mensaje.trim() || mensajePredeterminado;
 
+    /**
+     * Prepara y ejecuta la acción de compartir según la red seleccionada.
+     * Codifica el mensaje y la URL; Facebook y X/Twitter generan sus respectivas
+     * URL externas, que se abren en una ventana nueva. Instagram usa
+     * `navigator.share` cuando está disponible; si falla, registra el error salvo
+     * que sea una cancelación (`AbortError`). Si no está disponible, intenta copiar
+     * la URL con `navigator.clipboard.writeText` y muestra un aviso al usuario.
+     * La función puede finalizar anticipadamente según la red seleccionada.
+     */
     const handleCompartir = () => {
         const textoCodificado = encodeURIComponent(mensajeCompartir);
         const urlCodificada = encodeURIComponent(urlProducto);
@@ -74,6 +97,7 @@ const CompartirProducto = ({ producto }) => {
 
     return (
         <>
+            {/* Abre la ventana de compartir; el nombre accesible identifica el botón. */}
             <button
                 type="button"
                 className="btn-compartir-producto"
@@ -89,6 +113,7 @@ const CompartirProducto = ({ producto }) => {
                 </span>
             </button>
 
+            {/* La superposición cierra el modal al hacer clic fuera; dentro se detiene la propagación. */}
             {mostrarVentana && (
                 <div
                     className="compartir-overlay"
@@ -102,6 +127,7 @@ const CompartirProducto = ({ producto }) => {
                         onClick={(e) => e.stopPropagation()}
                     >
 
+                        {/* Cierra el modal; los atributos del diálogo lo identifican para tecnologías de asistencia. */}
                         <button
                             type="button"
                             className="compartir-modal__cerrar"
@@ -117,6 +143,7 @@ const CompartirProducto = ({ producto }) => {
 
                         <div className="compartir-producto__contenido">
 
+                            {/* Muestra la primera imagen disponible o un marcador alternativo. */}
                             {Array.isArray(producto.imagenes) &&
                                 producto.imagenes.length > 0 ? (
                                 <img
@@ -130,6 +157,7 @@ const CompartirProducto = ({ producto }) => {
                                 </div>
                             )}
 
+                            {/* Presenta los datos del producto y la URL actual de la página. */}
                             <div className="compartir-producto__info">
 
                                 <h3>{producto.nombre}</h3>
@@ -152,6 +180,7 @@ const CompartirProducto = ({ producto }) => {
                                 ¿Dónde querés compartirlo?
                             </h3>
 
+                            {/* Permite elegir la red; el estilo señala la opción seleccionada. */}
                             <div className="compartir-redes__opciones">
 
                                 <button
@@ -199,6 +228,7 @@ const CompartirProducto = ({ producto }) => {
 
                         <div className="compartir-mensaje">
 
+                            {/* Campo para ingresar el mensaje personalizado que se compartirá. */}
                             <label htmlFor="mensaje-compartir">
                                 Mensaje personalizado
                             </label>
@@ -215,6 +245,7 @@ const CompartirProducto = ({ producto }) => {
 
                         </div>
 
+                        {/* Ejecuta el flujo de compartir según la red elegida. */}
                         <button
                             type="button"
                             className="btn-confirmar-compartir"

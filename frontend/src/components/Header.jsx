@@ -6,32 +6,33 @@ import { useState } from 'react';
 import menuIcon from '../assets/menu-icon.png';
 
 /**
- * Componente Header - Barra de navegación superior.
+ * Componente Header - Encabezado de navegación de Reservas Carrizo.
  *
- * CARACTERÍSTICAS:
- * - Posición fija (fixed) en la parte superior
- * - Diseño responsivo con contenedor centrado
- * - Botón "Volver" en rutas de detalle de producto
- * - Logo + eslogan a la izquierda
- * - Botones de autenticación a la derecha (sin funcionalidad actual)
- *
- * ESTRUCTURA:
- * - header.app-header: Contenedor principal fijo
- * - .header-left: Botón de volver + logo + eslogan
- * - .header-right: Botones "Crear cuenta" e "Iniciar sesión"
- *
- * NOTA: El botón de volver aparece solo en rutas de detalle de producto.
+ * Muestra el logo y el eslogan, y ofrece volver desde las rutas de detalle
+ * de producto. Si no hay un usuario almacenado, permite navegar al registro
+ * o al inicio de sesión. Si hay un usuario, muestra su información y el menú;
+ * para el rol ADMIN también presenta el acceso al panel de administración.
  */
 const Header = () => {
+  // location y navigate permiten consultar la ruta actual y navegar entre rutas.
   const location = useLocation();
   const navigate = useNavigate();
+  // Determina si la ruta actual corresponde al detalle de un producto.
   const showBackButton = location.pathname.startsWith('/producto/');
+  // Obtiene del almacenamiento local los datos del usuario.
   const usuario = leerLocal("usuario");
+  // Controla la visibilidad del menú desplegable del usuario.
   const [mostrarMenu, setMostrarMenu] = useState(false);
 
+  // Iniciales del nombre y apellido, en mayúsculas cuando existe un usuario.
   const iniciales = usuario
     ? `${usuario.nombre.charAt(0)}${usuario.apellido.charAt(0)}`.toUpperCase() : "";
 
+  /**
+   * Cierra la sesión eliminando los datos locales después de pedir confirmación.
+   * Si se cancela, termina sin cambios; si se confirma, elimina usuario y token,
+   * cierra el menú, muestra un mensaje, navega al inicio y recarga la página.
+   */
   const handleCerrarSesion = () => {
 
     const confirmar = window.confirm(
@@ -58,10 +59,10 @@ const Header = () => {
 
   return (
     <header className="app-header">
-      {/* Contenedor centrado con ancho máximo */}
+      {/* Contenedor principal del encabezado, centrado y con ancho máximo. */}
       <div className="container header-content">
 
-        {/* Sección izquierda: botón de volver + logo y eslogan */}
+        {/* Sector izquierdo: botón de volver en detalle, logo y eslogan. */}
         <div className="header-left">
           {showBackButton && (
             <button
@@ -80,12 +81,13 @@ const Header = () => {
           <span className="slogan">Tu viaje comienza aquí</span>
         </div>
 
-        {/* Sección derecha: Botones de autenticación */}
+        {/* Sector derecho: accesos de autenticación o contenido del usuario. */}
         <div className="header-right">
 
           {!usuario ? (
 
             <>
+              {/* Accesos al registro y al inicio de sesión cuando no hay usuario almacenado. */}
               <button
                 className="btn btn-outline"
                 onClick={() => navigate("/registro-usuario")}
@@ -109,7 +111,7 @@ const Header = () => {
 
               <div className="usuario-logueado">
 
-                {/* Panel de administración */}
+                {/* Acceso al panel de administración, visible solo para el rol ADMIN. */}
                 {usuario.rol === "ADMIN" && (
                   <button
                     type="button"
@@ -123,7 +125,7 @@ const Header = () => {
                   </button>
                 )}
 
-                {/* Perfil del usuario */}
+                {/* Perfil con el avatar y la información personal del usuario. */}
                 <div className="header-perfil">
 
                   <div className="header-avatar">
@@ -137,7 +139,7 @@ const Header = () => {
 
                 </div>
 
-                {/* Menú */}
+                {/* Alterna el menú y comunica su estado mediante aria-expanded. */}
                 <button
                   type="button"
                   className="btn-menu-usuario"
@@ -152,6 +154,7 @@ const Header = () => {
 
               {mostrarMenu && (
                 <div className="menu-usuario">
+                  {/* Opciones de perfil, favoritos, reservas y cierre de sesión. */}
 
                   <button
                     type="button"

@@ -8,39 +8,53 @@ import {
 } from "../helpers/validaciones";
 import "../styles/components/FormularioCategoria.css";
 
+/**
+ * Permite crear o editar una categoría mediante un formulario con nombre,
+ * descripción e imagen.
+ * @param {Object|null} props.categoriaInicial Datos de la categoría usados al editar; por defecto, `null`.
+ * @param {boolean} props.modoEdicion Indica si el formulario funciona en modo edición; por defecto, `false`.
+ * @param {Function} [props.onExito] Función opcional invocada tras una operación exitosa, que recibe el resultado obtenido.
+ */
 const FormularioCategoria = ({
   categoriaInicial = null,
   modoEdicion = false,
   onExito
 }) => {
 
+  // Datos editables del formulario: nombre, descripción e imagen.
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
     imagen: ""
   });
 
+  // Operaciones para crear o editar categorías y estado de carga de la API.
   const {
     registerCategoria,
     editCategoria,
     loading
   } = useCategoriaAPI();
 
+  // URL utilizada para mostrar la vista previa de la imagen.
   const [imagenPreview, setImagenPreview] = useState("");
 
+  // Mensajes de validación asociados a cada campo.
   const [errores, setErrores] = useState({
     nombre: "",
     descripcion: "",
     imagen: ""
   });
 
+  // Mensaje informativo y clasificación visual del resultado.
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("");
 
+  // Referencia al selector de archivos para poder acceder a su valor.
   const inputImagenRef = useRef(null);
 
   /*
-   * Cargar los datos de la categoría cuando estamos editando.
+   * En modo edición, carga los datos de la categoría inicial y establece su
+   * imagen como vista previa.
    */
   useEffect(() => {
 
@@ -59,7 +73,8 @@ const FormularioCategoria = ({
   }, [modoEdicion, categoriaInicial]);
 
   /**
-   * Actualiza el campo modificado.
+   * Actualiza el campo modificado, limpia su error y restablece los mensajes generales.
+   * @param {Event} event Evento de cambio del campo.
    */
   const handleChange = (event) => {
 
@@ -81,7 +96,8 @@ const FormularioCategoria = ({
   };
 
   /**
-   * Valida todos los campos del formulario.
+   * Valida nombre, descripción e imagen, actualiza los errores y devuelve si el formulario es válido.
+   * @returns {boolean} Indica si no hay errores de validación.
    */
   const validarFormulario = () => {
 
@@ -103,7 +119,13 @@ const FormularioCategoria = ({
   };
 
   /**
-   * Envía la categoría para crear o actualizar.
+   * Evita el envío predeterminado, limpia mensajes, valida los datos y crea o edita la categoría.
+   * En edición, llama a `editCategoria` con el identificador inicial y los datos del formulario;
+   * en creación, llama a `registerCategoria` y restablece los campos, la vista previa y el input de imagen.
+   * Tras el éxito, establece el tipo de mensaje e invoca `onExito` con el resultado si está disponible.
+   * Si ocurre un error, lo registra en consola y muestra un mensaje específico para HTTP 409 o uno
+   * general según el modo de operación.
+   * @param {Event} event Evento de envío del formulario.
    */
   const handleSubmit = async (event) => {
 
@@ -189,7 +211,12 @@ const FormularioCategoria = ({
   };
 
   /**
-   * Procesa la imagen seleccionada.
+   * Procesa la imagen seleccionada: obtiene el archivo y lo valida con `validarArchivoImagen`.
+   * Si no hay archivo, no continúa; si no supera la validación, actualiza el error y limpia el input.
+   * Para un archivo válido, limpia el error de imagen y los mensajes anteriores, crea una URL temporal
+   * y revoca la vista previa anterior si es una URL `blob:` antes de actualizar `imagenPreview`.
+   * Lee el archivo con `FileReader` y actualiza `formData.imagen` cuando se dispara `reader.onload`.
+   * @param {Event} event Evento de cambio del selector de archivos.
    */
   const handleImagenChange = (event) => {
 
@@ -254,6 +281,8 @@ const FormularioCategoria = ({
       noValidate
     >
 
+      {/* `noValidate` deja la validación a cargo de la lógica del componente. */}
+      {/* Campos de nombre y descripción con sus respectivos mensajes de error. */}
       <div className="campo-formulario">
 
         <label htmlFor="nombre">
@@ -302,6 +331,7 @@ const FormularioCategoria = ({
 
       </div>
 
+      {/* Selector de imagen, validación del archivo y vista previa. */}
       <div className="campo-formulario">
 
         <label htmlFor="imagen">
@@ -337,6 +367,7 @@ const FormularioCategoria = ({
 
         )}
 
+        {/* En edición, se informa que la imagen actual se conserva si no se selecciona otra. */}
         {modoEdicion && (
           <small>
             Si no seleccionás una nueva imagen, se conservará la actual.
@@ -345,6 +376,7 @@ const FormularioCategoria = ({
 
       </div>
 
+      {/* Presenta el mensaje de resultado solo cuando hay contenido. */}
       {mensaje && (
         <div
           className={`mensaje-formulario ${tipoMensaje}`}
@@ -353,6 +385,7 @@ const FormularioCategoria = ({
         </div>
       )}
 
+      {/* Envío deshabilitado durante la carga, con texto según el modo y el estado. */}
       <div className="acciones-formulario">
 
         <button

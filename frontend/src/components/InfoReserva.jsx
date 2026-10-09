@@ -23,8 +23,19 @@ const InfoReserva = ({ datosReserva, onChange }) => {
                     <label htmlFor="cantidadHuespedes">
                         Cantidad de huéspedes
                     </label>
+                   /**
+                    * Muestra y actualiza los datos del formulario de reserva.
+                    * @param {Object} props
+                    * @param {Object} props.datosReserva Valores actuales de los campos del formulario.
+                    * @param {Function} props.onChange Callback que recibe el objeto actualizado con el campo modificado.
+                    */
 
                     <input
+                        /**
+                         * Recibe el evento de cambio de un campo y extrae su `name` y `value`.
+                         * Crea una copia de `datosReserva` con la propiedad correspondiente actualizada
+                         * y la envía mediante `onChange` para que el componente padre gestione el estado.
+                         */
                         type="number"
                         id="cantidadHuespedes"
                         name="cantidadHuespedes"
@@ -38,6 +49,7 @@ const InfoReserva = ({ datosReserva, onChange }) => {
                 <div className="info-reserva__campo">
                     <label htmlFor="dni">
                         DNI
+                        {/* Sección principal con la información de la reserva. */}
                     </label>
 
                     <input
@@ -54,6 +66,7 @@ const InfoReserva = ({ datosReserva, onChange }) => {
                 <div className="info-reserva__campo">
                     <label htmlFor="edadesHuespedes">
                         Edad de los huéspedes
+                        {/* Campo de texto para el DNI. */}
                     </label>
 
                     <input
@@ -88,6 +101,7 @@ const InfoReserva = ({ datosReserva, onChange }) => {
 
             </div>
 
+            {/* Área de observaciones con un límite de 500 caracteres. */}
         </section>
     );
 };

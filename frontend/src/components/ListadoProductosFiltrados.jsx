@@ -2,10 +2,17 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/components/ListadoProductosFilatrados.css";
 
+/**
+ * Muestra productos recibidos por prop, permite expandir o contraer los
+ * resultados y proporciona enlaces a los detalles de cada producto.
+ * @param {{ productos?: Array }} props Lista de productos; por defecto, un arreglo vacío.
+ */
 const ListadoProductosFiltrados = ({ productos = [] }) => {
 
+    // Controla la visibilidad de la lista; inicia en true para mostrar los resultados desplegados.
     const [abierto, setAbierto] = useState(true);
 
+    // Si no hay productos, muestra un mensaje informativo y realiza un retorno anticipado.
     if (productos.length === 0) {
         return (
             <div className="resultados-filtro-vacio">
@@ -19,6 +26,7 @@ const ListadoProductosFiltrados = ({ productos = [] }) => {
     return (
         <section className="listado-productos-filtrados">
 
+            {/* El botón muestra la cantidad de productos y alterna abierto usando su valor anterior. */}
             <button
                 type="button"
                 className="resultados-filtro-header"
@@ -30,6 +38,7 @@ const ListadoProductosFiltrados = ({ productos = [] }) => {
                     Productos encontrados: <strong>{productos.length}</strong>
                 </span>
 
+                {/* La clase de la flecha refleja abierto; aria-hidden la oculta de tecnologías de asistencia. */}
                 <span
                     className={`resultados-filtro-flecha ${abierto ? "abierto" : ""
                         }`}
@@ -40,10 +49,12 @@ const ListadoProductosFiltrados = ({ productos = [] }) => {
             </button>
 
 
+            {/* Los resultados solo se muestran cuando abierto es verdadero. */}
             {abierto && (
 
                 <div className="resultados-filtro-lista">
 
+                    {/* map genera una fila por producto, identificada por su id mediante key. */}
                     {productos.map((producto) => (
 
                         <div
@@ -53,6 +64,7 @@ const ListadoProductosFiltrados = ({ productos = [] }) => {
 
                             <div className="producto-filtrado-info">
 
+                                {/* Cada fila muestra el nombre y la categoría, o «Sin categoría». */}
                                 <h3>
                                     {producto.nombre}
                                 </h3>
@@ -63,6 +75,7 @@ const ListadoProductosFiltrados = ({ productos = [] }) => {
 
                             </div>
 
+                            {/* El enlace dirige a la ruta de detalle correspondiente al id del producto. */}
                             <Link
                                 to={`/producto/${producto.id}`}
                                 className="producto-filtrado-ver"

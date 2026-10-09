@@ -4,9 +4,23 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '../styles/components/CalendarioDisponibilidad.css';
 import useReservaAPI from '../hooks/useReservaAPI';
 
+/**
+ * Muestra la disponibilidad de un producto en un calendario, permite seleccionar
+ * un rango de fechas y comunica al componente padre los rangos aceptados.
+ *
+ * @param {object} props Propiedades del componente.
+ * @param {*} props.productoId Identificador del producto cuya disponibilidad se consulta.
+ * @param {Function} props.onFechasSeleccionadas Recibe las fechas cuando se completa un rango válido, si está disponible.
+ */
 const CalendarioDisponibilidad = ({ productoId, onFechasSeleccionadas }) => {
+    // El hook proporciona la función para consultar las reservas del producto.
     const { fetchDisponibilidad } = useReservaAPI();
 
+    /*
+     * fechaInicio y fechaFin representan el rango seleccionado; fechasOcupadas
+     * reúne los días derivados de las reservas. Los demás estados indican la
+     * carga, el error de consulta y los problemas con el rango elegido.
+     */
     const [fechaInicio, setFechaInicio] = useState(null);
     const [fechaFin, setFechaFin] = useState(null);
     const [fechasOcupadas, setFechasOcupadas] = useState([]);
@@ -15,7 +29,9 @@ const CalendarioDisponibilidad = ({ productoId, onFechasSeleccionadas }) => {
     const [mensajeSeleccion, setMensajeSeleccion] = useState('');
 
     /**
-     * Convierte una fecha YYYY-MM-DD en una fecha local.
+     * Separa una fecha YYYY-MM-DD y construye una fecha local con sus componentes.
+     * @param {string} fechaString Fecha en formato YYYY-MM-DD.
+     * @returns {Date} Fecha local correspondiente.
      */
     const convertirFechaLocal = (fechaString) => {
         const [anio, mes, dia] = fechaString.split('-').map(Number);
@@ -24,8 +40,10 @@ const CalendarioDisponibilidad = ({ productoId, onFechasSeleccionadas }) => {
     };
 
     /**
-     * Obtiene todas las fechas comprendidas entre
-     * fechaInicio y fechaFin.
+     * Genera las fechas entre ambos extremos, incluidos, normalizadas a medianoche.
+     * @param {Date} fechaInicio Inicio del intervalo.
+     * @param {Date} fechaFin Fin del intervalo.
+     * @returns {Date[]} Fechas comprendidas en el intervalo.
      */
     const obtenerFechasEntre = (fechaInicio, fechaFin) => {
         const fechas = [];
@@ -48,7 +66,9 @@ const CalendarioDisponibilidad = ({ productoId, onFechasSeleccionadas }) => {
     };
 
     /**
-     * Comprueba si una fecha está ocupada.
+     * Comprueba si la fecha coincide con alguna fecha ocupada, comparando a medianoche.
+     * @param {Date} fecha Fecha que se quiere comprobar.
+     * @returns {boolean} Indica si la fecha está ocupada.
      */
     const fechaEstaOcupada = (fecha) => {
         const fechaComparar = new Date(fecha);
@@ -66,7 +86,10 @@ const CalendarioDisponibilidad = ({ productoId, onFechasSeleccionadas }) => {
     };
 
     /**
-     * Comprueba si un rango contiene alguna fecha ocupada.
+     * Verifica si el rango incluye alguna fecha ocupada; si falta un extremo, devuelve false.
+     * @param {Date|null} inicio Inicio del rango.
+     * @param {Date|null} fin Fin del rango.
+     * @returns {boolean} Indica si el rango contiene una fecha ocupada.
      */
     const rangoContieneFechaOcupada = (inicio, fin) => {
         if (!inicio || !fin) {
@@ -84,7 +107,8 @@ const CalendarioDisponibilidad = ({ productoId, onFechasSeleccionadas }) => {
     };
 
     /**
-     * Obtiene las reservas del producto desde el backend.
+     * Consulta las reservas mediante fetchDisponibilidad, expande sus fechas de inicio y fin
+     * en días ocupados, actualiza los estados y gestiona errores y finalización de la carga.
      */
     const cargarDisponibilidad = async () => {
         if (!productoId) {
@@ -144,15 +168,15 @@ const CalendarioDisponibilidad = ({ productoId, onFechasSeleccionadas }) => {
         }
     };
 
+    // Vuelve a consultar cuando cambia el producto o la función de consulta.
     useEffect(() => {
         cargarDisponibilidad();
     }, [productoId, fetchDisponibilidad]);
 
     /**
-     * Maneja la selección del rango.
-     *
-     * Las fechas ocupadas no pueden formar parte
-     * de una reserva.
+     * Gestiona el rango: conserva un inicio pendiente, rechaza rangos con fechas
+     * ocupadas y notifica al padre cuando se completa uno aceptado.
+     * @param {[Date|null, Date|null]} fechas Fechas inicial y final seleccionadas.
      */
     const handleCambioFechas = (fechas) => {
         const [inicio, fin] = fechas;
@@ -202,7 +226,9 @@ const CalendarioDisponibilidad = ({ productoId, onFechasSeleccionadas }) => {
     };
 
     /**
-     * Formatea una fecha para mostrarla al usuario.
+     * Devuelve una cadena vacía si no hay fecha; de lo contrario, la formatea para es-AR.
+     * @param {Date|null} fecha Fecha que se mostrará.
+     * @returns {string} Fecha formateada o una cadena vacía.
      */
     const formatearFecha = (fecha) => {
         if (!fecha) return '';
@@ -211,7 +237,9 @@ const CalendarioDisponibilidad = ({ productoId, onFechasSeleccionadas }) => {
     };
 
     /**
-     * Clase visual para identificar las fechas ocupadas.
+     * Devuelve la clase CSS de una fecha ocupada o una cadena vacía en otro caso.
+     * @param {Date} fecha Fecha que se quiere clasificar.
+     * @returns {string} Clase CSS correspondiente o cadena vacía.
      */
     const obtenerClaseDia = (fecha) => {
         if (fechaEstaOcupada(fecha)) {
@@ -230,6 +258,7 @@ const CalendarioDisponibilidad = ({ productoId, onFechasSeleccionadas }) => {
                 Seleccioná las fechas de tu estadía para consultar la disponibilidad.
             </p>
 
+            {/* La consulta muestra su estado de carga o, ante un error, ofrece reintentar. */}
             {cargandoDisponibilidad && (
                 <p className="calendario-disponibilidad__estado">
                     Cargando disponibilidad...
@@ -260,6 +289,7 @@ const CalendarioDisponibilidad = ({ productoId, onFechasSeleccionadas }) => {
                 !errorDisponibilidad && (
                     <>
 
+                        {/* La leyenda distingue días disponibles y ocupados; el calendario muestra dos meses, limita la fecha mínima y permite navegar con un encabezado propio. excludeDates impide seleccionar días ocupados y dayClassName les aplica su estilo visual. */}
                         <div className="calendario-disponibilidad__leyenda">
 
                             <div className="calendario-disponibilidad__leyenda-item">
@@ -369,6 +399,7 @@ const CalendarioDisponibilidad = ({ productoId, onFechasSeleccionadas }) => {
 
                         </div>
 
+                        {/* Se informa si el rango no es aceptable y, cuando está completo, se resumen sus extremos. */}
                         {mensajeSeleccion && (
                             <p
                                 className="calendario-disponibilidad__mensaje"

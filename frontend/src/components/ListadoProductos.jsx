@@ -5,38 +5,23 @@ import { leerLocal } from '../helpers/storageUtils';
 import '../styles/components/ListadoProductos.css';
 
 /**
- * Componente ListadoProductos - Muestra lista paginada de productos aleatorios.
+ * Muestra los productos proporcionados por `useProductoAPI` en páginas de
+ * cuatro elementos y permite navegar a la ficha de cada producto mediante `Link`.
+ * También consulta y modifica favoritos cuando hay un usuario disponible, y
+ * presenta los estados de carga, error o lista vacía.
  *
- * FUNCIONALIDAD:
- * - Obtiene productos aleatorios usando hook personalizado
- * - Implementa paginación local (4 productos por página)
- * - Cada producto es un enlace a su página de detalle
- * - Diseño responsive con grid de productos
- *
- * PAGINACIÓN:
- * - Estado local: paginaActual (empieza en 1)
- * - pageSize: 4 productos por página
- * - Cálculo: slice() para obtener productos visibles
- * - Navegación: Inicio, Atrás, números de página, Adelante
- *
- * ESTADO:
- * - productosAleatorios: Array de productos del hook
- * - paginaActual: Página actual (1-indexed)
- * - totalPaginas: Calculado dinámicamente
- *
- * EFECTOS:
- * - useEffect para resetear página si excede totalPaginas
- * - Actualización automática cuando cambian productos
- *
- * NAVEGACIÓN:
- * - Link de React Router a /producto/:id
- * - Mantiene navegación SPA (Single Page Application)
+ * `paginaActual` controla la página seleccionada; los productos visibles y el
+ * total de páginas se calculan a partir de los productos obtenidos. Un efecto
+ * limita la página actual al total disponible. Otro consulta favoritos y
+ * mantiene sus identificadores en el estado local; depende de `fetchFavoritos`
+ * y `usuario?.email`.
  */
 const ListadoProductos = () => {
 
+  // Usuario recuperado del almacenamiento local.
   const usuario = leerLocal("usuario");
 
-  // Hook unificado con backend
+  // Funciones de productos y favoritos, y estados de carga y error proporcionados por el hook.
   const {
     getProductosAleatorios,
     fetchFavoritos,
@@ -46,33 +31,37 @@ const ListadoProductos = () => {
     error
   } = useProductoAPI();
 
-  // Estado de paginación (1-indexed para UX)
+  // Número de página seleccionado; la numeración comienza en 1.
   const [paginaActual, setPaginaActual] = useState(1);
 
+  // Identificadores de productos favoritos y estado de las operaciones de favoritos.
   const [favoritos, setFavoritos] = useState([]);
   const [cargandoFavoritos, setCargandoFavoritos] = useState(false);
 
-  const pageSize = 4; // 4 productos por página
+  // Cantidad de productos mostrados por página.
+  const pageSize = 4;
 
-  // Selección aleatoria desde productos cargados
-  const productosAleatorios = getProductosAleatorios(); // por ejemplo, 12 para recomendaciones
+  // Productos aleatorios obtenidos mediante el hook.
+  const productosAleatorios = getProductosAleatorios();
 
-  // Cálculos de paginación
+  // Cantidad de productos y páginas, con al menos una página calculada.
   const totalProductos = productosAleatorios.length;
   const totalPaginas = Math.max(1, Math.ceil(totalProductos / pageSize));
 
-  // Resetear página si excede el total disponible
+  // Ajusta la página seleccionada si supera el total disponible.
   useEffect(() => {
     if (paginaActual > totalPaginas) {
       setPaginaActual(totalPaginas);
     }
   }, [totalPaginas, paginaActual]);
 
+  // Consulta favoritos cuando hay usuario; guarda sus identificadores y limpia
+  // el estado en caso de error. El indicador se activa durante la consulta y se
+  // desactiva al finalizar; las dependencias son fetchFavoritos y usuario?.email.
   useEffect(() => {
     const cargarFavoritos = async () => {
 
-      // Los favoritos solo se consultan
-      // si existe un usuario autenticado.
+      // Sin usuario, no se consultan favoritos y se deja vacía la lista local.
       if (!usuario) {
         setFavoritos([]);
         setCargandoFavoritos(false);
@@ -102,13 +91,14 @@ const ListadoProductos = () => {
     cargarFavoritos();
   }, [fetchFavoritos, usuario?.email]);
 
-  // Marcar o desmarcar un producto como favorito
+  // Evita que el clic active el enlace, requiere usuario y bloquea operaciones
+  // simultáneas. Agrega o quita el favorito y actualiza el estado solo si la API
+  // devuelve un resultado verdadero; registra los errores en la consola.
   const toggleFavorito = async (e, productoId) => {
     e.preventDefault();
     e.stopPropagation();
 
-    // Los favoritos solo están disponibles
-    // para usuarios autenticados.
+    // Si no hay usuario disponible, no se realiza la operación de favoritos.
     if (!usuario) {
       alert("Iniciá sesión para agregar productos a favoritos.");
       return;
@@ -148,12 +138,12 @@ const ListadoProductos = () => {
     }
   };
 
-  // Verificar si un producto está marcado como favorito
+  // Indica si el identificador del producto está en la lista de favoritos.
   const esFavorito = (productoId) => {
     return favoritos.includes(productoId);
   };
 
-  // Estados de carga y error
+  // Retornos anticipados para carga, error de la API y lista sin productos.
   if (loading) {
     return <p className="mensaje-vacio">Cargando productos...</p>;
   }
@@ -164,20 +154,20 @@ const ListadoProductos = () => {
     return <p className="mensaje-vacio">No hay productos registrados aún.</p>;
   }
 
-  // Calcular productos visibles en página actual
+  // Calcula el inicio del segmento y obtiene los productos de la página con slice.
   const startIndex = (paginaActual - 1) * pageSize;
   const productosVisibles = productosAleatorios.slice(startIndex, startIndex + pageSize);
 
   return (
     <div className="listado-productos-wrapper">
 
-      {/* Grid de productos */}
+      {/* Tarjetas de los productos visibles, generadas a partir de la página actual. */}
       <div className="listado-productos">
         {productosVisibles.map((producto) => (
           <Link key={producto.id} to={`/producto/${producto.id}`} className="producto-link">
             <div className="producto-card">
 
-              {/* Botón de favorito */}
+              {/* Control accesible cuyo texto y estado visual indican si es favorito. */}
               <button
                 type="button"
                 className={`producto-favorito ${esFavorito(producto.id) ? 'producto-favorito--activo' : ''
@@ -193,7 +183,7 @@ const ListadoProductos = () => {
                 {esFavorito(producto.id) ? '♥' : '♡'}
               </button>
 
-              {/* Imagen del producto subida */}
+              {/* Muestra la primera imagen disponible o un marcador alternativo. */}
               {Array.isArray(producto.imagenes) && producto.imagenes.length > 0 ? (
                 <img
                   src={producto.imagenes[0]}
@@ -205,14 +195,14 @@ const ListadoProductos = () => {
               )}
 
 
-              {/* Información del producto */}
+              {/* Nombre, descripción y categoría; muestra un texto alternativo si falta la categoría. */}
               <h3>{producto.nombre}</h3>
               <p>{producto.descripcion}</p>
               <span className="categoria">
                 {producto.categoria?.nombre || "Sin categoría"}
               </span>
 
-              {/* Valoración del producto */}
+              {/* Valoración: estrellas redondeadas, promedio con un decimal y cantidad de valoraciones. */}
               <div className="producto-valoracion">
 
                 <div className="producto-valoracion__estrellas">
@@ -245,10 +235,10 @@ const ListadoProductos = () => {
         ))}
       </div>
 
-      {/* Componente de paginación */}
+      {/* Controles para cambiar la página actual. */}
       <div className="paginador">
 
-        {/* Botones de navegación principal */}
+        {/* Inicio y Atrás se deshabilitan en la primera página; Adelante, en la última. */}
         <div className="page-actions">
           <button
             className="page-nav"
@@ -275,7 +265,7 @@ const ListadoProductos = () => {
           </button>
         </div>
 
-        {/* Lista de números de página */}
+        {/* Un botón por página; el seleccionado recibe la clase activa y permite navegar a esa página. */}
         <div className="page-list">
           {Array.from({ length: totalPaginas }, (_, i) => {
             const page = i + 1;

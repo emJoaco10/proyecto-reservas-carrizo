@@ -9,27 +9,38 @@ import {
 } from "../helpers/validaciones";
 import "../styles/components/Formulario.css";
 
+/**
+ * Administra el formulario de inicio de sesión, la validación de sus campos,
+ * la presentación de errores y la navegación posterior al acceso. No recibe props.
+ */
 const IniciarSesionFormulario = () => {
 
+    // useNavigate permite redirigir al usuario según el resultado del acceso.
     const navigate = useNavigate();
 
+    // useLocation permite consultar el estado enviado a la ruta actual.
     const location = useLocation();
 
+    // Recuperan del estado de navegación el origen y, si existe, el contexto de una reserva pendiente.
     const desdeReserva = location.state?.desdeReserva;
     const reservaPendiente = location.state?.reserva;
 
+    // Datos ingresados por el usuario en los campos del formulario.
     const [formData, setFormData] = useState({
         email: "",
         password: ""
     });
 
+    // Mensajes de validación asociados a cada campo.
     const [errores, setErrores] = useState({
         email: "",
         password: ""
     });
 
+    // Mensaje general que se muestra si falla el inicio de sesión.
     const [errorLogin, setErrorLogin] = useState("");
 
+    /** Actualiza el campo modificado y limpia sus errores y el mensaje general de acceso. */
     const handleChange = ({ target }) => {
         setFormData((prev) => ({
             ...prev,
@@ -45,6 +56,7 @@ const IniciarSesionFormulario = () => {
         setErrorLogin("");
     };
 
+    /** Valida correo y contraseña, actualiza los errores y señala si el formulario es válido. */
     const validarFormulario = () => {
         const nuevosErrores = {
             email: validarEmail(formData.email),
@@ -56,6 +68,11 @@ const IniciarSesionFormulario = () => {
         return !nuevosErrores.email && !nuevosErrores.password;
     };
 
+    /**
+     * Previene el envío tradicional, valida los datos y realiza el acceso de forma asíncrona.
+     * Persiste usuario y token, recupera el flujo de reserva si corresponde o redirige al inicio;
+     * ante un fallo, muestra el mensaje recibido en errorLogin.
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -98,6 +115,7 @@ const IniciarSesionFormulario = () => {
 
     return (
         <>
+            {/* Informa que el acceso es necesario para continuar con una reserva. */}
             {desdeReserva && (
                 <p className="mensaje-login-reserva">
                     Para realizar una reserva necesitás iniciar sesión.
@@ -107,10 +125,12 @@ const IniciarSesionFormulario = () => {
             <form
                 className="formulario"
                 onSubmit={handleSubmit}
+                // Se desactiva la validación nativa porque se utilizan funciones de validación propias.
                 noValidate
             >
                 <h2>Iniciar sesión</h2>
 
+                {/* Campo de correo electrónico y mensaje condicional de validación. */}
                 <div className="campo-formulario">
                     <label htmlFor="email">
                         Correo electrónico
@@ -133,6 +153,7 @@ const IniciarSesionFormulario = () => {
                     )}
                 </div>
 
+                {/* Campo de contraseña y mensaje condicional de validación. */}
                 <div className="campo-formulario">
                     <label htmlFor="password">
                         Contraseña
@@ -155,6 +176,7 @@ const IniciarSesionFormulario = () => {
                     )}
                 </div>
 
+                {/* Envía el formulario mediante handleSubmit. */}
                 <button
                     type="submit"
                     className="btn btn-filled"
@@ -162,12 +184,14 @@ const IniciarSesionFormulario = () => {
                     Iniciar sesión
                 </button>
 
+                {/* Presenta el error general devuelto si el acceso no se completa. */}
                 {errorLogin && (
                     <p className="mensaje-error">
                         {errorLogin}
                     </p>
                 )}
 
+                {/* Enlace para acceder al flujo de creación de cuenta. */}
                 <p className="login-footer">
                     ¿Aún no tienes una cuenta?{" "}
                     <Link to="/registro-usuario">

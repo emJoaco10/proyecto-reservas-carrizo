@@ -7,20 +7,22 @@ import useReservaAPI from '../hooks/useReservaAPI';
 import { Link } from 'react-router-dom';
 
 /**
- * Bloque principal de búsqueda de productos.
- *
- * Permite ingresar una palabra clave y seleccionar
- * un rango de fechas para realizar la búsqueda de productos.
+ * Permite buscar productos por palabra clave, consultar resultados según su
+ * disponibilidad para un rango de fechas, mostrar sugerencias y presentar
+ * los productos encontrados.
  */
 const BuscadorProductos = () => {
 
+  // Productos usados para las sugerencias y la operación de búsqueda por texto.
   const {
     productos,
     fetchProductosPorBusqueda
   } = useProductoAPI();
 
+  // Operación que consulta productos según el rango de fechas seleccionado.
   const { fetchProductosDisponibles } = useReservaAPI();
 
+  // Criterios de búsqueda y estado de interfaz: resultados, carga, mensaje y sugerencias.
   const [textoBusqueda, setTextoBusqueda] = useState('');
   const [fechaInicio, setFechaInicio] = useState(null);
   const [fechaFin, setFechaFin] = useState(null);
@@ -32,9 +34,11 @@ const BuscadorProductos = () => {
   const [mostrarSugerencias, setMostrarSugerencias] = useState(false);
 
   /**
- * Normaliza un texto para comparar palabras
- * ignorando mayúsculas, minúsculas y acentos.
- */
+   * Convierte el valor recibido a texto, normaliza sus caracteres y quita
+   * espacios externos para comparar sin distinguir mayúsculas ni diacríticos.
+   * @param {*} texto Valor que se desea normalizar.
+   * @returns {string} Texto normalizado.
+   */
   const normalizarTexto = (texto = '') => {
     return String(texto)
       .toLowerCase()
@@ -44,8 +48,12 @@ const BuscadorProductos = () => {
   };
 
   /**
-   * Ordena los resultados según su relevancia
-   * respecto del texto buscado.
+  * Ordena una copia según la coincidencia del nombre con la búsqueda:
+  * coincidencia exacta, nombre que comienza con el texto, palabra del nombre
+  * que comienza con el texto, nombre que lo contiene y, por último, los demás.
+  * @param {Array} resultados Productos que se van a ordenar.
+  * @param {string} texto Texto buscado.
+  * @returns {Array} Copia ordenada de los productos.
    */
   const ordenarResultadosPorRelevancia = (
     resultados,
@@ -94,13 +102,7 @@ const BuscadorProductos = () => {
 
 
 
-  /**
-   * Obtiene sugerencias a partir de los productos
-   * disponibles.
-   *
-   * Se buscan coincidencias dentro del nombre
-   * del producto.
-   */
+  /** Filtra por coincidencia textual con el nombre y limita las sugerencias a cinco productos. */
   const sugerencias = textoBusqueda.trim()
     ? productos
       .filter((producto) =>
@@ -112,7 +114,8 @@ const BuscadorProductos = () => {
     : [];
 
   /**
-   * Actualiza el texto de búsqueda.
+  * Actualiza el texto, limpia el mensaje y habilita las sugerencias.
+  * @param {React.ChangeEvent<HTMLInputElement>} e Evento de cambio del campo.
    */
   const handleCambioBusqueda = (e) => {
 
@@ -124,7 +127,8 @@ const BuscadorProductos = () => {
   };
 
   /**
-   * Selecciona una sugerencia.
+  * Coloca el nombre elegido en el campo, oculta las sugerencias y limpia el mensaje.
+  * @param {string} nombre Nombre del producto elegido.
    */
   const handleSeleccionarSugerencia = (nombre) => {
 
@@ -134,7 +138,8 @@ const BuscadorProductos = () => {
   };
 
   /**
-   * Actualiza la fecha inicial y final seleccionadas.
+  * Actualiza las fechas inicial y final a partir del rango recibido.
+  * @param {Array<Date|null>} fechas Rango con fecha inicial y fecha final.
    */
   const handleCambioFechas = (fechas) => {
 
@@ -145,7 +150,7 @@ const BuscadorProductos = () => {
   };
 
   /**
-   * Limpia completamente el rango seleccionado.
+  * Restablece ambas fechas del rango a null.
    */
   const handleLimpiarFechas = () => {
 
@@ -154,8 +159,10 @@ const BuscadorProductos = () => {
   };
 
   /**
-   * Convierte una fecha JavaScript al formato
-   * DD/MM/YYYY para mostrarla al usuario.
+  * Devuelve una cadena vacía si no hay fecha; de lo contrario, usa el formato
+  * local es-AR.
+  * @param {Date|null} fecha Fecha que se desea mostrar.
+  * @returns {string} Fecha localizada o cadena vacía.
    */
   const formatearFecha = (fecha) => {
 
@@ -165,9 +172,12 @@ const BuscadorProductos = () => {
   };
 
   /**
-   * Ejecuta la búsqueda de productos utilizando
-   * la palabra clave ingresada por el usuario y 
-   * el rango de fechas seleccionado.
+  * Valida que haya texto o un rango completo, y que ambas fechas estén
+  * seleccionadas. Con un rango consulta por disponibilidad y, si hay texto,
+  * filtra la respuesta por nombre normalizado y la ordena por relevancia.
+  * Sin rango consulta por texto y ordena la respuesta. Actualiza los resultados
+  * y los mensajes de ausencia de coincidencias o error; al finalizar la consulta,
+  * restablece el estado de carga.
    */
   const handleBuscar = async () => {
     const texto = textoBusqueda.trim();
@@ -293,6 +303,7 @@ const BuscadorProductos = () => {
 
       <div className="buscador-productos__contenido">
 
+        {/* Campo de búsqueda por palabra clave y sugerencias de autocompletado. */}
         <div className="buscador-productos__campo">
 
           <label htmlFor="busqueda-producto">
@@ -346,6 +357,7 @@ const BuscadorProductos = () => {
 
         </div>
 
+        {/* Selector del rango de fechas usado para consultar disponibilidad. */}
         <div className="buscador-productos__campo">
 
           <label htmlFor="rango-fechas">
@@ -369,6 +381,7 @@ const BuscadorProductos = () => {
 
         </div>
 
+        {/* Inicia la búsqueda y refleja el estado de carga mientras está en curso. */}
         <button
           type="button"
           className="buscador-productos__boton"
@@ -382,6 +395,7 @@ const BuscadorProductos = () => {
 
       </div>
 
+      {/* Presenta el rango seleccionado (aunque esté incompleto) y permite limpiarlo. */}
       {(fechaInicio || fechaFin) && (
         <div className="buscador-productos__rango">
 
@@ -410,12 +424,14 @@ const BuscadorProductos = () => {
         </div>
       )}
 
+      {/* Mensajes informativos o de error asociados a la búsqueda. */}
       {mensaje && (
         <p className="buscador-productos__mensaje">
           {mensaje}
         </p>
       )}
 
+      {/* Lista los resultados con sus valoraciones y acceso al detalle de cada producto. */}
       {resultados.length > 0 && (
         <div className="buscador-productos__resultados">
 

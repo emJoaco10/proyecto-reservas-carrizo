@@ -8,8 +8,14 @@ import {
 } from "../helpers/validaciones";
 import "../styles/components/Formulario.css";
 
+/**
+ * Administra el formulario de registro de usuarios, la validación de sus campos,
+ * el envío de los datos y la presentación de los estados de carga, error y éxito.
+ * Este componente no recibe props.
+ */
 const RegistroUsuarioFormulario = () => {
 
+  // useUsuarioAPI proporciona usuario, loading, error y registerUsuario.
   const {
     usuario,
     loading,
@@ -17,6 +23,7 @@ const RegistroUsuarioFormulario = () => {
     registerUsuario
   } = useUsuarioAPI();
 
+  // Valores ingresados en los campos del formulario.
   const [formData, setFormData] = useState({
     nombre: "",
     apellido: "",
@@ -24,6 +31,7 @@ const RegistroUsuarioFormulario = () => {
     password: "",
   });
 
+  // Mensajes de validación de cada campo.
   const [errores, setErrores] = useState({
     nombre: "",
     apellido: "",
@@ -31,8 +39,10 @@ const RegistroUsuarioFormulario = () => {
     password: ""
   });
 
+  // Mensaje que se muestra cuando el registro se completa correctamente.
   const [mensajeExito, setMensajeExito] = useState("");
 
+  /** Extrae el campo modificado, actualiza su valor, limpia su error y restablece el éxito. */
   const handleChange = (e) => {
 
     const { name, value } = e.target;
@@ -55,6 +65,10 @@ const RegistroUsuarioFormulario = () => {
   };
 
 
+  /**
+   * Ejecuta las validaciones de nombre, apellido, correo y contraseña, actualiza
+   * errores y devuelve true si hay algún mensaje de error; de lo contrario, false.
+   */
   const validarFormulario = () => {
 
     const nuevosErrores = {
@@ -72,6 +86,11 @@ const RegistroUsuarioFormulario = () => {
   };
 
 
+  /**
+   * Evita el envío tradicional, limpia el éxito y valida los datos. Si son válidos,
+   * intenta registrar al usuario; al completarse, muestra el éxito y reinicia campos
+   * y errores. Si ocurre una excepción, la registra en la consola.
+   */
   const handleSubmit = async (e) => {
 
     e.preventDefault();
@@ -123,9 +142,11 @@ const RegistroUsuarioFormulario = () => {
       noValidate
     >
 
+      {/* Formulario con validación propia: noValidate evita la validación nativa del navegador. */}
       <h2>Crear cuenta</h2>
 
 
+      {/* Campos de nombre, apellido, correo electrónico y contraseña con errores condicionales. */}
       {/* NOMBRE */}
 
       <div className="campo-formulario">
@@ -234,6 +255,7 @@ const RegistroUsuarioFormulario = () => {
       </div>
 
 
+      {/* El texto refleja loading y el botón se deshabilita durante la carga. */}
       <button
         type="submit"
         disabled={loading}
@@ -244,7 +266,7 @@ const RegistroUsuarioFormulario = () => {
       </button>
 
 
-      {/* ERROR DEL BACKEND */}
+      {/* Error proporcionado por useUsuarioAPI. */}
 
       {error && (
         <p className="mensaje-error">
@@ -253,7 +275,7 @@ const RegistroUsuarioFormulario = () => {
       )}
 
 
-      {/* ÉXITO */}
+      {/* Muestra mensajeExito cuando contiene un valor. */}
 
       {mensajeExito && (
         <p className="mensaje-exito">

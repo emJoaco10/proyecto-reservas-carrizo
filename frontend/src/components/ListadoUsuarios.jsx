@@ -3,15 +3,25 @@ import { useEffect, useState } from "react";
 import useUsuarioAPI from "../hooks/useUsuarioAPI";
 import ConfirmacionModal from "./ConfirmacionModal";
 
+/**
+ * Lista los usuarios registrados y permite administrar sus roles mediante
+ * un modal de confirmación. No recibe props.
+ */
 const ListadoUsuarios = () => {
+    // Almacena la lista de usuarios obtenida.
     const [usuarios, setUsuarios] = useState([]);
+    // Controla la visibilidad del modal de confirmación.
     const [mostrarModal, setMostrarModal] = useState(false);
+    // Conserva el usuario elegido para cambiar su rol.
     const [usuarioSeleccionado, setUsuarioSeleccionado] = useState(null);
+    // El hook provee getUsuarios para consultar usuarios y actualizarRol para modificar su rol.
     const { getUsuarios, actualizarRol } = useUsuarioAPI();
 
+    // Obtiene los usuarios al ejecutarse el efecto, que depende de getUsuarios.
     useEffect(() => {
         const fetchUsuarios = async () => {
             try {
+                // Guarda los datos recibidos en el estado; los errores se registran en la consola.
                 const data = await getUsuarios();
                 setUsuarios(data);
             } catch (error) {
@@ -22,6 +32,7 @@ const ListadoUsuarios = () => {
         fetchUsuarios();
     }, [getUsuarios]);
 
+    // Guarda el usuario seleccionado y abre el modal para solicitar confirmación.
     const cambiarRolUsuario = async (usuario) => {
 
         setUsuarioSeleccionado(usuario);
@@ -29,10 +40,12 @@ const ListadoUsuarios = () => {
         setMostrarModal(true);
     };
 
+    // Comprueba la selección, solicita el rol opuesto y sincroniza el estado local si la operación finaliza correctamente.
     const confirmarCambioRol = async () => {
 
         if (!usuarioSeleccionado) return;
 
+        // Alterna entre los roles ADMIN y USER.
         const nuevoRol =
             usuarioSeleccionado.rol === "ADMIN"
                 ? "USER"
@@ -56,12 +69,14 @@ const ListadoUsuarios = () => {
 
         } catch (error) {
 
+            // Registra el error; el cambio local solo se aplica tras una actualización exitosa.
             console.error("Error al actualizar el rol:", error);
 
         }
 
     };
 
+    // Cierra el modal y limpia el usuario seleccionado.
     const cancelarCambioRol = () => {
 
         setMostrarModal(false);
@@ -74,6 +89,7 @@ const ListadoUsuarios = () => {
 
         <section className="bloque">
 
+            {/* Encabezado y descripción de la sección de administración de usuarios. */}
             <h2>Lista de usuarios</h2>
 
             <p>
@@ -82,6 +98,7 @@ const ListadoUsuarios = () => {
 
             <div className="lista-usuarios">
 
+                {/* Crea una tarjeta por usuario y pasa el callback para iniciar el cambio de rol. */}
                 {usuarios.map(usuario => (
 
                     <UsuarioCard
@@ -94,6 +111,9 @@ const ListadoUsuarios = () => {
 
             </div>
 
+            {/* La visibilidad depende de mostrarModal; el título, mensaje y texto de confirmación
+                reflejan el rol actual, y la clase del botón depende de la operación solicitada.
+                Los callbacks permiten confirmar o cancelar el cambio. */}
             <ConfirmacionModal
 
                 abierto={mostrarModal}
