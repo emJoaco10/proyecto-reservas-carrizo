@@ -1,235 +1,150 @@
-# 📚 Documentación Frontend - Proyecto Reservas Carrizo
+# Documentación del Frontend — Reservas Carrizo
 
-## 📌 Resumen
+## 1. Introducción
 
-El frontend de **Reservas Carrizo** es una aplicación web desarrollada con **React**, responsable de la interfaz de usuario, la navegación y la comunicación con el backend mediante una API REST.
+El frontend de **Reservas Carrizo** es una aplicación web desarrollada con **React, JavaScript, JSX y Vite**. Su responsabilidad es presentar la interfaz, gestionar la navegación, recoger las acciones del usuario y comunicarse con el backend mediante una API REST.
 
-Durante el **Sprint 1** se desarrolló principalmente la estructura visual y las funcionalidades iniciales de productos y usuarios, utilizando `localStorage` para la persistencia inicial.
+El código fuente se encuentra en `frontend/src/`. La aplicación organiza la interfaz en páginas y componentes reutilizables, mientras que los hooks, servicios y helpers concentran lógica compartida y operaciones de acceso a datos.
 
-En el **Sprint 2** se incorporó la integración con el backend desarrollado en **Spring Boot**, pasando a utilizar la API REST como fuente principal de datos para productos, categorías y usuarios. También se incorporaron funcionalidades administrativas, gestión de roles, características y validaciones.
+Esta documentación describe la estructura del frontend y la evolución funcional reflejada en el repositorio hasta el **Sprint 4**. Las pruebas manuales se documentan por separado en `testsS1.md`, `testsS2.md`, `testsS3.md` y  `testsS4.md`.
 
-Durante el **Sprint 3** se ampliaron las funcionalidades orientadas a la búsqueda, disponibilidad, interacción de los usuarios con los productos y administración de categorías.
+> **Alcance:** este documento describe el comportamiento que puede identificarse en el frontend. La persistencia, las reglas de negocio definitivas, la autorización efectiva y el envío de notificaciones dependen también del backend. La presencia de una interfaz no demuestra por sí sola que una operación haya sido validada en el servidor o que una prueba se haya ejecutado.
 
-Actualmente el frontend permite:
+## 2. Tecnologías
 
-- Visualizar, registrar, editar y eliminar productos.
-- Gestionar y filtrar productos por categoría.
-- Buscar productos mediante texto.
-- Mostrar sugerencias y autocompletado en el buscador.
-- Visualizar la disponibilidad de los alojamientos.
-- Seleccionar rangos de fechas y reconocer fechas ocupadas.
-- Registrar e iniciar sesión con usuarios.
-- Diferenciar funcionalidades según el rol.
-- Acceder a funcionalidades administrativas.
-- Marcar productos como favoritos.
-- Consultar y gestionar el listado de productos favoritos.
-- Visualizar las políticas de los alojamientos.
-- Compartir productos.
-- Visualizar y registrar valoraciones.
-- Mostrar el promedio y la cantidad de valoraciones.
-- Eliminar categorías desde el panel administrativo sin eliminar los productos asociados.
-- Validar formularios e imágenes.
-- Mostrar estados de carga, errores y mensajes de interacción.
-- Utilizar una interfaz responsive.
+| Tecnología | Uso en el frontend |
+|---|---|
+| React | Construcción de la interfaz mediante componentes y estado. |
+| JavaScript | Lógica de interacción, transformación de datos y llamadas a funciones. |
+| JSX | Declaración de la estructura visual de los componentes React. |
+| React Router DOM | Definición de rutas, navegación y lectura de parámetros de URL. |
+| CSS | Estilos de páginas, componentes, estados y adaptación responsive. |
+| Vite | Entorno de desarrollo y herramienta de compilación del frontend. |
+| `react-datepicker` | Selector de fechas utilizado en búsqueda y disponibilidad. |
+| `lucide-react` | Iconografía utilizada por componentes de la interfaz. |
 
-La aplicación mantiene una separación entre páginas, componentes, hooks, servicios, helpers y estilos.
+La aplicación se comunica con el backend por HTTP mediante los servicios del frontend. En el entorno local utilizado durante el desarrollo, las direcciones habituales son:
 
----
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:8080`
 
-## 🏗️ Arquitectura
+Estas direcciones corresponden a la configuración habitual de desarrollo y pueden variar según el entorno.
 
-El frontend utiliza una arquitectura basada en componentes React.
+## 3. Organización del código
 
-La organización principal es:
+La estructura principal de `frontend/src/` es la siguiente:
 
 ```text
-Pages
-   │
-   ▼
-Components
-   │
-   ▼
-Hooks / Helpers
-   │
-   ▼
-API REST
-   │
-   ▼
-Backend Spring Boot
-   │
-   ▼
-Base de datos H2
-Principales responsabilidades
-
-Pages
-
-Representan las diferentes vistas de la aplicación y organizan los componentes utilizados en cada pantalla.
-
-Components
-
-Contienen elementos reutilizables de la interfaz, como formularios, filtros, listados y tarjetas.
-
-Hooks
-
-Centralizan lógica reutilizable. El principal hook utilizado para la comunicación con el backend es useProductoAPI.
-
-Helpers
-
-Contienen funciones auxiliares relacionadas con validaciones, almacenamiento y tratamiento de datos.
-
-Styles
-
-Contienen los estilos CSS de páginas y componentes.
-
-🛠️ Stack Tecnológico
-Frontend
-Tecnología	Uso
-React	Desarrollo de la interfaz
-JavaScript	Lógica de la aplicación
-JSX	Componentes React
-React Router	Navegación
-CSS	Estilos
-Vite	Desarrollo y compilación
-Integración con Backend
-Tecnología	Uso
-Spring Boot	Backend
-Spring Data JPA	Persistencia
-Spring Security	Seguridad y roles
-H2	Base de datos
-Comunicación
-
-La comunicación entre frontend y backend se realiza mediante HTTP y una API REST.
-
-Durante el desarrollo local:
-
-Frontend → http://localhost:5173
-Backend  → http://localhost:8080
-
-El hook useProductoAPI centraliza las principales operaciones relacionadas con productos y categorías.
-
-## 🔄 Evolución Sprint 1 → Sprint 2 → Sprint 3
-
-### Sprint 1
-
-Durante el primer sprint se desarrolló la estructura inicial del frontend y las principales funcionalidades de productos y usuarios.
-
-La persistencia inicial utilizaba principalmente `localStorage`.
-
-Entre las funcionalidades desarrolladas se encontraron:
-
-- Visualización de productos.
-- Registro de productos.
-- Edición de productos.
-- Eliminación de productos.
-- Navegación entre páginas.
-- Primeras funcionalidades relacionadas con usuarios.
-- Persistencia inicial mediante `localStorage`.
-
-### Sprint 2
-
-Durante el segundo sprint se realizó la integración del frontend con el backend y se incorporaron nuevas funcionalidades.
-
-Los principales cambios fueron:
-
-- Integración con la API REST.
-- Gestión de categorías.
-- Asociación de categorías a productos.
-- Filtrado de productos por categoría.
-- Administración de categorías.
-- Gestión de usuarios y roles.
-- Funcionalidades específicas para administradores.
-- Mejoras en formularios y validaciones.
-- Mejoras visuales y responsive.
-
-También se eliminó el atributo `tipo` del producto.
-
-La clasificación pasó a realizarse mediante `Categoria`, evitando mantener dos mecanismos diferentes para clasificar los productos.
-
-El modelo conceptual del producto quedó:
-
-```text
-Producto
-├── id
-├── nombre
-├── descripcion
-├── imagenes
-└── categoria
+src/
+├── App.jsx
+├── main.jsx
+├── index.css
+├── constantes/
+│   └── iconos.js
+├── components/
+├── helpers/
+├── hooks/
+├── pages/
+├── services/
+└── styles/
+    ├── components/
+    ├── pages/
+    ├── App.css
+    ├── Botones.css
+    └── variables.css
 ```
 
-Los productos sin categoría muestran `Sin categoría`.
+### 3.1. `App.jsx` y `main.jsx`
 
-### Sprint 3
+`main.jsx` es el punto de entrada de React. `App.jsx` organiza las rutas de la aplicación mediante `BrowserRouter`, `Routes` y `Route`. También dispone el encabezado y el pie de página globales.
 
-Durante el tercer sprint se incorporaron funcionalidades orientadas principalmente a la búsqueda, disponibilidad, interacción de los usuarios con los productos y administración de categorías.
+Las rutas públicas incluyen la página principal, el detalle de un producto, el registro, el inicio de sesión, el flujo de reserva, el perfil, los favoritos y el historial de reservas.
 
-Las principales funcionalidades incorporadas fueron:
+Las rutas administrativas se agrupan bajo `AdminRoute`, que controla el acceso a las vistas de administración en el frontend. La autorización efectiva de las operaciones debe estar respaldada por el backend.
 
-- Búsqueda de productos mediante texto.
-- Sugerencias y autocompletado en el buscador.
-- Visualización de disponibilidad de los alojamientos.
-- Selección de rangos de fechas.
-- Identificación visual de fechas ocupadas.
-- Marcado de productos como favoritos.
-- Visualización del listado de productos favoritos.
-- Eliminación de productos de favoritos.
-- Visualización de políticas de los alojamientos.
-- Compartir productos mediante diferentes opciones.
-- Sistema de valoraciones mediante estrellas.
-- Registro de comentarios y puntuaciones.
-- Visualización del promedio de valoración.
-- Visualización de la cantidad de valoraciones.
-- Integración de valoraciones en el detalle y listado de productos.
-- Eliminación de categorías desde el panel administrativo.
-- Conservación de los productos asociados al eliminar una categoría.
+### 3.2. `pages/`
 
-El Sprint 3 también incorporó nuevos componentes, páginas, hooks y servicios para mantener separadas las responsabilidades del frontend.
+Contiene las vistas que corresponden a páginas o flujos de navegación completos. Entre ellas se encuentran:
 
-La comunicación con el backend continúa realizándose mediante la API REST.
+- `Main.jsx`: página principal, buscador, filtro por categorías y recomendaciones.
+- `DetalleProductos.jsx`: detalle del producto, calendario, políticas, valoraciones y contacto por WhatsApp.
+- `DetalleProductosGaleria.jsx`: vista de galería del producto.
+- `RegistroUsuario.jsx` e `IniciarSesion.jsx`: páginas de registro e inicio de sesión.
+- `MiPerfil.jsx`: acceso a la información del perfil.
+- `MisFavoritos.jsx`: listado de productos favoritos.
+- `Reserva.jsx`: formulario y flujo de solicitud de reserva.
+- `ListaReservas.jsx`: historial de reservas del usuario.
+- `Administracion.jsx` y páginas relacionadas: administración de productos, usuarios, categorías y características.
+- `AgregarProducto.jsx`, `EditarProducto.jsx` y las páginas de administración relacionadas: formularios de gestión.
 
-### 📊 Estado actual
+### 3.3. `components/`
 
-Al finalizar el Sprint 3, el frontend se encuentra integrado con el backend y cuenta con las funcionalidades desarrolladas durante los tres primeros sprints.
+Contiene elementos reutilizables de la interfaz. Entre los principales se encuentran:
 
-Las pruebas funcionales se mantienen organizadas por sprint en:
+- `Header.jsx` y `Footer.jsx`: estructura global y navegación.
+- `ListadoProductos.jsx` y `ListadoProductosFiltrados.jsx`: presentación de listados de productos.
+- `BuscadorProductos.jsx`: búsqueda por texto y fechas, sugerencias y resultados.
+- `CalendarioDisponibilidad.jsx`: consulta de fechas ocupadas y selección de un rango.
+- `InfoProducto.jsx`, `CaracteristicasListado.jsx`, `PoliticasProducto.jsx` y `ValoracionesProducto.jsx`: bloques de información del producto.
+- `CompartirProducto.jsx`: opciones para compartir el enlace de un producto.
+- `InfoReserva.jsx`, `InformacionPago.jsx` y `ConfirmacionReserva.jsx`: partes de la interfaz del flujo de reserva.
+- `ListadoUsuarios.jsx`, `UsuarioCard.jsx` y componentes de paneles administrativos: gestión y visualización de usuarios.
+- `BreadcrumAdministracion.jsx`: navegación contextual dentro del área administrativa.
+
+### 3.4. `hooks/`
+
+Los hooks encapsulan operaciones reutilizables y estados relacionados con el acceso a datos:
+
+| Hook | Responsabilidad general |
+|---|---|
+| `useProductoAPI.js` | Operaciones de productos, búsquedas, categorías relacionadas y favoritos que expone el hook. |
+| `useUsuarioAPI.js` | Operaciones de registro, inicio de sesión y gestión de usuarios disponibles en el servicio. |
+| `useCategoriaAPI.js` | Operaciones de categorías. |
+| `useCaracteristicaAPI.js` | Operaciones de características de productos. |
+| `useReservaAPI.js` | Operaciones relacionadas con reservas, disponibilidad y consulta de reservas. |
+| `useImageError.js` | Lógica reutilizable relacionada con errores de imágenes. |
+
+Las operaciones exactas disponibles deben consultarse en cada hook; esta tabla resume su propósito general y no reemplaza la revisión de sus implementaciones.
+
+### 3.5. `services/`
+
+Los servicios separan las peticiones HTTP de los componentes visuales:
+
+- `apiService.js`: configuración o funciones comunes para la comunicación con la API.
+- `productoService.js`: operaciones relacionadas con productos.
+- `usuarioService.js`: operaciones relacionadas con usuarios.
+- `categoriaService.js`: operaciones relacionadas con categorías.
+- `caracteristicaService.js`: operaciones relacionadas con características.
+- `reservaService.js`: operaciones relacionadas con reservas y disponibilidad.
+- `favoritoService.js`: operaciones relacionadas con favoritos.
+- `valoracionService.js`: operaciones relacionadas con valoraciones.
+
+El hook o componente que necesita información utiliza las funciones correspondientes y luego actualiza el estado de la interfaz según la respuesta recibida.
+
+### 3.6. `helpers/` y `constantes/`
+
+- `storageUtils.js`: funciones auxiliares para leer y escribir información en el almacenamiento local.
+- `validaciones.js`: validaciones reutilizables.
+- `imageUtils.js`: utilidades para el tratamiento de imágenes.
+- `productoUtils.js`: utilidades relacionadas con productos.
+- `constantes/iconos.js`: constantes relacionadas con iconos.
+
+### 3.7. `styles/`
+
+Los estilos se organizan en hojas generales y hojas específicas de páginas y componentes. `variables.css` centraliza variables visuales, mientras que las carpetas `styles/pages/` y `styles/components/` agrupan estilos por responsabilidad.
+
+## 4. Arquitectura y flujo de datos
+
+El patrón general de interacción del frontend es:
 
 ```text
-testsS1.md
-testsS2.md
-testsS3.md
-```
-
-La documentación técnica describe cómo está construido el frontend, mientras que los archivos de testing registran cómo fueron verificadas las funcionalidades.
-
----
-
-## 🪝 `useProductoAPI`
-
-El hook:
-
-```text
-src/hooks/useProductoAPI.js
-
-centraliza las operaciones relacionadas con la API.
-
-Su objetivo es evitar que cada componente tenga que implementar directamente las peticiones HTTP.
-
-Entre las operaciones principales se encuentran:
-
-Obtener productos.
-Obtener productos aleatorios.
-Obtener productos por ID.
-Obtener productos paginados.
-Crear productos.
-Actualizar productos.
-Eliminar productos.
-Obtener categorías.
-Consultar productos por categoría.
-
-El flujo general es:
-
-Componente
+Página (pages/)
     ↓
-useProductoAPI
+Componente reutilizable (components/)
+    ↓
+Hook (hooks/) o helper (helpers/)
+    ↓
+Servicio (services/)
     ↓
 API REST
     ↓
@@ -237,1055 +152,405 @@ Backend
     ↓
 Respuesta
     ↓
-Componente
-📦 Gestión de Productos
+Actualización del estado y renderizado React
+```
 
-Las operaciones de productos se realizan principalmente mediante la API REST.
+No todos los componentes necesitan recorrer todas las capas: una página puede delegar una parte de la interfaz a un componente, y ese componente puede usar un hook. La separación busca evitar que las peticiones HTTP queden repetidas en múltiples lugares.
 
-El frontend puede solicitar información para:
+### 4.1. Estado de interfaz
 
-Listados.
-Detalles.
-Paginación.
-Productos aleatorios.
-Filtrado.
-Creación.
-Edición.
-Eliminación.
+Los componentes utilizan `useState` para mantener datos de formularios, filtros, resultados, mensajes y estados de carga. `useEffect` se utiliza para realizar operaciones asociadas al ciclo de vida del componente, como cargar datos al entrar en una página o cuando cambian determinadas dependencias.
 
-Los datos recibidos se utilizan posteriormente para actualizar el estado de los componentes y mostrar la información correspondiente.
+Los estados de carga, error, ausencia de resultados y confirmación se muestran mediante renderizado condicional cuando corresponde.
 
-🏷️ Gestión de Categorías
+### 4.2. Almacenamiento local y sesión
 
-Las categorías también se obtienen y gestionan mediante la API.
+`storageUtils.js` proporciona funciones para acceder al almacenamiento local. En distintas partes de la interfaz se utiliza la información almacenada bajo la clave `usuario` para presentar datos del usuario y adaptar algunas opciones de navegación.
 
-El frontend puede:
+La existencia de datos en el almacenamiento local no debe interpretarse como una garantía de autenticación segura. El backend debe verificar la identidad y los permisos en cada operación protegida.
 
-Obtener las categorías disponibles.
-Utilizarlas para filtrar productos.
-Crear nuevas categorías desde el panel administrativo.
-Mostrar la categoría asociada a un producto.
+### 4.3. Formularios y validaciones
 
-La categoría pasó a ser el mecanismo principal de clasificación de los productos durante el Sprint 2.
+El frontend realiza validaciones de entrada para mostrar mensajes y evitar envíos incompletos. Estas validaciones mejoran la experiencia de uso, pero no sustituyen las validaciones del backend.
 
-🔍 Filtrado por Categoría
+## 5. Rutas principales
 
-El filtrado comienza en CategoryFilter.jsx.
+Las rutas configuradas en `App.jsx` incluyen:
 
-El usuario selecciona una o más categorías y esa información se comunica a Main.jsx.
+| Ruta | Vista o propósito |
+|---|---|
+| `/` | Página principal. |
+| `/producto/:id` | Detalle de un producto. |
+| `/producto/:id/galeria` | Galería del producto. |
+| `/registro-usuario` | Registro de usuario. |
+| `/iniciar-sesion` | Inicio de sesión. |
+| `/reserva/:id` | Flujo de reserva del producto indicado. |
+| `/mi-perfil` | Perfil del usuario. |
+| `/mis-favoritos` | Listado de favoritos. |
+| `/mis-reservas` | Historial de reservas. |
+| `/administracion` | Panel principal de administración. |
+| `/productos-admin` | Administración de productos. |
+| `/lista-productos` | Listado administrativo de productos. |
+| `/agregar-producto` | Alta de producto. |
+| `/admin/producto/editar/:id` | Edición de producto. |
+| `/usuarios-admin` | Administración de usuarios. |
+| `/lista-usuarios` | Listado administrativo de usuarios. |
+| `/caracteristicas-admin` | Administración de características. |
+| `/lista-caracteristicas` | Listado de características. |
+| `/agregar-caracteristica` | Alta de característica. |
+| `/editar-caracteristica/:id` | Edición de característica. |
+| `/asociar-producto-caracteristica/:id` | Asociación de características a un producto. |
+| `/categorias-admin` | Administración de categorías. |
+| `/agregar-categoria` | Alta de categoría. |
+| `/editar-categoria/:id` | Edición de categoría. |
 
-El flujo es:
+Las rutas administrativas están anidadas dentro de `AdminRoute`. Las rutas de perfil, favoritos y reservas del usuario se declaran en `App.jsx` sin estar anidadas dentro de ese componente; algunas páginas pueden realizar comprobaciones adicionales por su cuenta.
 
-CategoryFilter
-      ↓
-Categorías seleccionadas
-      ↓
-Main.jsx
-      ↓
-useProductoAPI
-      ↓
-Backend
-      ↓
-Productos filtrados
-      ↓
-ListadoProductosFiltrados
+## 6. Evolución funcional por sprint
 
-Cuando no hay categorías seleccionadas, se muestra nuevamente el listado general.
+### 6.1. Sprint 1 — Estructura inicial
 
-💾 localStorage
+El primer sprint estableció la estructura visual inicial de la aplicación y los flujos básicos de productos y navegación.
 
-El proyecto utiliza utilidades de almacenamiento local mediante:
+Las funcionalidades documentadas para esa etapa incluyen:
 
-src/helpers/storageUtils.js
+- Encabezado, cuerpo principal y pie de página.
+- Visualización de productos en la página principal.
+- Detalle de producto y galería de imágenes.
+- Alta, edición, listado y eliminación de productos.
+- Primeras páginas y formularios de usuarios.
+- Navegación entre vistas y estilos responsive.
+- Uso inicial de `localStorage` en determinadas operaciones.
 
-Durante el Sprint 1, localStorage tenía un papel más importante en la gestión de datos.
+La implementación inicial fue evolucionando en los siguientes sprints hacia una mayor integración con el backend.
 
-Con la incorporación del backend, dejó de ser la fuente principal de productos y categorías.
+### 6.2. Sprint 2 — Integración y administración
 
-Actualmente se utiliza únicamente cuando una funcionalidad del frontend necesita conservar información local durante la navegación.
+Durante el Sprint 2 se amplió la integración con la API REST y se desarrollaron funcionalidades de administración.
 
-🧰 Helpers
+Entre los cambios documentados se encuentran:
 
-Los helpers contienen funciones auxiliares reutilizables.
+- Registro e inicio de sesión.
+- Gestión de sesión y presentación de opciones según el usuario.
+- Gestión de usuarios y roles.
+- Rutas y páginas administrativas.
+- Alta, edición y eliminación de categorías.
+- Gestión de características de productos y asociación con productos.
+- Filtrado de productos por categoría.
+- Validaciones de formularios e imágenes.
+- Centralización de operaciones mediante hooks y servicios.
 
-productoUtils.js
+La clasificación de productos pasó a realizarse mediante categorías, en lugar de mantener mecanismos de clasificación duplicados. Cuando un producto no tiene una categoría asociada, la interfaz puede mostrar `Sin categoría`.
 
-Agrupa funciones relacionadas con el tratamiento y manejo de información de productos.
+La HU19 fue descrita en la documentación anterior como opcional y postergada.
 
-storageUtils.js
+### 6.3. Sprint 3 — Búsqueda, disponibilidad e interacción
 
-Centraliza las operaciones relacionadas con localStorage.
+El Sprint 3 amplió la consulta de productos y la interacción con los alojamientos.
 
-validaciones.js
+#### HU22 — Realizar búsqueda
 
-Contiene validaciones reutilizables utilizadas por los formularios.
+`BuscadorProductos.jsx` permite:
 
-Esta separación evita duplicar lógica dentro de los componentes.
+- Buscar por palabra clave.
+- Mostrar sugerencias durante la escritura.
+- Seleccionar una sugerencia.
+- Seleccionar fecha inicial y final.
+- Ejecutar una búsqueda.
+- Presentar resultados relacionados con los criterios ingresados.
+- Ordenar los resultados por relevancia textual.
 
-⚠️ Validaciones
+El buscador utiliza operaciones de `useProductoAPI` para la búsqueda por texto y de `useReservaAPI` para consultar productos disponibles según el rango de fechas.
 
-El frontend realiza validaciones iniciales antes de enviar determinados datos al backend.
+#### HU23 — Visualizar disponibilidad
 
-Estas validaciones permiten detectar errores básicos directamente en la interfaz.
+`CalendarioDisponibilidad.jsx` consulta la disponibilidad del producto, presenta las fechas ocupadas y permite seleccionar un rango. El componente contiene lógica para comprobar si una fecha o un rango incluyen días ocupados, mostrar mensajes y comunicar al componente padre las fechas aceptadas.
 
-Las reglas de negocio y validaciones definitivas corresponden al backend.
+El detalle del producto integra el calendario y conserva las fechas seleccionadas para utilizarlas al iniciar el flujo de reserva.
 
-🖼️ Validación de imágenes
+#### HU24 y HU25 — Favoritos
 
-El formulario de categorías valida las imágenes seleccionadas antes de procesarlas.
+La funcionalidad de favoritos permite marcar productos y consultar la lista guardada por el usuario. `ListadoProductos.jsx` incorpora interacción con favoritos y `MisFavoritos.jsx` presenta los productos favoritos, permite acceder al detalle y solicitar la eliminación de un favorito. La página contempla estados de carga, error y lista vacía.
 
-Formatos permitidos:
+#### HU26 — Políticas del producto
 
-JPG
-PNG
-WEBP
+`PoliticasProducto.jsx` presenta una sección de políticas del alojamiento dentro del detalle del producto.
 
-Tamaño máximo:
+#### HU27 — Compartir productos
 
-5 MB
+`CompartirProducto.jsx` presenta opciones para compartir el enlace de un producto, incluyendo mecanismos de compartición del navegador cuando están disponibles y opciones de copia o enlaces para compartir, según la implementación del componente.
 
-Si el archivo no cumple alguna condición, se informa al usuario y no se continúa con el procesamiento.
+#### HU28 — Valorar productos
 
-👁️ Vista previa de imágenes
+`ValoracionesProducto.jsx` presenta la sección de valoraciones e integra las operaciones disponibles para mostrar o registrar puntuaciones y comentarios. La interfaz contempla información como puntuación, usuario, fecha, comentario, promedio y cantidad de valoraciones, de acuerdo con los datos que recibe.
 
-Cuando se selecciona una imagen válida en FormularioCategoria.jsx, se utiliza FileReader para generar una representación que permite mostrar una vista previa.
+#### HU29 — Eliminar categoría
 
-El flujo es:
+La interfaz administrativa permite solicitar la eliminación de una categoría mediante un flujo de confirmación. La documentación de esta funcionalidad indica que los productos asociados deben conservarse y quedar sin categoría; el resultado definitivo depende de la operación del backend.
 
-Seleccionar archivo
-      ↓
-Validar formato
-      ↓
-Validar tamaño
-      ↓
-FileReader
-      ↓
-Vista previa
+## 7. Sprint 4 — Reservas y contacto
 
-Esto permite comprobar visualmente la imagen antes de completar el formulario.
+Durante el Sprint 4 se incorporaron o ampliaron en el frontend las funcionalidades relacionadas con búsqueda por fecha, acceso al detalle para reservar, solicitud de reservas, historial y contacto por WhatsApp. Las Historias de Usuario recibidas son HU30 a HU35.
 
-⏳ Estados de carga y errores
+### 7.1. HU30 — Reservas: seleccionar fecha
 
-Las operaciones que dependen de la API pueden requerir estados de carga mientras se espera una respuesta.
+**Objetivo:** permitir que el usuario realice búsquedas por fecha para encontrar productos que coincidan con sus intereses.
 
-El frontend contempla también situaciones como:
+**Implementación frontend identificada:**
 
-Error en una petición.
-Datos inválidos.
-Producto inexistente.
-Categoría inexistente.
-Archivo de imagen inválido.
+- `BuscadorProductos.jsx` incluye un selector de fechas con `react-datepicker`.
+- Mantiene estados para el texto buscado, la fecha inicial, la fecha final, los resultados, la carga, los mensajes y las sugerencias.
+- Utiliza `useReservaAPI` para consultar productos disponibles por rango de fechas.
+- Utiliza `useProductoAPI` para la búsqueda por palabra clave.
+- Presenta los resultados y permite navegar al detalle del producto.
 
-La interfaz puede informar estos estados al usuario sin interrumpir el funcionamiento general de la aplicación.
+El selector de fechas del buscador y el calendario de disponibilidad del detalle cumplen funciones relacionadas, pero no idénticas: el primero ayuda a buscar productos según fechas; el segundo permite consultar la disponibilidad de un producto concreto y seleccionar un rango para iniciar una reserva.
 
-🔁 Evolución del manejo de datos
-Sprint 1
-React
-  ↓
-localStorage
-Sprint 2
-React
-  ↓
-useProductoAPI
-  ↓
-API REST
-  ↓
-Spring Boot
-  ↓
-H2
+### 7.2. HU31 — Reservas: visualizar detalles
 
-El cambio permite centralizar la persistencia y mantener sincronizados frontend y backend.
+**Objetivo:** permitir que un usuario autenticado visualice la página de detalle del producto para poder reservarlo.
 
-📌 Principio de separación
+**Implementación frontend identificada:**
 
-La gestión actual busca mantener separadas tres responsabilidades:
+- La ruta `/producto/:id` renderiza `DetalleProductos.jsx`.
+- El componente obtiene el identificador mediante `useParams` y consulta el producto mediante `useProductoAPI`.
+- Presenta información del producto, imágenes, características, políticas y valoraciones.
+- Integra `CalendarioDisponibilidad.jsx` para consultar fechas y seleccionar un rango.
+- Mantiene las fechas seleccionadas en el estado de la página.
+- Ofrece el paso al flujo de reserva y una opción de contacto por WhatsApp.
 
-Componentes
-    ↓
-Interfaz y estado visual
+**Nota de alcance:** la ruta de detalle está declarada como pública en `App.jsx`; el componente contiene lógica para adaptar el flujo de reserva según la existencia de un usuario leído del almacenamiento local. La autorización real de una reserva debe comprobarse en el backend. Por eso, la descripción de la HU no debe interpretarse como prueba de que la ruta de detalle, por sí sola, exige autenticación.
 
-Hooks
-    ↓
-Comunicación y lógica reutilizable
+### 7.3. HU32 — Realizar reserva
 
-Backend
-    ↓
-Persistencia y reglas de negocio
+**Objetivo:** permitir que un usuario autenticado realice una reserva para utilizar un producto.
 
-Esto permite que los componentes se concentren principalmente en la interfaz y que la comunicación con el backend se encuentre centralizada.
+**Implementación frontend identificada:**
 
-## 🧭 Routing y Navegación
+- La ruta `/reserva/:id` renderiza `Reserva.jsx`.
+- El componente obtiene el ID del producto mediante `useParams` y carga su información con `useProductoAPI`.
+- Puede inicializar las fechas con valores recibidos a través de `location.state`.
+- Muestra los datos del producto y del usuario disponible en el almacenamiento local.
+- Recopila cantidad de huéspedes, DNI, edades de los huéspedes y observaciones.
+- Valida que se hayan seleccionado fechas, que la cantidad de huéspedes sea mayor que cero, que DNI, edades y observaciones estén informados, y que la cantidad de edades ingresadas coincida con la cantidad de huéspedes.
+- Envía los datos a `registrarReserva` mediante `useReservaAPI`.
+- Convierte las fechas a cadenas `YYYY-MM-DD` antes de enviarlas.
+- Muestra mensajes de error y un estado de procesamiento.
+- Si la operación devuelve un resultado verdadero, activa la interfaz `ConfirmacionReserva`.
 
-La navegación del frontend se gestiona mediante **React Router** y se encuentra centralizada principalmente en:
+La pantalla de confirmación indica el resultado que interpreta el frontend a partir de la respuesta recibida. La persistencia y aceptación definitiva de la reserva corresponden al backend.
+
+### 7.4. HU33 — Acceder al historial
+
+**Objetivo:** permitir que un usuario autenticado consulte reservas anteriores.
+
+**Implementación frontend identificada:**
+
+- La ruta `/mis-reservas` renderiza `ListaReservas.jsx`.
+- El componente utiliza `fetchMisReservas` de `useReservaAPI`.
+- Mantiene estados para la lista, la carga y los errores.
+- Muestra mensajes diferenciados durante la carga, ante un error y cuando no hay reservas.
+- Si existen resultados, presenta tarjetas con nombre del producto, estado de la reserva, fecha de ingreso, fecha de salida y cantidad de huéspedes.
+
+**Nota de alcance:** la ruta se encuentra declarada en `App.jsx` fuera del grupo `AdminRoute`. La protección de acceso para usuarios autenticados debe revisarse en el flujo completo y garantizarse también desde el backend; la presencia de la página no constituye por sí sola una barrera de seguridad.
+
+### 7.5. HU34 — WhatsApp: iniciar chat
+
+**Objetivo:** permitir que el usuario se comunique con el proveedor del producto por WhatsApp para realizar consultas.
+
+**Implementación frontend identificada:**
+
+- `DetalleProductos.jsx` define una función de contacto que construye una URL `wa.me` con un número configurado y un mensaje inicial.
+- El mensaje se codifica para su inclusión en la URL.
+- Se intenta abrir el enlace en una pestaña nueva.
+- El componente muestra un mensaje de resultado del intento y registra excepciones en consola.
+
+La interfaz informa que WhatsApp se abrió cuando la llamada de apertura se ejecuta sin lanzar una excepción; esto no permite asegurar que el usuario haya enviado un mensaje. El número de contacto se encuentra configurado en el código del componente.
+
+### 7.6. HU35 — Notificación: confirmar reserva por correo
+
+**Objetivo:** que un usuario registrado reciba un correo electrónico con los datos de la reserva después de realizarla.
+
+**Alcance frontend:** el flujo de reserva se comunica con `useReservaAPI` y presenta una confirmación visual a partir de la respuesta de `registrarReserva`. En los componentes de interfaz revisados no se identifica una implementación frontend directa del envío de correo electrónico.
+
+El envío de una notificación por correo suele requerir una operación del backend o de un servicio de notificaciones. Para considerar esta HU completa es necesario comprobar la implementación del backend y las pruebas correspondientes. La confirmación visual de `Reserva.jsx` no demuestra por sí sola que el correo se haya enviado o recibido.
+
+## 8. Flujo frontend de una reserva
+
+El flujo principal que conecta búsqueda, detalle y reserva puede representarse así:
 
 ```text
-src/App.jsx
-
-React Router permite cambiar entre las diferentes vistas sin recargar completamente la aplicación.
-
-🛣️ Principales rutas
-Ruta	Página	Función
-/	Main.jsx	Página principal y listado de productos
-/producto/:id	DetalleProducto.jsx	Detalle de un producto
-/agregar-producto	AgregarProducto.jsx	Registro de productos
-/editar-producto/:id	EditarProducto.jsx	Edición de productos
-/administración	Administracion.jsx	Panel administrativo
-/categorias-admin	AdministracionCategorias.jsx	Administración de categorías
-/agregar-categoria	AgregarCategorias.jsx	Creación de categorías
-
-Las rutas que contienen :id utilizan un parámetro dinámico para identificar el recurso correspondiente.
-
-🔗 Navegación entre vistas
-
-El proyecto utiliza diferentes herramientas de React Router según la necesidad:
-
-Link
-
-Permite crear enlaces internos entre páginas sin recargar la aplicación.
-
-useNavigate
-
-Permite realizar navegación programáticamente, por ejemplo después de completar correctamente una operación.
-
-useParams
-
-Permite obtener parámetros de la URL, como el identificador de un producto:
-
-/producto/:id
-🔐 Navegación administrativa
-
-Las funcionalidades administrativas se encuentran separadas de las vistas públicas.
-
-El flujo principal es:
-
-Administracion.jsx
-       │
-       ├── Gestión de productos
-       │
-       └── Gestión de categorías
-              │
-              ▼
-      AdministracionCategorias
-              │
-              ▼
-        AgregarCategorias
-              │
-              ▼
-     FormularioCategoria
-
-El acceso a las funcionalidades administrativas depende del usuario y sus permisos.
-
-La validación de seguridad definitiva corresponde al backend.
-
-🔄 Flujo principal de navegación
-
-La navegación general puede resumirse en:
-
 Página principal
-      │
-      ├── Producto
-      │      └── Detalle
-      │
-      └── Administración
-             ├── Productos
-             └── Categorías
-                    └── Agregar categoría
-
-La utilización de React Router permite mantener una estructura de navegación tipo SPA y separar cada funcionalidad en su propia página.
-
-## 🧩 Páginas y Componentes Principales
-
-Las páginas representan las vistas principales de la aplicación y utilizan componentes reutilizables para construir la interfaz.
-
----
-
-## 📄 Páginas principales
-
-### `Main.jsx`
-
-Es la página principal de la aplicación.
-
-Se encarga principalmente de:
-
-- Mostrar productos.
-- Obtener información desde la API.
-- Gestionar el filtrado por categorías.
-- Mostrar el listado correspondiente.
-- Coordinar los componentes principales de la pantalla.
-
-Utiliza `CategoryFilter`, `ListadoProductos` y `ListadoProductosFiltrados`.
-
----
-
-### `AgregarProducto.jsx`
-
-Contiene la vista utilizada para registrar nuevos productos.
-
-Permite ingresar los datos correspondientes y enviarlos al backend.
-
-Durante el Sprint 2 se eliminó el campo `tipo` del formulario, ya que la clasificación del producto pasó a realizarse mediante `Categoria`.
-
----
-
-### `EditarProducto.jsx`
-
-Permite modificar un producto existente.
-
-Utiliza el identificador recibido mediante la ruta para obtener el producto correspondiente y cargar sus datos en el formulario.
-
----
-
-### `DetalleProducto.jsx`
-
-Muestra la información de un producto seleccionado.
-
-El producto se obtiene utilizando el identificador incluido en la URL.
-
----
-
-### `Administracion.jsx`
-
-Es la página principal de las funcionalidades administrativas.
-
-Centraliza el acceso a las diferentes herramientas disponibles para usuarios con permisos de administrador.
-
----
-
-### `AdministracionCategorias.jsx`
-
-Página destinada a la gestión de categorías.
-
-Permite acceder a las funcionalidades relacionadas con la administración de categorías.
-
----
-
-### `AgregarCategorias.jsx`
-
-Página que contiene el formulario utilizado para crear nuevas categorías.
-
-Renderiza el componente:
-
-```text
-FormularioCategoria.jsx
-🧱 Componentes principales
-ListadoProductos.jsx
-
-Muestra el listado general de productos mediante tarjetas.
-
-La información visual incluye principalmente:
-
-Imagen.
-Nombre.
-Descripción.
-Categoría.
-
-Cuando un producto no posee categoría, se muestra:
-
-Sin categoría
-ListadoProductosFiltrados.jsx
-
-Muestra los productos obtenidos después de aplicar un filtro por categoría.
-
-Mantiene la misma estructura visual que el listado general.
-
-CategoryFilter.jsx
-
-Permite seleccionar las categorías utilizadas para filtrar productos.
-
-Las categorías seleccionadas son comunicadas a Main.jsx, que coordina la consulta correspondiente mediante useProductoAPI.
-
-FormularioCategoria.jsx
-
-Contiene el formulario para crear categorías.
-
-Campos principales:
-
-Nombre
-Descripción
-Imagen
-
-La imagen seleccionada se valida y posteriormente se muestra mediante una vista previa.
-
-Validaciones principales:
-
-Formatos: JPG, PNG, WEBP
-Tamaño máximo: 5 MB
-🔄 Relación entre páginas y componentes
-
-La estructura principal de productos puede resumirse como:
-
-Main.jsx
-   │
-   ├── CategoryFilter
-   │
-   ├── ListadoProductos
-   │
-   └── ListadoProductosFiltrados
-
-La administración de categorías:
-
-AdministracionCategorias.jsx
-        │
-        ▼
-AgregarCategorias.jsx
-        │
-        ▼
-FormularioCategoria.jsx
-
-Esta separación permite mantener las páginas enfocadas en organizar las vistas y los componentes en funcionalidades reutilizables.  
-
-## 🗃️ Modelo de Datos: Producto y Categoría
-
-Durante el Sprint 2 se modificó el modelo utilizado para clasificar los productos.
-
-Inicialmente, `Producto` utilizaba un atributo `tipo`. Con la incorporación de `Categoria`, se decidió eliminarlo y utilizar la categoría asociada como mecanismo principal de clasificación.
-
----
-
-## 🏠 Producto
-
-El producto contiene los datos principales de una propiedad:
-
-```js
-{
-  id,
-  nombre,
-  descripcion,
-  imagenes,
-  categoria
-}
-
-La información se obtiene principalmente desde el backend mediante la API REST.
-
-🏷️ Categoría
-
-La categoría representa la clasificación de los productos.
-
-Conceptualmente contiene:
-
-{
-  id,
-  nombre,
-  descripcion,
-  imagen
-}
-
-Las categorías son gestionadas desde el panel administrativo.
-
-🔗 Relación Producto → Categoría
-
-Un producto puede tener una categoría asociada:
-
-Producto
     │
-    └── Categoria
-
-Esta relación se utiliza para:
-
-Clasificar productos.
-Filtrar productos.
-Mostrar la categoría en las tarjetas.
-Gestionar la información desde el panel administrativo.
-
-Un producto puede existir sin categoría.
-
-En ese caso, la interfaz muestra:
-
-Sin categoría
-🧹 Eliminación de tipo
-
-El modelo anterior utilizaba:
-
-Producto
-├── nombre
-├── descripcion
-├── tipo
-└── imagenes
-
-El modelo actual utiliza:
-
-Producto
-├── nombre
-├── descripcion
-├── imagenes
-└── categoria
-
-El cambio evita mantener dos mecanismos diferentes de clasificación.
-
-También se eliminaron las referencias a tipo de los formularios y componentes que utilizaban ese atributo.
-
-🖥️ Uso en la interfaz
-
-La categoría asociada se muestra actualmente en las tarjetas de productos.
-
-Conceptualmente:
-
-Producto
-   │
-   ▼
-ListadoProductos
-   │
-   ▼
-producto.categoria
-   │
-   ▼
-Nombre de categoría
-
-Si no existe una asociación, se muestra Sin categoría.
-
-🔍 Uso en el filtrado
-
-Las categorías también funcionan como criterio de búsqueda.
-
-El usuario selecciona categorías mediante CategoryFilter.jsx y el frontend solicita los productos correspondientes mediante useProductoAPI.
-
-CategoryFilter
-      ↓
-Categorías seleccionadas
-      ↓
-useProductoAPI
-      ↓
-Backend
-      ↓
-Productos filtrados
-
-De esta manera, la misma categoría se utiliza tanto para clasificar como para filtrar los productos.
-
-## 📋 Historias de Usuario — Sprint 2
-
-Durante el Sprint 2 se incorporaron funcionalidades relacionadas con usuarios, administración, productos y categorías.
-
-| HU | Funcionalidad | Participación del Frontend |
-|---|---|---|
-| HU12 | Categorías de productos | Visualización y utilización de categorías |
-| HU13 | Registro de usuarios | Formulario y envío de datos |
-| HU14 | Inicio de sesión | Formulario y comunicación con la API |
-| HU15 | Gestión de sesión | Estado del usuario y cierre de sesión |
-| HU16 | Gestión de administradores | Acceso a funcionalidades administrativas |
-| HU17 | Gestión de características | Interfaz para las operaciones correspondientes |
-| HU18 | Visualización de características | Presentación de la información |
-| HU20 | Filtrado por categoría | Selección y visualización de productos filtrados |
-| HU21 | Administración de categorías | Panel y formulario de creación |
-
----
-
-### HU12 — Categorías
-
-El frontend incorpora las categorías como mecanismo de clasificación de productos.
-
-La asociación de una categoría a un producto se realiza desde la gestión y edición del producto.
-
-Las categorías se utilizan principalmente para:
-
-- Clasificar productos.
-- Filtrar productos.
-- Mostrar la categoría asociada en las tarjetas.
-- Administrar categorías desde el panel correspondiente.
-
-Si un producto no posee una categoría asociada, se muestra `Sin categoría`.
-
----
-
-### HU13 — Registro de usuarios
-
-El frontend proporciona el formulario necesario para registrar usuarios y envía los datos al backend mediante la API REST.
-
----
-
-### HU14 — Inicio de sesión
-
-El usuario puede ingresar sus credenciales desde el formulario de autenticación.
-
-El frontend envía la información al backend y utiliza la respuesta para continuar con el flujo correspondiente.
-
----
-
-### HU15 — Gestión de sesión
-
-El frontend mantiene el estado necesario para identificar al usuario autenticado y permite cerrar la sesión.
-
-Al cerrar sesión se limpia la información correspondiente y se actualiza la interfaz.
-
----
-
-### HU16 — Administración
-
-El frontend incorpora las vistas y navegación necesarias para las funcionalidades administrativas.
-
-El acceso a estas funcionalidades depende del rol del usuario.
-
-La validación definitiva de permisos corresponde al backend.
-
----
-
-### HU17 — Administrar características de producto
-
-El frontend proporciona las vistas necesarias para administrar las características de los productos.
-
-Estas funcionalidades incluyen:
-
-- Visualizar las características registradas.
-- Crear nuevas características.
-- Editar características existentes.
-- Eliminar características.
-- Asociar una o más características a un producto.
-
----
-
-### HU18 — Visualizar características del producto
-
-El frontend muestra las características asociadas a un producto dentro de su detalle.
-
-Cada característica puede incluir:
-
-- Nombre.
-- Icono asociado.
-
-El bloque de características se adapta a diferentes tamaños de pantalla para mantener una correcta visualización en desktop, tablet y dispositivos móviles.
-
-### HU20 — Filtrado por categoría
-
-El filtrado utiliza `CategoryFilter.jsx`.
-
-El usuario selecciona una o más categorías y la aplicación solicita los productos correspondientes mediante `useProductoAPI`.
-
-```text
-CategoryFilter
-      ↓
-Categorías seleccionadas
-      ↓
-useProductoAPI
-      ↓
-Backend
-      ↓
-Productos filtrados
-      ↓
-ListadoProductosFiltrados
-HU21 — Administración de categorías
-
-Se incorporó un flujo específico para la creación de categorías:
-
-AdministracionCategorias
-          ↓
-AgregarCategorias
-          ↓
-FormularioCategoria
-          ↓
-API REST
-
-El formulario permite ingresar:
-
-Nombre.
-Descripción.
-Imagen.
-
-La imagen se valida antes de ser procesada y se muestra una vista previa.
-
-🧪 Verificación de las HUs
-
-Las pruebas funcionales de estas historias de usuario se encuentran documentadas en:
-
-tests.md
-
-El archivo contiene los casos de prueba, pasos, resultados esperados y estado de cada verificación.
-
-La HU19, al ser opcional, fue postergada y no forma parte del cierre del Sprint 2.
-
-## 🚀 Funcionalidades del Sprint 3
-
-Durante el Sprint 3 se incorporaron nuevas funcionalidades orientadas principalmente a mejorar la búsqueda y consulta de alojamientos, la interacción de los usuarios con los productos y la administración del sistema.
-
-### 🔎 HU22 — Realizar búsqueda
-
-El frontend incorpora un buscador de productos mediante `BuscadorProductos.jsx`.
-
-La funcionalidad permite:
-
-- Ingresar texto para buscar productos.
-- Mostrar sugerencias mientras el usuario escribe.
-- Seleccionar una sugerencia del listado.
-- Ejecutar la búsqueda mediante el botón correspondiente.
-- Ordenar los resultados según la coincidencia con el texto buscado.
-- Normalizar caracteres para mejorar las coincidencias.
-
-El buscador mantiene las categorías y recomendaciones de la página principal.
-
-Flujo principal:
-
-```text
+    ▼
 BuscadorProductos
-       ↓
-useProductoAPI
-       ↓
-API REST
-       ↓
-Backend
-       ↓
-Productos encontrados
-       ↓
-ListadoProductos
+    │
+    ├── Búsqueda por texto
+    └── Búsqueda por rango de fechas
+    │
+    ▼
+Resultados de productos
+    │
+    ▼
+DetalleProductos (/producto/:id)
+    │
+    ├── Información del producto
+    ├── Características, políticas y valoraciones
+    ├── CalendarioDisponibilidad
+    └── Selección de fechas
+    │
+    ▼
+Reserva (/reserva/:id)
+    │
+    ├── Datos del usuario
+    ├── Datos de la reserva
+    ├── Validaciones de formulario
+    └── Solicitud a registrarReserva
+    │
+    ▼
+Respuesta de la API
+    │
+    └── Interfaz de confirmación o mensaje de error
 ```
 
-### 📅 HU23 — Visualizar disponibilidad
+Las fechas seleccionadas en el detalle pueden transmitirse mediante el estado de navegación. `Reserva.jsx` utiliza esas fechas para inicializar sus estados cuando están disponibles.
 
-El componente `CalendarioDisponibilidad.jsx` permite consultar y visualizar la disponibilidad de un alojamiento.
+## 9. Historial de reservas
 
-La funcionalidad permite:
+`ListaReservas.jsx` consulta las reservas del usuario mediante `fetchMisReservas`. La vista diferencia cuatro situaciones:
 
-- Consultar las reservas existentes para un producto.
-- Identificar fechas ocupadas.
-- Seleccionar una fecha de inicio.
-- Seleccionar una fecha de finalización.
-- Seleccionar rangos de fechas.
-- Mostrar visualmente las fechas no disponibles.
-- Evitar rangos que contengan fechas ocupadas.
-- Mostrar mensajes relacionados con la selección.
+1. La consulta todavía está en curso.
+2. La consulta produjo un error.
+3. La consulta finalizó y no existen reservas.
+4. Existen reservas para presentar.
 
-El calendario utiliza la información proporcionada por el backend y evita problemas de zona horaria mediante el tratamiento de fechas locales.
+Cada tarjeta muestra el nombre del producto, el estado, las fechas y la cantidad de huéspedes. La clase CSS de la tarjeta se construye a partir del estado de la reserva, permitiendo aplicar estilos según el estado recibido.
 
-### ❤️ HU24 — Marcar como favorito
+El frontend representa los datos que obtiene del servicio; la exactitud del historial y su asociación con el usuario dependen de la respuesta y de las comprobaciones realizadas por el backend.
 
-Los usuarios autenticados pueden marcar productos como favoritos desde el listado de productos.
+## 10. Acceso, roles y seguridad
 
-`ListadoProductos.jsx` integra la funcionalidad de favoritos y utiliza las operaciones correspondientes del hook de productos.
+`AdminRoute.jsx` se utiliza para agrupar rutas administrativas en `App.jsx`. Las vistas administrativas incluyen gestión de productos, usuarios, categorías y características.
 
-La funcionalidad permite:
+El frontend puede ocultar opciones o redirigir al usuario según los datos disponibles en la interfaz. Sin embargo:
 
-- Consultar los favoritos del usuario.
-- Marcar un producto como favorito.
-- Quitar un producto de favoritos.
-- Actualizar visualmente el estado del producto.
-- Solicitar inicio de sesión cuando el usuario no está autenticado.
+- Las comprobaciones visuales no sustituyen la autorización del backend.
+- Los datos de `localStorage` pueden modificarse desde el navegador.
+- Las operaciones administrativas y las reservas deben validar identidad y permisos en el servidor.
+- Las páginas declaradas fuera de `AdminRoute` no quedan protegidas automáticamente por ese componente.
+- La documentación de una ruta o pantalla no constituye evidencia de una prueba de seguridad.
 
-La comunicación con el backend se realiza mediante `favoritoService.js`.
+## 11. Manejo de carga, errores y estados vacíos
 
-### ❤️ HU25 — Listar productos favoritos
+En diferentes páginas y componentes se utilizan estados de interfaz para informar al usuario sobre las operaciones asíncronas. Entre los patrones identificados se encuentran:
 
-La página `MisFavoritos.jsx` permite consultar los productos guardados por el usuario autenticado.
+- Mensajes de carga al consultar productos o reservas.
+- Mensajes de error cuando una consulta falla.
+- Mensajes alternativos cuando no existen resultados.
+- Botones de reintento en algunas vistas.
+- Deshabilitación temporal de acciones durante el procesamiento.
+- Mensajes de confirmación o error después de una operación.
 
-Desde esta vista es posible:
+El comportamiento específico varía según el componente. No todas las operaciones presentan necesariamente el mismo nivel de manejo de errores; debe consultarse el componente correspondiente para conocer su implementación exacta.
 
-- Visualizar los productos favoritos.
-- Acceder al detalle de un producto.
-- Eliminar productos de favoritos.
-- Mostrar un estado vacío cuando no existen favoritos.
+## 12. Estilos y diseño responsive
 
-El acceso se encuentra disponible desde el menú del usuario autenticado.
+Los estilos se distribuyen entre hojas globales y archivos específicos de cada página o componente. La documentación y los estilos existentes incluyen ajustes para adaptar distintas secciones a resoluciones de escritorio, tablet y dispositivos móviles.
 
-### 📋 HU26 — Políticas de producto
+Las áreas con estilos específicos incluyen:
 
-El componente `PoliticasProducto.jsx` incorpora una sección específica dentro del detalle del alojamiento.
+- Encabezado y navegación.
+- Listados y tarjetas de productos.
+- Formularios de registro, inicio de sesión y administración.
+- Buscador y selector de fechas.
+- Calendario de disponibilidad.
+- Detalle y galería del producto.
+- Políticas, valoraciones y compartir.
+- Formularios y confirmación de reserva.
+- Listados administrativos y perfil del usuario.
 
-Las políticas mostradas incluyen información relacionada con:
+La adaptación responsive debe verificarse mediante pruebas visuales en las resoluciones definidas por el equipo; no se considera validada únicamente por la existencia de reglas CSS.
 
-- Check-in y check-out.
-- Capacidad del alojamiento.
-- Cuidado del alojamiento.
-- Ruidos y convivencia.
-- Mascotas.
-- Prohibición de fumar.
+## 13. Pruebas y documentación QA
 
-La sección utiliza un diseño responsive para adaptarse a diferentes tamaños de pantalla.
-
-### 🔗 HU27 — Compartir productos
-
-El componente `CompartirProducto.jsx` permite compartir un producto desde su detalle.
-
-La ventana de compartir muestra información del alojamiento y proporciona diferentes opciones para compartir su enlace.
-
-Entre las funcionalidades implementadas se encuentran:
-
-- Visualización de la imagen del producto.
-- Visualización del nombre y descripción.
-- Generación del enlace actual del producto.
-- Compartir mediante opciones de redes sociales.
-- Copiado del enlace cuando corresponde.
-- Uso de la API de compartir del navegador cuando está disponible.
-
-La funcionalidad se integra dentro de `InfoProducto.jsx`, junto al título del alojamiento.
-
-### ⭐ HU28 — Valorar productos
-
-El componente `ValoracionesProducto.jsx` permite visualizar y registrar valoraciones de productos.
-
-La interfaz permite trabajar con puntuaciones de una a cinco estrellas y comentarios.
-
-Las valoraciones muestran:
-
-- Puntuación.
-- Usuario.
-- Fecha.
-- Comentario.
-
-También se muestra:
-
-- Promedio de valoración.
-- Cantidad total de valoraciones.
-
-La información de valoración se presenta tanto en el detalle del producto como en las tarjetas del listado.
-
-La comunicación con el backend se realiza mediante `valoracionService.js` y las operaciones correspondientes del hook.
-
-### 🗑️ HU29 — Eliminar categoría
-
-`AdministracionCategorias.jsx` incorpora la posibilidad de eliminar una categoría desde el panel administrativo.
-
-Antes de eliminarla se muestra una ventana de confirmación que identifica la categoría y explica que los productos asociados no serán eliminados.
-
-Cuando la operación se confirma:
-
-- La categoría se elimina.
-- Los productos asociados permanecen registrados.
-- Los productos quedan sin categoría.
-- El listado de categorías se actualiza en el frontend.
-
-El frontend utiliza las operaciones de categorías existentes para ejecutar la eliminación y actualizar el estado de la interfaz.
-
-### 🧩 Nuevos elementos del Sprint 3
-
-Entre los principales archivos incorporados o ampliados durante el Sprint 3 se encuentran:
+Los casos de prueba funcionales se organizan en documentos Markdown separados:
 
 ```text
-src/components/
-├── BuscadorProductos.jsx
-├── CalendarioDisponibilidad.jsx
-├── CompartirProducto.jsx
-├── PoliticasProducto.jsx
-├── ValoracionesProducto.jsx
-└── ...
-
-src/pages/
-├── MisFavoritos.jsx
-├── AdministracionCategorias.jsx
-├── DetalleProductos.jsx
-└── ...
-
-src/services/
-├── favoritoService.js
-├── reservaService.js
-├── valoracionService.js
-└── ...
+docs/
+├── testsS1.md
+├── testsS2.md
+├── testsS3.md
+└── testsS4.md
 ```
 
-Estos elementos mantienen la separación de responsabilidades utilizada durante los sprints anteriores.
+Los documentos de los tres primeros sprints contienen casos manuales asociados a las historias documentadas en cada uno. Para el Sprint 4, los casos deben cubrir HU30 a HU35 y registrar, como mínimo:
+
+- Historia de Usuario y criterio de aceptación.
+- Datos de entrada y precondiciones.
+- Pasos de ejecución.
+- Resultado esperado.
+- Resultado observado.
+- Estado: `OK`, `ERROR` o `PENDIENTE`.
+
+**Importante:** el estado de una prueba debe representar una ejecución real. Si solo se definió el caso, corresponde dejarlo como `PENDIENTE`; no debe marcarse `OK` por el hecho de que exista el componente o la funcionalidad en el código.
+
+### Cobertura recomendada para el Sprint 4
+
+| HU | Funcionalidad | Aspectos que debe cubrir el testing |
+|---|---|---|
+| HU30 | Seleccionar fecha y buscar productos | Selección de fechas, búsqueda con rango válido, ausencia de resultados y mantenimiento de otras secciones del Home. |
+| HU31 | Visualizar detalles | Acceso al detalle, datos del producto, calendario y paso al flujo de reserva según el estado del usuario. |
+| HU32 | Realizar reserva | Campos obligatorios, cantidad y edades de huéspedes, fechas, respuesta exitosa y manejo de errores. |
+| HU33 | Acceder al historial | Historial con resultados, sin reservas, error de consulta y control de acceso. |
+| HU34 | Iniciar chat por WhatsApp | Apertura del enlace, contenido del mensaje inicial y comportamiento ante errores de apertura. |
+| HU35 | Confirmar reserva por correo | Generación y envío desde el backend, destinatario, datos de la reserva y manejo de fallos, verificando recepción cuando sea posible. |
+
+Esta tabla propone los aspectos que deben probarse; no afirma que los casos del Sprint 4 hayan sido ejecutados ni aprobados.
+
+## 14. Instalación y ejecución local
+
+El frontend se encuentra en la carpeta `frontend/`. Los comandos exactos deben contrastarse con los scripts declarados en `frontend/package.json`.
+
+Flujo habitual de ejecución en desarrollo:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Para compilar el frontend, utilizar el script de compilación definido en `package.json`, habitualmente:
+
+```bash
+npm run build
+```
+
+La ejecución completa de la aplicación requiere que el backend esté disponible y que la configuración de la API apunte a la dirección correspondiente al entorno.
+
+## 15. Documentación relacionada
+
+Dentro de `docs/` se encuentran los siguientes documentos del proyecto:
+
+| Archivo | Contenido |
+|---|---|
+| `DOCUMENTACION_FRONTEND.md` | Arquitectura, estructura y funcionalidades del frontend. |
+| `DOCUMENTACION_BACKEND.md` | Arquitectura e implementación del backend. |
+| `bitacora.md` | Registro de avances y decisiones por Historia de Usuario y sprint. |
+| `testsS1.md` | Casos de prueba del Sprint 1. |
+| `testsS2.md` | Casos de prueba del Sprint 2. |
+| `testsS3.md` | Casos de prueba del Sprint 3. |
+| `testsS4.md` | Documento que debe reunir los casos de prueba del Sprint 4. |
+| `identidad-marca.md` | Referencia de identidad visual del proyecto. |
+
+## 16. Estado y puntos que requieren verificación
+
+A partir de la estructura y los componentes del frontend se identifican las interfaces para buscar por fecha, consultar detalles, iniciar una reserva, mostrar el historial y abrir un contacto por WhatsApp. Hay dos límites que conviene mantener explícitos en la documentación:
+
+1. **HU33 y acceso autenticado:** `/mis-reservas` está declarada fuera del grupo de rutas anidadas bajo `AdminRoute`. Debe verificarse dónde se controla el acceso del usuario y confirmar que el backend devuelve únicamente las reservas del usuario autenticado.
+2. **HU35 y correo electrónico:** el flujo frontend presenta una confirmación visual de reserva, pero eso no prueba el envío de un correo. La implementación debe verificarse en el backend y mediante pruebas.
+
+Además, los estados de los tests deben actualizarse únicamente después de ejecutar los casos. La documentación técnica, la bitácora y los tests deben mantenerse coherentes entre sí y con el comportamiento real del repositorio.
 
 ---
 
-## ⚙️ Decisiones Técnicas y Mejoras — Sprint 2
-
-Durante el Sprint 2 se realizaron cambios destinados a mejorar la integración con el backend, simplificar el modelo de productos y mejorar la experiencia de usuario.
-
----
-
-## 🔌 Integración con la API
-
-Los productos y categorías pasaron a gestionarse principalmente mediante la API REST.
-
-Para evitar repetir peticiones y lógica HTTP en los componentes, se centralizaron las operaciones principales en:
-
-```text
-src/hooks/useProductoAPI.js
-
-Esto permite mantener separadas la interfaz y la comunicación con el backend.
-
-🏷️ Uso de categorías
-
-Se decidió utilizar Categoria como mecanismo principal para clasificar los productos.
-
-Como consecuencia, se eliminó el campo tipo de los formularios y componentes que lo utilizaban.
-
-La categoría ahora se utiliza para:
-
-Clasificar productos.
-Filtrar productos.
-Mostrar información en las tarjetas.
-Gestionar productos desde las funcionalidades administrativas.
-🖼️ Validación de imágenes
-
-El formulario de categorías incorpora validaciones antes de procesar las imágenes.
-
-Se permiten:
-
-JPG
-PNG
-WEBP
-
-con un tamaño máximo de:
-
-5 MB
-
-Las imágenes válidas generan una vista previa mediante FileReader.
-
-🧩 Separación de responsabilidades
-
-Se mantiene una separación entre:
-
-Pages
-   ↓
-Components
-   ↓
-Hooks / Helpers
-   ↓
-API
-
-Las páginas organizan las vistas, los componentes manejan elementos reutilizables y los hooks centralizan lógica compartida y comunicación con el backend.
-
-🎨 Mejoras visuales
-
-Durante el Sprint 2 se realizaron mejoras en diferentes elementos de la interfaz:
-
-Formularios.
-Tarjetas de productos.
-Filtros.
-Botones.
-Formularios de categorías.
-Vista previa de imágenes.
-Diseño responsive.
-
-Se buscó mantener una apariencia consistente entre las diferentes secciones de la aplicación.
-
-📱 Responsive
-
-Los estilos incluyen reglas específicas para pantallas pequeñas.
-
-Entre los principales ajustes se encuentran:
-
-Formularios adaptados al ancho disponible.
-Botones adaptados a dispositivos móviles.
-Espaciado reducido cuando es necesario.
-Conservación de la legibilidad de los elementos principales.
-🛡️ Validaciones en Frontend
-
-El frontend realiza validaciones iniciales para proporcionar una respuesta rápida al usuario.
-
-Estas validaciones no reemplazan las reglas de negocio del backend.
-
-El backend continúa siendo responsable de validar y procesar definitivamente la información recibida.
-
-📌 Principales decisiones
-
-Las decisiones más importantes del Sprint 2 fueron:
-
-Utilizar la API REST como fuente principal de productos y categorías.
-Centralizar la comunicación mediante useProductoAPI.
-Utilizar categorías como clasificación de productos.
-Eliminar el atributo tipo.
-Mostrar Sin categoría cuando un producto no posee asociación.
-Incorporar filtrado por categorías.
-Incorporar administración de categorías.
-Validar imágenes antes de procesarlas.
-Mantener separación entre páginas, componentes y lógica reutilizable.
-Mejorar la interfaz y su adaptación a dispositivos móviles.
-
-## 🧪 QA y Testing
-
-Las pruebas funcionales del frontend se encuentran documentadas en archivos separados por sprint:
-
-```text
-testsS1.md
-testsS2.md
-testsS3.md
-```
-
-Cada archivo contiene los casos de prueba correspondientes a las Historias de Usuario del sprint, junto con los pasos, resultados esperados y estado de cada verificación.
-
-### ✅ Cobertura del Sprint 1
-
-Las funcionalidades del primer sprint se encuentran documentadas y verificadas en `testsS1.md`.
-
-### ✅ Cobertura del Sprint 2
-
-Las funcionalidades verificadas durante el Sprint 2 corresponden principalmente a:
-
-| HU | Funcionalidad | Estado |
-|---|---|---|
-| HU12 | Categorías de productos | ✅ OK |
-| HU13 | Registro de usuarios | ✅ OK |
-| HU14 | Inicio de sesión | ✅ OK |
-| HU15 | Gestión de sesión | ✅ OK |
-| HU16 | Administración y roles | ✅ OK |
-| HU17 | Gestión de características | ✅ OK |
-| HU18 | Visualización de características | ✅ OK |
-| HU20 | Filtrado por categoría | ✅ OK |
-| HU21 | Administración de categorías | ✅ OK |
-
-La HU19 fue considerada opcional y se mantuvo postergada.
-
-### ✅ Cobertura del Sprint 3
-
-Las funcionalidades desarrolladas durante el Sprint 3 se verifican mediante los casos de prueba correspondientes a:
-
-| HU | Funcionalidad | Estado |
-|---|---|---|
-| HU22 | Realizar búsqueda | ✅ OK |
-| HU23 | Visualizar disponibilidad | ✅ OK |
-| HU24 | Marcar como favorito | ✅ OK |
-| HU25 | Listar productos favoritos | ✅ OK |
-| HU26 | Políticas de producto | ✅ OK |
-| HU27 | Compartir productos | ✅ OK |
-| HU28 | Valorar productos | ✅ OK |
-| HU29 | Eliminar categoría | ✅ OK |
-
-### 🔍 Verificaciones principales del Sprint 3
-
-Durante las pruebas se verificó el funcionamiento de:
-
-- Búsqueda de productos.
-- Sugerencias y autocompletado.
-- Coincidencia y ordenamiento de resultados.
-- Visualización de disponibilidad.
-- Selección de rangos de fechas.
-- Identificación de fechas ocupadas.
-- Marcado y eliminación de favoritos.
-- Listado de productos favoritos.
-- Estados vacíos.
-- Visualización de políticas.
-- Compartir productos.
-- Visualización de valoraciones.
-- Registro de puntuaciones y comentarios.
-- Actualización del promedio y cantidad de valoraciones.
-- Visualización de valoraciones en listados y detalle.
-- Confirmación antes de eliminar categorías.
-- Eliminación de categorías sin eliminar productos asociados.
-- Adaptación responsive de las nuevas funcionalidades.
-
-### 🐞 Correcciones y ajustes del Sprint 3
-
-Durante el desarrollo y las pruebas del Sprint 3 se realizaron diferentes ajustes para garantizar el correcto funcionamiento de las nuevas funcionalidades.
-
-Entre ellos se encuentran:
-
-- Ajustes en el autocompletado del buscador.
-- Corrección de coincidencias de texto y normalización de caracteres.
-- Corrección del manejo de fechas para evitar problemas de zona horaria.
-- Prevención de rangos que contienen fechas ocupadas.
-- Ajustes en la carga y eliminación de favoritos.
-- Corrección de estados de carga y errores relacionados con favoritos.
-- Incorporación de políticas al detalle del producto.
-- Integración del botón de compartir dentro de la información principal del producto.
-- Incorporación de valoraciones en el detalle y en las tarjetas de productos.
-- Ajustes en la eliminación de categorías y actualización del listado.
-- Adaptación responsive de los nuevos componentes y modales.
-
-### 📋 Relación entre documentación y testing
-
-La documentación técnica explica cómo está construido el frontend y qué funcionalidades fueron incorporadas durante cada sprint.
-
-Los archivos de testing documentan cómo se verificó el funcionamiento de esas funcionalidades.
-
-```text
-DOCUMENTACION_FRONTEND.md
-        │
-        └── Cómo está construido y cómo evolucionó el frontend
-
-        │
-        ├── testsS1.md
-        ├── testsS2.md
-        └── testsS3.md
-
-                │
-                └── Cómo se verificaron las funcionalidades
-```
-
-Esta separación permite mantener organizada la documentación técnica y la documentación de QA del proyecto.
-
+**Fin de la documentación del frontend de Reservas Carrizo.**
