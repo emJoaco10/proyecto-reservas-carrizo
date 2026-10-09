@@ -1,32 +1,45 @@
 import { useState, useEffect } from 'react';
+// Hooks que proporcionan las operaciones de productos y los datos de categorías usados por la página.
 import useProductoAPI from '../hooks/useProductoAPI';
+// Utilidades para crear y liberar URLs temporales de archivos de imagen.
 import { filesToObjectURLs, revokeObjectURLs } from '../helpers/imageUtils';
+// Validadores reutilizados para los campos de nombre y descripción.
 import { validarNombre, validarDescripcion } from '../helpers/validaciones';
 import useCategoriaAPI from '../hooks/useCategoriaAPI';
+// Estilos específicos de esta página.
 import '../styles/pages/AgregarProducto.css';
+// Componente de navegación jerárquica del área de administración.
 import BreadcrumAdministracion from "../components/BreadcrumAdministracion";
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const MAX_FILES = 10;
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // Límite individual de 5 MB por archivo.
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']; // Tipos MIME admitidos por las validaciones.
+const MAX_FILES = 10; // Cantidad máxima de imágenes seleccionables.
 
 /**
- * Página para registrar nuevos productos.
+ * Página de administración para registrar productos y gestionar imágenes asociadas.
  *
- * Gestiona los datos del formulario, validaciones, selección de imágenes,
- * generación de previews y envío del producto al backend.
+ * Gestiona el estado de los campos y sus errores, solicita las categorías,
+ * valida los datos y las imágenes, y genera vistas previas temporales liberando
+ * sus URLs cuando corresponde. Convierte las imágenes a Base64 e intenta
+ * registrar el producto mediante `addProducto`, mostrando el resultado y
+ * controlando el estado de envío. También ofrece una acción administrativa
+ * para solicitar la eliminación de todos los productos mediante
+ * `removeAllProductos`.
  */
 const AgregarProducto = () => {
   const { addProducto, removeAllProductos } = useProductoAPI();
   const { categorias, fetchCategorias } = useCategoriaAPI();
 
+  // Datos editables del producto.
   const [nombre, setNombre] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [ubicacion, setUbicacion] = useState('');
   const [categoriaId, setCategoriaId] = useState('');
+  // Archivos seleccionados y URLs temporales usadas para sus vistas previas.
   const [imagenesFiles, setImagenesFiles] = useState([]);
   const [previews, setPreviews] = useState([]);
 
+  // Mensajes de validación asociados a cada campo del formulario.
   const [errores, setErrores] = useState({
     nombre: '',
     descripcion: '',
@@ -35,12 +48,16 @@ const AgregarProducto = () => {
     imagenes: ''
   });
 
+  // Mensaje de confirmación y estado que indica si el envío está en curso.
   const [exito, setExito] = useState('');
   const [subiendo, setSubiendo] = useState(false);
 
   /**
-   * Genera las URLs temporales utilizadas para mostrar
-   * la vista previa de las imágenes seleccionadas.
+   * Genera vistas previas para los archivos seleccionados y gestiona sus URLs.
+   * Registra los errores de procesamiento recibidos por el callback y libera
+   * las URLs al ejecutar la función de limpieza. El efecto depende de
+   * `imagenesFiles`, por lo que vuelve a procesar las vistas previas cuando
+   * cambia la selección.
    */
   useEffect(() => {
     if (!imagenesFiles || imagenesFiles.length === 0) {
@@ -70,14 +87,18 @@ const AgregarProducto = () => {
   }, [imagenesFiles]);
 
   /**
-   * Obtiene las categorías disponibles.
+    * Solicita las categorías disponibles al ejecutarse este efecto.
+    * La lista de dependencias vacía indica que el efecto no depende de valores
+    * reactivos del componente.
    */
   useEffect(() => {
     fetchCategorias();
   }, []);
 
   /**
-   * Convierte un archivo de imagen a Base64.
+    * Convierte un archivo en una promesa con el resultado producido por `FileReader`.
+    * @param {File} file Archivo que se leerá como URL de datos Base64.
+    * @returns {Promise<string | ArrayBuffer | null>} Resultado de `FileReader`.
    */
   const fileToBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -90,7 +111,13 @@ const AgregarProducto = () => {
     });
 
   /**
-   * Envía el formulario de creación del producto.
+    * Procesa el envío del formulario de creación del producto.
+    * Valida nombre, descripción, ubicación, categoría e imágenes; si encuentra
+    * errores, los muestra y detiene el envío. Si la validación pasa, convierte
+    * las imágenes a Base64 e intenta registrar el producto con `addProducto`.
+    * Gestiona la respuesta sin producto y las excepciones mediante los mensajes
+    * de error correspondientes, y actualiza el estado de envío.
+    * @param {React.FormEvent<HTMLFormElement>} e Evento de envío del formulario.
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -265,7 +292,10 @@ const AgregarProducto = () => {
   };
 
   /**
-   * Procesa los archivos seleccionados.
+    * Obtiene los archivos seleccionados y valida cantidad, formato y tamaño.
+    * Actualiza el estado de imágenes solo cuando la selección cumple los límites;
+    * en caso contrario, conserva la selección anterior y comunica el error.
+    * @param {React.ChangeEvent<HTMLInputElement>} e Evento del selector de archivos.
    */
   const handleImagenes = (e) => {
     const files = Array.from(
@@ -334,7 +364,8 @@ const AgregarProducto = () => {
   };
 
   /**
-   * Elimina todos los productos.
+    * Solicita la eliminación de todos los productos mediante `removeAllProductos`.
+    * Actualiza el mensaje de éxito o registra un error si la operación falla.
    */
   const handleBorrarTodo = async () => {
     try {
@@ -370,6 +401,7 @@ const AgregarProducto = () => {
   return (
     <div className="agregar-producto">
 
+      {/* Navegación jerárquica: Administración, Administración de productos y página actual. */}
       <BreadcrumAdministracion
         items={[
           {
@@ -397,6 +429,7 @@ const AgregarProducto = () => {
         {/* DATOS DEL PRODUCTO */}
         {/* ========================= */}
 
+        {/* Campos principales que describen el producto y su categoría. */}
         <div className="form-section">
 
           {/* NOMBRE */}
@@ -559,6 +592,7 @@ const AgregarProducto = () => {
         {/* IMÁGENES */}
         {/* ========================= */}
 
+        {/* Selección de archivos, mensajes de validación y vistas previas temporales. */}
         <div className="form-actions">
 
           <label htmlFor="imagenes">
@@ -599,6 +633,7 @@ const AgregarProducto = () => {
             </div>
           )}
 
+          {/* El botón refleja el estado de envío y se deshabilita mientras se guarda. */}
           <button
             type="submit"
             disabled={subiendo}
@@ -616,6 +651,7 @@ const AgregarProducto = () => {
       {/* ZONA DE PELIGRO */}
       {/* ========================= */}
 
+      {/* Acción administrativa para solicitar la eliminación de todos los productos. */}
       <section className="zona-peligro">
 
         <div className="zona-peligro__contenido">
@@ -662,6 +698,7 @@ const AgregarProducto = () => {
       {/* MENSAJE DE ÉXITO */}
       {/* ========================= */}
 
+      {/* Mensaje condicional anunciado a tecnologías de asistencia. */}
       {exito && (
         <p
           className="mensaje-exito"

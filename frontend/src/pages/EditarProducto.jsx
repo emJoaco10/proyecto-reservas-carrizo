@@ -1,34 +1,47 @@
+// Hooks de React para gestionar el estado local y los efectos del componente.
 import React, { useEffect, useState } from 'react'
+// Permite obtener el identificador del producto desde la ruta actual.
 import { useParams } from 'react-router-dom'
+// Muestra la navegación jerárquica del área de administración.
 import BreadcrumAdministracion from "../components/BreadcrumAdministracion";
+// Proporciona las operaciones de consulta y edición de productos.
 import useProductoAPI from '../hooks/useProductoAPI'
+// Selector de categoría empleado durante la edición del producto.
 import { CategorySelector } from '../components/CategorySelector'
+// Validaciones del nombre y la descripción del producto.
 import {
   validarNombre,
   validarDescripcion
 } from '../helpers/validaciones'
+// Utilidades para crear y liberar URLs temporales de vistas previas.
 import {
   filesToObjectURLs,
   revokeObjectURLs
 } from '../helpers/imageUtils'
+// Estilos específicos de esta página.
 import '../styles/pages/EditarProducto.css'
 
+/** Tamaño máximo permitido para cada archivo de imagen: 5 MB. */
 const MAX_FILE_SIZE = 5 * 1024 * 1024
+/** Tipos MIME admitidos para los archivos de imagen. */
 const ALLOWED_TYPES = [
   'image/jpeg',
   'image/png',
   'image/webp'
 ]
+/** Cantidad máxima de imágenes permitidas por producto. */
 const MAX_FILES = 10
 
 /**
- * Página encargada de cargar y editar la información de un producto.
+ * Página de edición que obtiene el identificador del producto desde la ruta,
+ * carga sus datos y permite modificar el nombre, la descripción y la categoría.
  *
- * Permite modificar:
- * - Nombre
- * - Descripción
- * - Categoría
- * - Imágenes
+ * Permite quitar imágenes de los datos locales del producto y seleccionar
+ * imágenes nuevas, valida los datos y las restricciones de los archivos,
+ * genera vistas previas temporales y convierte los archivos seleccionados a
+ * Base64 al preparar los cambios. Intenta guardar la actualización mediante
+ * `editProducto` y presenta los estados de carga y los mensajes de error
+ * correspondientes; el resultado depende de esa operación.
  */
 export const EditarProducto = () => {
 
@@ -39,13 +52,15 @@ export const EditarProducto = () => {
     editProducto
   } = useProductoAPI()
 
+  // Datos del producto que se está editando, incluidos sus cambios locales.
   const [producto, setProducto] = useState(null)
+  // Indica si está en curso la carga inicial solicitada para el producto.
   const [loading, setLoading] = useState(true)
 
-  // Error general de carga/API
+  // Mensaje general para errores de carga o de intento de actualización.
   const [error, setError] = useState(null)
 
-  // Errores específicos de cada campo
+  // Mensajes de validación asociados a campos concretos del formulario.
   const [errores, setErrores] = useState({
     nombre: '',
     descripcion: '',
@@ -53,12 +68,19 @@ export const EditarProducto = () => {
     imagenes: ''
   })
 
+  // Archivos nuevos seleccionados por el usuario; aún no se envían al guardar.
   const [imagenesFiles, setImagenesFiles] = useState([])
+  // URLs temporales que se usan para mostrar los archivos nuevos seleccionados.
   const [previews, setPreviews] = useState([])
 
 
   /**
-   * Carga el producto correspondiente al ID recibido.
+  * Consulta el producto identificado por `id` y actualiza el estado local.
+  * Comprueba que exista el identificador, activa la carga y limpia el error
+  * general antes de consultar. Si la consulta falla, registra el error en
+  * consola y establece un mensaje general; siempre desactiva la carga en
+  * `finally`. La dependencia `[id]` hace que el efecto se ejecute al montarse
+  * y cuando cambie ese identificador.
    */
   useEffect(() => {
 
@@ -100,7 +122,13 @@ export const EditarProducto = () => {
 
 
   /**
-   * Genera las previsualizaciones de las nuevas imágenes.
+  * Genera vistas previas temporales para los archivos seleccionados.
+  * Si no hay archivos, limpia las vistas previas. En caso contrario, pasa los
+  * archivos y las restricciones a `filesToObjectURLs`, guarda las URLs
+  * resultantes y registra en los errores de imágenes los errores comunicados
+  * por el callback. La limpieza libera esas URLs mediante
+  * `revokeObjectURLs`; la dependencia `[imagenesFiles]` vuelve a ejecutar el
+  * efecto cuando cambia la selección.
    */
   useEffect(() => {
 
@@ -141,7 +169,10 @@ export const EditarProducto = () => {
 
 
   /**
-   * Convierte un archivo en Base64.
+  * Convierte un archivo en una promesa cuyo resultado procede de
+  * `FileReader.readAsDataURL`.
+  * @param {File} file Archivo que se leerá como Data URL.
+  * @returns {Promise<string|ArrayBuffer|null>} Resultado de la lectura.
    */
   const fileToBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -159,7 +190,12 @@ export const EditarProducto = () => {
 
 
   /**
-   * Procesa las imágenes seleccionadas.
+  * Obtiene y valida los archivos seleccionados: comprueba que haya selección,
+  * que no se supere `MAX_FILES`, que todos los tipos MIME estén permitidos y
+  * que ningún archivo exceda `MAX_FILE_SIZE`. Actualiza el error de imágenes
+  * y la lista de archivos según el resultado de esas comprobaciones; no los
+  * guarda en el backend.
+  * @param {React.ChangeEvent<HTMLInputElement>} e Evento del selector de archivos.
    */
   const handleImagenes = (e) => {
 
@@ -242,7 +278,18 @@ export const EditarProducto = () => {
 
 
   /**
-   * Guarda los cambios realizados sobre el producto.
+  * Valida y prepara los cambios del producto e intenta guardarlos mediante
+  * `editProducto`.
+  *
+  * Se detiene si falta `id` o `producto`; valida nombre, descripción,
+  * categoría y cantidad total de imágenes. Si hay errores, los actualiza y
+  * detiene el flujo. Si la validación pasa, limpia los errores, conserva las
+  * imágenes que permanecen en `producto.imagenes`, convierte a Base64 los
+  * archivos nuevos cuando los hay y los agrega a las existentes. Construye
+  * `productoParaGuardar` y llama a `editProducto`. Si recibe un producto
+  * actualizado, actualiza el estado, limpia archivos y vistas previas y
+  * muestra el mensaje de éxito. Las excepciones se registran en consola y
+  * establecen un error general; esta función no redirige a otra página.
    */
   const handleGuardar = async () => {
 
@@ -403,6 +450,7 @@ export const EditarProducto = () => {
   return (
     <div className="editar-producto">
 
+      {/* Navegación jerárquica: Administración → Administración de productos → Editar producto. */}
       <BreadcrumAdministracion
         items={[
           {
@@ -422,6 +470,7 @@ export const EditarProducto = () => {
       {/* ====================================== */}
       {/* ENCABEZADO */}
       {/* ====================================== */}
+      {/* Título y descripción de la tarea de edición. */}
 
       <div className="editar-producto__header">
 
@@ -439,6 +488,7 @@ export const EditarProducto = () => {
       {/* ====================================== */}
       {/* ERROR GENERAL */}
       {/* ====================================== */}
+      {/* Mensaje general de carga o actualización, anunciado con prioridad mediante aria-live. */}
 
       {error && (
 
@@ -455,6 +505,7 @@ export const EditarProducto = () => {
       {/* ====================================== */}
       {/* CARGANDO */}
       {/* ====================================== */}
+      {/* Mientras carga se muestra el indicador; después, el formulario requiere un producto disponible. */}
 
       {loading ? (
 
@@ -470,6 +521,7 @@ export const EditarProducto = () => {
           {/* ================================== */}
           {/* NOMBRE */}
           {/* ================================== */}
+          {/* El campo actualiza el nombre en producto y limpia su error al cambiar. */}
 
           <div className="campo-edicion">
 
@@ -518,6 +570,7 @@ export const EditarProducto = () => {
           {/* ================================== */}
           {/* DESCRIPCIÓN */}
           {/* ================================== */}
+          {/* El campo actualiza la descripción en producto y limpia su error al cambiar. */}
 
           <div className="campo-edicion">
 
@@ -568,6 +621,7 @@ export const EditarProducto = () => {
           {/* ================================== */}
           {/* CATEGORÍA */}
           {/* ================================== */}
+          {/* El selector recibe el producto y la categoría actual; onChange actualiza la categoría local. */}
 
           <div className="editar-producto__category-selector">
 
@@ -610,6 +664,7 @@ export const EditarProducto = () => {
           {/* ================================== */}
           {/* IMÁGENES */}
           {/* ================================== */}
+          {/* Sección de imágenes actuales y nuevas; el contador muestra la cantidad actual frente al límite. */}
 
           <div className="imagenes-edicion">
 
@@ -634,6 +689,7 @@ export const EditarProducto = () => {
             {/* ================================= */}
             {/* IMÁGENES ACTUALES */}
             {/* ================================= */}
+            {/* Galería de imágenes del producto; quitar una imagen solo la filtra del estado local. */}
 
             {producto?.imagenes?.length > 0 ? (
 
@@ -693,6 +749,8 @@ export const EditarProducto = () => {
             ) : (
 
               <div className="imagenes-vacias">
+                {/* Estado alternativo cuando no hay imágenes actuales. */}
+
                 Este producto no tiene imágenes.
               </div>
 
@@ -702,6 +760,7 @@ export const EditarProducto = () => {
             {/* ================================= */}
             {/* AGREGAR IMÁGENES */}
             {/* ================================= */}
+            {/* Selector de archivos que informa los formatos y el límite de tamaño admitidos. */}
 
             <div className="imagenes-agregar">
 
@@ -744,8 +803,8 @@ export const EditarProducto = () => {
               />
 
               {errores.imagenes && (
-
-                <p className="mensaje-error-campo">
+                < p className="mensaje-error-campo">
+                  {/* Error de validación asociado a la selección o cantidad de imágenes. */}
                   {errores.imagenes}
                 </p>
 
@@ -757,6 +816,7 @@ export const EditarProducto = () => {
             {/* ================================= */}
             {/* NUEVAS IMÁGENES */}
             {/* ================================= */}
+            {/* Vistas previas temporales de las nuevas imágenes seleccionadas. */}
 
             {previews.length > 0 && (
 
@@ -806,6 +866,7 @@ export const EditarProducto = () => {
           {/* ================================== */}
           {/* GUARDAR */}
           {/* ================================== */}
+          {/* Acción que ejecuta las validaciones y el intento de guardar los cambios. */}
 
           <div className="editar-producto__acciones">
 
@@ -825,14 +886,15 @@ export const EditarProducto = () => {
 
         !error && (
 
-          <p className="editar-producto__not-found">
-            No se encontró el producto.
-          </p>
+      <p className="editar-producto__not-found">
+        {/* Mensaje alternativo si no hay producto y tampoco se muestra un error general. */ }
+        No se encontró el producto.
+      </p>
 
-        )
+      )
 
       )}
 
-    </div>
+    </div >
   )
 }
