@@ -1,6 +1,15 @@
-# 📑 Bitácora del Sprint 1
+# 📑 Bitácora del Proyecto — Reservas Carrizo
 
-## Índice
+## Índice general
+
+- [Sprint 1 — Estructura inicial](#sprint-1--estructura-inicial)
+- [Sprint 2 — Usuarios, sesión y administración](#sprint-2--usuarios-sesión-y-administración)
+- [Sprint 3 — Búsqueda, disponibilidad y participación](#sprint-3--búsqueda-disponibilidad-y-participación)
+- [Sprint 4 — Reservas y contacto](#sprint-4--reservas-y-contacto)
+- [Resumen de estado y pendientes](#resumen-de-estado-y-pendientes)
+
+### Historias de Usuario del Sprint 1
+
 
 - [HU 1: Colocar encabezado](#hu-1-colocar-encabezado)
 - [HU 2: Definir el cuerpo del sitio](#hu-2-definir-el-cuerpo-del-sitio)
@@ -393,3 +402,292 @@
 - `/src/hooks/useProductosAdmin.js`
 - `/src/styles/components/TablaProductos.css`
 - `/src/styles/components/ModalConfirmacion.css`
+
+---
+
+# Sprint 1 — Estructura inicial
+
+El Sprint 1 estableció la estructura visual y los primeros flujos de navegación y administración de productos. Las historias documentadas en esta sección corresponden al contenido original de la bitácora.
+
+## HU 1 — Colocar encabezado
+Se desarrolló el encabezado global con logotipo, lema y acciones de navegación para crear una cuenta e iniciar sesión. La estructura se diseñó para reutilizarse en las páginas de la aplicación y adaptarse a diferentes resoluciones.
+
+**Referencias registradas en la bitácora original:** `Header.jsx` y sus estilos.
+
+## HU 2 — Definir el cuerpo del sitio
+Se definió la página principal con buscador, categorías y recomendaciones de productos, separando la composición de la página de los componentes que presentan los listados.
+
+**Referencias registradas en la bitácora original:** `Main.jsx`, `ListadoProductos.jsx` y `Main.css`.
+
+## HU 3 — Registrar producto
+Se documentó el formulario de alta de producto, con campos de información, carga de imágenes, validaciones y actualización del listado. La bitácora original describe una implementación inicial apoyada en `localStorage`; el proyecto evolucionó posteriormente hacia la integración con la API.
+
+## HU 4 — Visualizar productos en el home
+Se implementó una vista de productos destacados/aleatorios en el inicio, con tarjetas y disposición adaptable a pantallas pequeñas.
+
+## HU 5 — Visualizar detalle de producto
+Se documentó una página de detalle con navegación desde el listado y presentación de la información del producto. Los nombres de archivos de la primera versión pueden diferir de los componentes actuales.
+
+## HU 6 — Visualizar galería de imágenes
+Se documentó la galería de imágenes con una imagen principal, imágenes secundarias y acceso a una vista ampliada.
+
+## HU 7 — Colocar pie de página
+Se incorporó un pie de página global con identidad visual y año dinámico.
+
+## HU 8 — Paginar productos
+Se documentó la paginación del listado de productos para facilitar su navegación cuando la cantidad de resultados es grande.
+
+## HU 9 — Panel de administración
+Se documentó la creación del acceso al área de administración para centralizar las operaciones de gestión.
+
+## HU 10 — Listar productos
+Se documentó la tabla administrativa de productos con identificador, nombre y acciones disponibles.
+
+## HU 11 — Eliminar producto
+Se documentó la eliminación con confirmación previa. En la implementación inicial, la bitácora describe el uso de `localStorage`; el comportamiento vigente debe verificarse en los componentes y servicios actuales.
+
+> **Nota de trazabilidad del Sprint 1:** los nombres y rutas de archivos de esta sección provienen de la bitácora original y reflejan la etapa inicial. No todos tienen por qué coincidir con la estructura actual del frontend y backend.
+
+---
+
+# Sprint 2 — Usuarios, sesión y administración
+
+Durante el Sprint 2 se amplió la aplicación desde la estructura inicial hacia una aplicación integrada con backend, con gestión de usuarios, sesión, roles, categorías y características de productos.
+
+## HU 12 — Categorías de productos
+
+Se incorporó la clasificación de productos mediante categorías. La interfaz permite visualizar y utilizar categorías y asociarlas a productos. En el backend se incorporaron las entidades, relaciones y operaciones necesarias para persistir esa información.
+
+## HU 13 — Registro de usuarios
+
+Se desarrolló el formulario de registro y su integración con el servicio de usuarios. El backend procesa el registro, persiste el usuario y utiliza un codificador de contraseñas para no almacenar la contraseña en texto plano.
+
+## HU 14 — Inicio de sesión / gestión de sesión
+
+La documentación de Sprint 2 registra el inicio de sesión y la gestión de sesión del usuario. El frontend presenta las opciones correspondientes al estado del usuario y utiliza el almacenamiento local para recuperar los datos que necesita mostrar. El backend valida las credenciales y entrega la respuesta de autenticación según la implementación vigente.
+
+La numeración y el título de esta HU varían entre algunos documentos históricos: `DOCUMENTACION_FRONTEND.md` la describe como inicio de sesión, mientras que `testsS2.md` documenta casos de cierre de sesión. Conviene conservar la denominación oficial del tablero de HU del equipo al hacer la entrega final.
+
+## HU 15 — Funcionalidades del usuario autenticado
+
+Se incorporó el acceso a la información del perfil del usuario. La página `MiPerfil.jsx` recupera los datos guardados localmente y muestra `MiPerfilInfo`; si no encuentra un usuario, redirige a la página principal.
+
+## HU 16 — Identificar administrador
+
+Se incorporó la diferenciación de permisos administrativos. El frontend dispone de rutas y paneles de administración, y el backend configura reglas de autorización por rol para operaciones restringidas. La seguridad efectiva debe comprobarse en el servidor y no solo mediante la visibilidad de opciones en la interfaz.
+
+## HU 17 — Administrar características de producto
+
+Se desarrollaron las pantallas y operaciones administrativas para listar, crear, editar y eliminar características. La implementación utiliza componentes, hooks y servicios para comunicarse con el backend.
+
+## HU 18 — Visualizar características del producto
+
+Se incorporó la presentación de características asociadas a un producto, incluyendo nombre e icono cuando está disponible.
+
+## HU 19 — Notificación de confirmación de registro
+
+La documentación de Sprint 2 identifica esta historia como opcional y postergada. No debe marcarse como completada sin verificar su implementación y sus pruebas.
+
+## HU 20 — Filtrado por categoría
+
+Se desarrolló el filtro de productos por una o varias categorías. La página principal pasa las categorías seleccionadas al componente de filtro y presenta los resultados correspondientes.
+
+## HU 21 — Administración de categorías
+
+Se incorporaron páginas y operaciones administrativas para listar, crear y editar categorías, junto con validaciones y comunicación con la API.
+
+### Decisiones técnicas registradas para el Sprint 2
+
+- Separación de la interfaz, hooks, servicios y backend.
+- Uso de DTO para transferir datos entre el frontend y la API.
+- Persistencia de categorías, usuarios y características en la base de datos configurada.
+- Codificación de contraseñas en el backend.
+- Control de acceso a operaciones administrativas mediante roles.
+- Uso de componentes reutilizables para formularios y listados.
+
+### Referencias de pruebas
+
+El repositorio contiene `docs/testsS2.md`, con casos para HU12, HU13, HU14, HU15, HU16, HU17, HU18, HU20 y HU21. HU19 figura como opcional/postergada en la documentación de testing.
+
+---
+
+# Sprint 3 — Búsqueda, disponibilidad y participación
+
+El Sprint 3 amplió la experiencia de consulta de productos y agregó funcionalidades de interacción de usuarios.
+
+## HU 22 — Realizar búsqueda
+
+Se incorporó la búsqueda de productos por palabra clave. El frontend ofrece sugerencias y resultados y puede combinar la búsqueda con un rango de fechas. El backend dispone de `GET /api/producto/buscar?texto={texto}` para buscar productos por nombre.
+
+## HU 23 — Visualizar disponibilidad
+
+Se incorporó el calendario de disponibilidad en el detalle del producto. El frontend consulta las reservas existentes, presenta fechas ocupadas y permite seleccionar un rango disponible. El backend expone operaciones para consultar la disponibilidad de un producto.
+
+## HU 24 — Marcar como favorito
+
+Se incorporó la posibilidad de agregar y quitar productos de favoritos. El backend mantiene la relación entre usuarios y productos y asocia las operaciones al usuario autenticado.
+
+## HU 25 — Listar productos favoritos
+
+Se incorporó la página `MisFavoritos.jsx`, que consulta los favoritos, presenta estados de carga/error/lista vacía y permite acceder al detalle o quitar un producto de la lista.
+
+## HU 26 — Políticas de producto
+
+Se agregó una sección informativa de políticas en el detalle del producto. La funcionalidad es principalmente de presentación en el frontend; la documentación del backend no identifica una entidad o endpoint específico para políticas.
+
+## HU 27 — Compartir productos
+
+Se incorporaron opciones para compartir el enlace del producto desde la interfaz. Esta funcionalidad se resuelve principalmente en el frontend y no requiere un endpoint específico del backend según la documentación disponible.
+
+## HU 28 — Valorar productos
+
+Se incorporó el sistema de valoraciones. El backend utiliza la entidad `Valoracion` y sus operaciones para asociar puntuación y comentario a un usuario y un producto. Se contemplan restricciones de puntuación, prevención de valoraciones duplicadas y la condición de haber finalizado una reserva para poder valorar.
+
+Los datos de promedio y cantidad de valoraciones se integran en la información de los productos.
+
+## HU 29 — Eliminar categoría
+
+Se ajustó la eliminación de categorías para conservar los productos asociados. Según la implementación documentada en el backend, los productos que estaban asociados quedan sin categoría y la categoría se elimina dentro de una transacción.
+
+### Decisiones técnicas registradas para el Sprint 3
+
+- Búsqueda de productos delegada al backend.
+- Consulta de disponibilidad basada en las reservas almacenadas.
+- Relación muchos a muchos entre usuarios y productos favoritos.
+- Entidad, repositorio y servicio específicos para valoraciones.
+- Cálculo del promedio de puntuaciones y cantidad de valoraciones.
+- Desasociación de productos antes de eliminar una categoría.
+- Reutilización de componentes y servicios en el frontend.
+
+### Referencias de pruebas
+
+El repositorio contiene `docs/testsS3.md`, con casos de prueba para HU22 a HU29. Ese documento registra la cobertura y los estados consignados en el archivo existente. Cualquier cambio posterior en el código debe acompañarse de una nueva ejecución cuando corresponda.
+
+---
+
+# Sprint 4 — Reservas y contacto
+
+El Sprint 4 aborda seis historias de usuario: búsqueda por fechas, visualización de detalles para reservar, registro de reservas, historial, contacto por WhatsApp y notificación por correo.
+
+## HU 30 — Reservas: seleccionar fecha
+
+**Historia:** como usuario, quiero poder realizar búsquedas por fecha para encontrar productos que coincidan con mis intereses.
+
+**Trabajo frontend:**
+- `BuscadorProductos.jsx` incorpora la selección de fecha inicial y final.
+- La búsqueda utiliza el hook `useReservaAPI` para consultar productos disponibles en un rango.
+- El hook `useProductoAPI` se utiliza para la búsqueda por texto.
+- La interfaz presenta los resultados y permite navegar al detalle del producto.
+
+**Trabajo backend:**
+- `GET /api/reserva/disponibles` recibe las fechas de inicio y fin.
+- `ReservaService` valida la presencia de ambas fechas y que la fecha final no sea anterior a la inicial.
+- El servicio consulta las reservas existentes y descarta los productos con rangos superpuestos.
+
+**Pendiente de verificar:** probar rangos válidos, rango invertido, resultados vacíos y los límites exactos de inclusión de las fechas de entrada y salida.
+
+## HU 31 — Reservas: visualizar detalles
+
+**Historia:** como usuario autenticado, quiero poder visualizar una página de reservas con el detalle del producto para poder reservarlo.
+
+**Trabajo frontend:**
+- `DetalleProductos.jsx` obtiene el producto a partir del ID de la ruta.
+- Presenta información general, imágenes, características, políticas y valoraciones.
+- Integra `CalendarioDisponibilidad.jsx` para consultar fechas ocupadas y seleccionar un rango.
+- Permite avanzar al flujo de reserva y ofrece la opción de contacto por WhatsApp.
+
+**Trabajo backend:**
+- `GET /api/producto/{id}` devuelve la información del producto.
+- Los endpoints de disponibilidad permiten consultar reservas existentes.
+
+**Pendiente de verificar:** confirmar que la navegación al flujo de reserva respete el estado de autenticación esperado y que el backend aplique los controles necesarios. La página de detalle está declarada como pública en el frontend; eso no equivale a autorizar una reserva.
+
+## HU 32 — Realizar reserva
+
+**Historia:** como usuario autenticado, quiero poder realizar reservas para poder utilizar los productos.
+
+**Trabajo frontend:**
+- `Reserva.jsx` carga el producto y utiliza las fechas recibidas mediante el estado de navegación cuando están disponibles.
+- Presenta información del producto y del usuario.
+- Recopila cantidad de huéspedes, DNI, edades y observaciones.
+- Valida campos obligatorios y que la cantidad de edades ingresadas coincida con la cantidad de huéspedes.
+- Envía los datos mediante `registrarReserva`.
+- Muestra estados de procesamiento, errores y la interfaz de confirmación cuando la respuesta se interpreta como exitosa.
+
+**Trabajo backend:**
+- `POST /api/reserva` delega la operación en `ReservaService`.
+- Se validan fechas, cantidad de huéspedes, DNI, edades y observaciones.
+- Se verifica que existan el producto y el usuario autenticado.
+- Se comprueba la superposición con reservas existentes.
+- Se persiste la reserva y se invoca el servicio de correo.
+
+**Pendiente de verificar:** probar campos inválidos, producto inexistente, usuario no autenticado, fechas superpuestas y la respuesta ante errores de persistencia o de envío de correo. La confirmación visual del frontend no demuestra por sí sola la entrega de una notificación.
+
+## HU 33 — Acceder a historial
+
+**Historia:** como usuario autenticado, quiero poder visualizar mis reservas anteriores para conocer mi historial.
+
+**Trabajo frontend:**
+- `ListaReservas.jsx` consulta las reservas mediante `fetchMisReservas`.
+- Presenta estados de carga, error y lista vacía.
+- Muestra tarjetas con nombre del producto, estado, fechas y cantidad de huéspedes.
+
+**Trabajo backend:**
+- `GET /api/reserva/mis-reservas` obtiene las reservas asociadas al usuario autenticado.
+- El servicio transforma los resultados a `ReservaHistorialDTO`.
+- Las reservas se ordenan por fecha de inicio descendente.
+- El estado se calcula como `FINALIZADA`, `PRÓXIMA` o `EN CURSO` según las fechas y la fecha actual del servidor.
+
+**Pendiente de verificar:** comprobar que cada usuario solo reciba sus propias reservas, que el listado se ordene correctamente y que se manejen los casos sin resultados y de error. Revisar también las reglas de seguridad de la ruta y del endpoint.
+
+## HU 34 — WhatsApp: iniciar chat
+
+**Historia:** como usuario, quiero poder comunicarme con el proveedor del producto a través de WhatsApp para consultarle si tengo alguna duda.
+
+**Trabajo frontend:**
+- `DetalleProductos.jsx` construye un enlace `wa.me`.
+- El enlace incluye un mensaje inicial codificado para URL.
+- El navegador intenta abrir el chat en una nueva pestaña.
+
+**Trabajo backend:**
+- En el código revisado no se identifica un endpoint específico para iniciar chats de WhatsApp. La funcionalidad está implementada principalmente en el frontend.
+
+**Pendiente de verificar:** confirmar que el enlace contiene el número correcto, que el mensaje se forma adecuadamente y que el comportamiento se entiende como apertura del chat, no como envío automático de un mensaje.
+
+## HU 35 — Notificación: confirmar reserva por correo
+
+**Historia:** como usuario registrado, quiero recibir un correo electrónico con los datos de mi reserva luego de su ejecución para validarlos y encontrarlos fácilmente.
+
+**Trabajo backend:**
+- Existe `EmailService`, que utiliza `JavaMailSender` y `SimpleMailMessage`.
+- El correo incluye datos del usuario, producto, fechas y cantidad de huéspedes.
+- Se define el asunto `Confirmación de reserva - Reservas Carrizo`.
+- `ReservaService` invoca el envío después de guardar la reserva.
+- El remitente se obtiene de la configuración `spring.mail.username`; el envío depende de la configuración SMTP.
+
+**Trabajo frontend:**
+- `Reserva.jsx` muestra la interfaz de confirmación según la respuesta de la operación de reserva.
+- Esa confirmación no demuestra por sí sola que el correo se haya enviado o recibido.
+
+**Pendiente de verificar:** ejecutar una prueba con SMTP válido, comprobar destinatario, asunto, contenido y recepción del correo. Registrar también el comportamiento cuando el servidor SMTP falla después de persistir la reserva.
+
+---
+
+# Resumen de estado y pendientes
+
+## Funcionalidades documentadas por sprint
+
+| Sprint | Alcance principal | Documento de pruebas |
+|---|---|---|
+| Sprint 1 | Estructura visual, navegación, productos y administración inicial | Casos originales registrados en la bitácora |
+| Sprint 2 | Categorías, registro, sesión, roles, características y administración | `testsS2.md` |
+| Sprint 3 | Búsqueda, disponibilidad, favoritos, políticas, compartir, valoraciones y eliminación de categorías | `testsS3.md` |
+| Sprint 4 | Búsqueda por fechas, detalle, reservas, historial, WhatsApp y correo | Se recomienda crear y mantener `testsS4.md` |
+
+## Criterio de actualización
+
+Esta bitácora describe el alcance y las decisiones técnicas reflejadas en la documentación y el código revisados. Si una funcionalidad cambia, debe actualizarse su sección y el documento de testing correspondiente. Los resultados de pruebas solo deben consignarse después de su ejecución.
+
+---
+
+**Fin de la bitácora del proyecto Reservas Carrizo.**
