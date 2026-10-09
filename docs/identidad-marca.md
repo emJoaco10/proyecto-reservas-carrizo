@@ -1,49 +1,50 @@
-# Identidad Visual del Proyecto
+# Identidad de Marca — Reservas Carrizo
 
-Este documento define los lineamientos de identidad visual y paleta de colores
-para el proyecto **Reservas Carrizo**. Su objetivo es asegurar consistencia en
-todos los componentes de la aplicación.
+## Propósito
 
----
+Este documento resume los lineamientos visuales de **Reservas Carrizo** para mantener una interfaz coherente entre páginas, componentes y dispositivos.
 
 ## Logo
-- **Ubicación principal:** Header y Footer del sitio.
-- **Formato:** `logo.svg`.
-- **Uso:** 
-  - Encabezado de todas las páginas.
-  - Footer como elemento de identidad.
-  - Favicons y tarjetas de producto.
+
+- **Recurso identificado en el frontend:** `frontend/src/assets/logo.png`.
+- **Uso principal:** encabezado y pie de página, según la implementación de cada componente.
+- Mantener las proporciones del logo y evitar deformarlo, recolorearlo o colocarlo sobre fondos que dificulten su lectura.
+
+> La documentación anterior mencionaba `logo.svg` y `/assets/logo.svg`, pero en el repositorio revisado se identifica `frontend/src/assets/logo.png`. Actualizar esta referencia si el recurso cambia.
+
+## Paleta de colores
+
+Los siguientes valores corresponden a las variables definidas en `frontend/src/styles/variables.css`.
+
+| Variable CSS | Color | Uso |
+|---|---|---|
+| `--color-primario` | `#2F7D62` | Acciones y elementos principales de marca. |
+| `--color-primario-hover` | `#256A52` | Estado hover e interacciones. |
+| `--color-header-bg` | `#173F35` | Fondo del encabezado. |
+| `--color-footer-bg` | `#1D4A3E` | Fondo del pie de página. |
+| `--color-secundario` | `#E8F3EE` | Fondos secundarios y detalles suaves. |
+| `--color-fondo` | `#F6F8F7` | Fondo general de la aplicación. |
+| `--color-superficie` | `#FFFFFF` | Tarjetas, formularios y bloques de contenido. |
+| `--color-superficie-secundaria` | `#F0F5F2` | Superficies y elementos destacados. |
+| `--color-texto` | `#1F2933` | Texto principal. |
+| `--color-texto-secundario` | `#667085` | Texto de apoyo. |
+| `--color-texto-invertido` | `#FFFFFF` | Texto sobre fondos oscuros. |
+| `--color-exito` | `#2E7D32` | Mensajes y estados exitosos. |
+| `--color-error` | `#C62828` | Mensajes y estados de error. |
+| `--color-alerta` | `#B7791F` | Advertencias. |
+
+## Lineamientos de uso
+
+- Utilizar las variables CSS existentes en lugar de repetir valores de color en los estilos.
+- Mantener contraste suficiente entre texto, fondos y controles.
+- Usar los verdes de marca en elementos principales y reservar los colores de estado para mensajes de éxito, error y advertencia.
+- Conservar una apariencia consistente entre encabezado, pie de página, botones, formularios, tarjetas y páginas administrativas.
+- Verificar la legibilidad y la adaptación visual en pantallas de escritorio y dispositivos móviles.
+
+## Implementación
+
+La paleta se centraliza en `frontend/src/styles/variables.css`. Antes de incorporar nuevos colores o cambiar los existentes, revisar las variables disponibles y actualizar este documento si la identidad visual cambia.
 
 ---
 
-## Paleta de Colores
-
-| Nombre        | Hex      | Uso principal |
-|---------------|----------|---------------|
-| Primario      | #2ECC71  | Botones, links, elementos destacados |
-| Secundario    | #27AE60  | Hover y detalles |
-| Header BG     | #1B5E20; | Background del header |
-| Fondo general | #F1F8E9  | Fondo principal |
-| Color de texto| #212121  | Texto principal |
-| Texto invertido| #FFFFFF | Texto sobre fondos oscuros|
-| Color exito   | #00C853  | Confirmaciones
-| Color error   | #C62828  | Errores
-| Color alerta  | #F9A825  | Advertencias
-
-*(Los valores hexadecimales deben confirmarse con los definidos en `src/styles/variables.css`.)*
-
----
-
-## Lineamientos de Uso
-- Mantener contraste suficiente para accesibilidad.
-- Usar la paleta de forma consistente en header, footer y componentes.
-- Evitar tonos fuera de la paleta definida salvo en imágenes o ilustraciones.
-- Centralizar los colores en variables CSS (`:root { --color-primario: ... }`).
-
----
-
-## Implementación Técnica
-- Los colores están definidos en `src/styles/variables.css`.
-- El logo se referencia desde `/assets/logo.svg`.
-- Todos los componentes deben importar las variables de color para mantener coherencia.
-- Se recomienda revisar con DevTools la accesibilidad de contraste en botones y textos.
+**Última revisión:** octubre de 2026.
