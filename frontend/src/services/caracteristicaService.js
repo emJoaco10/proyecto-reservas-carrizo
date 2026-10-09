@@ -1,8 +1,20 @@
 import apiService from "./apiService";
 
+/**
+ * Centraliza las solicitudes HTTP relacionadas con características mediante
+ * la instancia compartida `apiService`. Este servicio no valida los datos;
+ * registra los errores y los vuelve a lanzar.
+ */
+/** Ruta base `/caracteristica` utilizada por las solicitudes HTTP del servicio. */
 const URL_BASE = "/caracteristica";
 
-// Obtener todas las características
+/**
+ * Obtiene todas las características mediante una solicitud GET a `URL_BASE`.
+ * No recibe parámetros.
+ *
+ * @returns {Promise<*>} `response.data` cuando la solicitud se completa correctamente.
+ * @throws {*} Registra el error en la consola y lo vuelve a lanzar si la solicitud falla.
+ */
 export const getCaracteristicas = async () => {
     try {
         const response = await apiService.get(URL_BASE);
@@ -13,7 +25,14 @@ export const getCaracteristicas = async () => {
     }
 };
 
-// Obtener una característica por ID
+/**
+ * Obtiene una característica mediante una solicitud GET a la ruta formada por
+ * `URL_BASE` y su identificador.
+ *
+ * @param {*} id Identificador de la característica.
+ * @returns {Promise<*>} `response.data` si la solicitud tiene éxito.
+ * @throws {*} Registra el error junto con el identificador y lo vuelve a lanzar si falla.
+ */
 export const obtenerCaracteristicaPorId = async (id) => {
     try {
         const response = await apiService.get(`${URL_BASE}/${id}`);
@@ -27,7 +46,13 @@ export const obtenerCaracteristicaPorId = async (id) => {
     }
 };
 
-// Crear una característica
+/**
+ * Envía una característica en el cuerpo de una solicitud POST a `URL_BASE`.
+ *
+ * @param {*} caracteristica Objeto de característica que se enviará al backend.
+ * @returns {Promise<*>} `response.data` si la solicitud tiene éxito.
+ * @throws {*} Registra el error en la consola y lo vuelve a lanzar si la solicitud falla.
+ */
 export const postCaracteristica = async (caracteristica) => {
     try {
         const response = await apiService.post(
@@ -42,7 +67,15 @@ export const postCaracteristica = async (caracteristica) => {
     }
 };
 
-// Actualizar una característica
+/**
+ * Envía los datos de una característica mediante una solicitud PUT a la ruta
+ * formada por `URL_BASE` y su identificador.
+ *
+ * @param {*} id Identificador de la característica.
+ * @param {*} caracteristica Objeto con los datos que se enviarán.
+ * @returns {Promise<*>} `response.data` si la solicitud tiene éxito.
+ * @throws {*} Registra el error junto con el identificador y lo vuelve a lanzar si falla.
+ */
 export const putCaracteristica = async (id, caracteristica) => {
     try {
         const response = await apiService.put(
@@ -60,7 +93,14 @@ export const putCaracteristica = async (id, caracteristica) => {
     }
 };
 
-// Eliminar una característica
+/**
+ * Elimina una característica mediante una solicitud DELETE a la ruta formada
+ * por `URL_BASE` y su identificador.
+ *
+ * @param {*} id Identificador de la característica que se desea eliminar.
+ * @returns {Promise<*>} `response.data` si la solicitud tiene éxito.
+ * @throws {*} Registra el error junto con el identificador y lo vuelve a lanzar si falla.
+ */
 export const deleteCaracteristica = async (id) => {
     try {
         const response = await apiService.delete(

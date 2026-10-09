@@ -1,7 +1,11 @@
+/** Instancia de Axios utilizada para realizar solicitudes HTTP al backend. */
 import apiService from './apiService';
+/** Validadores auxiliares de los datos del producto para su creación o actualización. */
 import { validarDescripcion, validarNombre } from '../helpers/validaciones';
+/** Helper que normaliza el objeto de producto antes de enviarlo al backend. */
 import { crearProducto } from '../helpers/productoUtils';
 
+/** Ruta base utilizada por las solicitudes de este servicio. */
 const URL_BASE = '/producto';
 
 /**
@@ -11,13 +15,17 @@ const URL_BASE = '/producto';
  */
 
 /**
- * Obtiene productos paginados para el catálogo público.
+ * Obtiene productos paginados para el catálogo público mediante GET a
+ * `/producto/paginados`, enviando `page` y `size` como parámetros de consulta.
  *
- * No requiere autenticación.
+ * No requiere autenticación. Usa la página `0` y el tamaño `100` de forma
+ * predeterminada. Devuelve `response.data.content` cuando está disponible;
+ * en caso contrario, devuelve un array vacío. Si la solicitud falla, registra
+ * el error en la consola y lo vuelve a lanzar.
  *
  * @param {number} page Número de página.
  * @param {number} size Cantidad de productos.
- * @returns {Promise<Array>} Lista de productos.
+ * @returns {Promise<Array>} Contenido paginado o un array vacío si no está disponible.
  */
 export const getProductosPublicos = async (
   page = 0,
@@ -47,7 +55,12 @@ export const getProductosPublicos = async (
 };
 
 /**
- * Obtiene un producto por su ID.
+ * Obtiene un producto mediante GET a `/producto/{id}`. Devuelve
+ * `response.data`; si la solicitud falla, registra el error en la consola y
+ * lo vuelve a lanzar.
+ *
+ * @param {number|string} id Identificador del producto.
+ * @returns {Promise<*>} Datos devueltos por el backend.
  */
 export const getProductoById = async (id) => {
   try {
@@ -68,7 +81,14 @@ export const getProductoById = async (id) => {
 };
 
 /**
- * Obtiene productos paginados.
+ * Obtiene productos mediante GET a `/producto/paginados`, enviando `page` y
+ * `size` como parámetros de consulta. Devuelve `response.data` sin transformar
+ * el resultado. Si la solicitud falla, registra el error en la consola y lo
+ * vuelve a lanzar.
+ *
+ * @param {number} page Número de página.
+ * @param {number} size Cantidad de productos por página.
+ * @returns {Promise<*>} Datos devueltos por el backend.
  */
 export const getPaginados = async (page, size) => {
   try {
@@ -95,7 +115,11 @@ export const getPaginados = async (page, size) => {
 };
 
 /**
- * Obtiene productos aleatorios.
+ * Solicita productos aleatorios mediante GET a `/producto/aleatorios` y
+ * devuelve `response.data`. Si la solicitud falla, registra el error en la
+ * consola y lo vuelve a lanzar.
+ *
+ * @returns {Promise<*>} Datos devueltos por el backend.
  */
 export const obtenerProductosAleatorios = async () => {
   try {
@@ -116,7 +140,12 @@ export const obtenerProductosAleatorios = async () => {
 };
 
 /**
- * Obtiene productos filtrados por categorías.
+ * Consulta `/producto/categoriasFiltro` mediante GET, enviando `categoriaIds`
+ * en el parámetro de consulta `ids`. Devuelve `response.data`; si la solicitud
+ * falla, registra el error en la consola y lo vuelve a lanzar.
+ *
+ * @param {*} categoriaIds Valor enviado como parámetro de consulta `ids`.
+ * @returns {Promise<*>} Datos devueltos por el backend.
  */
 export const getProductosPorCategorias = async (
   categoriaIds
@@ -144,7 +173,12 @@ export const getProductosPorCategorias = async (
 };
 
 /**
- * Busca productos por palabra clave.
+ * Realiza una solicitud GET a `/producto/buscar`, enviando `texto` como
+ * parámetro de consulta. Devuelve `response.data`; si la solicitud falla,
+ * registra el error en la consola y lo vuelve a lanzar.
+ *
+ * @param {string} texto Texto enviado como parámetro de búsqueda.
+ * @returns {Promise<*>} Datos devueltos por el backend.
  */
 export const buscarProductos = async (texto) => {
   try {
@@ -170,8 +204,12 @@ export const buscarProductos = async (texto) => {
 };
 
 /**
- * Obtiene todas las categorías disponibles
- * para las funcionalidades públicas y formularios.
+ * Consulta `/producto/categorias` mediante GET. Devuelve directamente
+ * `response.data` si es un array; de lo contrario, devuelve `data.content` o
+ * un array vacío si ese valor es nulo o indefinido. Si la solicitud falla,
+ * registra el error en la consola y lo vuelve a lanzar.
+ *
+ * @returns {Promise<Array|*>} Array recibido o contenido disponible en la respuesta.
  */
 export const getCategorias = async () => {
   try {
@@ -203,7 +241,9 @@ export const getCategorias = async () => {
  */
 
 /**
- * Obtiene TODOS los productos para administración.
+ * Obtiene productos para administración mediante GET a `/producto/admin` y
+ * devuelve `response.data`. Si la solicitud falla, registra el error en la
+ * consola y lo vuelve a lanzar.
  *
  * IMPORTANTE:
  * Este endpoint está protegido por Spring Security
@@ -235,7 +275,15 @@ export const getProductosAdmin = async () => {
  */
 
 /**
- * Crear producto.
+ * Valida el nombre y la descripción mediante `validarNombre` y
+ * `validarDescripcion`; si cualquiera devuelve un mensaje verdadero, lanza un
+ * error con ese mensaje. Luego normaliza el objeto mediante `crearProducto` y
+ * lo envía en una solicitud POST a `URL_BASE`. Devuelve `response.data` si la
+ * solicitud tiene éxito. Los errores capturados se registran en la consola y
+ * se vuelven a lanzar.
+ *
+ * @param {Object} producto Datos del producto que se validarán y normalizarán.
+ * @returns {Promise<*>} Datos devueltos por el backend.
  */
 export const createProducto = async (producto) => {
   try {
@@ -278,7 +326,16 @@ export const createProducto = async (producto) => {
 
 
 /**
- * Actualizar producto completo.
+ * Valida el nombre y la descripción mediante `validarNombre` y
+ * `validarDescripcion`; si cualquiera devuelve un mensaje verdadero, lanza un
+ * error con ese mensaje. Normaliza el objeto mediante `crearProducto` y envía
+ * el objeto normalizado en una solicitud PUT a `/producto/{id}`. Devuelve
+ * `response.data` si la solicitud tiene éxito. Los errores capturados se
+ * registran en la consola con el identificador y se vuelven a lanzar.
+ *
+ * @param {number|string} id Identificador del producto que se actualizará.
+ * @param {Object} producto Datos del producto que se validarán y normalizarán.
+ * @returns {Promise<*>} Datos devueltos por el backend.
  */
 export const updateProducto = async (
   id,
@@ -324,7 +381,11 @@ export const updateProducto = async (
 
 
 /**
- * Eliminar un producto por ID.
+ * Realiza una solicitud DELETE a `/producto/{id}` y devuelve `response.data`.
+ * Si la solicitud falla, registra el error en la consola y lo vuelve a lanzar.
+ *
+ * @param {number|string} id Identificador del producto.
+ * @returns {Promise<*>} Datos devueltos por el backend.
  */
 export const deleteProductoById = async (id) => {
   try {
@@ -348,7 +409,11 @@ export const deleteProductoById = async (id) => {
 
 
 /**
- * Eliminar todos los productos.
+ * Realiza una solicitud DELETE a `URL_BASE` y devuelve `response.data`. No
+ * recibe parámetros. Si la solicitud falla, registra el error en la consola y
+ * lo vuelve a lanzar.
+ *
+ * @returns {Promise<*>} Datos devueltos por el backend.
  */
 export const deleteProducto = async () => {
   try {
@@ -372,7 +437,14 @@ export const deleteProducto = async () => {
 
 
 /**
- * Asignar categoría a un producto.
+ * Realiza una solicitud PUT a `/producto/{id}/categoria`, enviando
+ * `categoriaId` como cuerpo y especificando `Content-Type: application/json`.
+ * Devuelve `response.data`; si la solicitud falla, registra el error en la
+ * consola y lo vuelve a lanzar.
+ *
+ * @param {number|string} id Identificador del producto.
+ * @param {*} categoriaId Valor enviado en el cuerpo de la solicitud.
+ * @returns {Promise<*>} Datos devueltos por el backend.
  */
 export const asignarCategoria = async (
   id,
@@ -405,7 +477,14 @@ export const asignarCategoria = async (
 
 
 /**
- * Asignar características a un producto.
+ * Realiza una solicitud PUT a `/producto/{id}/caracteristicas`, enviando
+ * `caracteristicasId` como cuerpo y especificando
+ * `Content-Type: application/json`. Devuelve `response.data`; si la solicitud
+ * falla, registra el error en la consola y lo vuelve a lanzar.
+ *
+ * @param {number|string} id Identificador del producto.
+ * @param {*} caracteristicasId Valor enviado en el cuerpo de la solicitud.
+ * @returns {Promise<*>} Datos devueltos por el backend.
  */
 export const asignarCaracteristicas = async (
   id,
